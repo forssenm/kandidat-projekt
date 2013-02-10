@@ -25,7 +25,13 @@ public class InMainMenuState extends AbstractAppState {
     private InputManager inputManager;
     private ViewPort viewPort;
     private BulletAppState physics;
-
+    
+    
+    /**
+     * This method should initialize the main menu screen
+     * @param stateManager
+     * @param app 
+     */
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);

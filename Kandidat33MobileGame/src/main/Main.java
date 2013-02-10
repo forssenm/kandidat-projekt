@@ -17,6 +17,7 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
+        flyCam.setEnabled(false);
         stateManager.attach(new InMainMenuState());
     }
 
