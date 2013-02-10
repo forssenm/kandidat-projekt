@@ -4,6 +4,9 @@
  */
 package variables;
 
+import com.jme3.material.Material;
+import com.jme3.material.MaterialDef;
+
 /**
  * This is where you put variables. This makes for easier finding and changing 
  * values for a given variable without checking the entire code.
@@ -11,8 +14,10 @@ package variables;
  */
 public class P {
 
-    public static final float platform_length = 20f;
-    public static final float platform_width = 5f;
-    public static final float platform_height = 0.5f;
+    //Platform variables
+    public static final float platformLength = 20f;
+    public static final float platformWidth = 5f;
+    public static final float platformHeight = 0.5f;
+    public static final int platformsPerLevel = 10;
     
 }
