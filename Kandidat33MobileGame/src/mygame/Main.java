@@ -220,9 +220,9 @@ public class Main extends SimpleApplication implements ActionListener {
 
         playerNode.addControl(playerCharacter);
         bulletAppState.getPhysicsSpace().add(playerCharacter);
-        Vector3f walkDirection = Vector3f.UNIT_X.multLocal(run_speed);
+        Vector3f walkVelocity = Vector3f.UNIT_X.multLocal(run_speed);
 
-        playerCharacter.setWalkDirection(walkDirection);
+        playerCharacter.setWalkDirection(walkVelocity);
         return playerNode;
 
     }
