@@ -11,6 +11,7 @@ import com.jme3.material.MaterialDef;
  * This is where you put variables. This makes for easier finding and changing 
  * values for a given variable without checking the entire code.
  * @author Mathias
+ * Jonatan testar
  */
 public class P {
 
