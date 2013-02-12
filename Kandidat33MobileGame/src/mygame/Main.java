@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * test
  *
- * @author jonatankilhamn som testar git
+ * @author jonatankilhamn
  */
 public class Main extends SimpleApplication implements ActionListener {
 
