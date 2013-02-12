@@ -10,11 +10,19 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
+import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -40,6 +48,10 @@ public class InGameState extends AbstractAppState {
     private Material platformMaterial;
     private Material playerMaterial;
     private Box playerModel;
+    private Node playerNode;
+    private CharacterControl playerCharacter;
+
+    
 
     /**
      * This method initializes the the InGameState
@@ -87,7 +99,24 @@ public class InGameState extends AbstractAppState {
         generateModels();
         generatePlatforms();
         generatePlayer();
+        initInputs();
+        
     }
+
+    /*
+     private ChaseCamera chaseCam;
+     
+     private void initCamera() {
+
+     // Enable a chase cam for this target (typically the player).
+     Camera cam = new Camera();
+     chaseCam = new ChaseCamera(cam, playerNode, inputManager);
+     chaseCam.setSmoothMotion(true);
+     chaseCam.setTrailingEnabled(false);
+     chaseCam.setDefaultHorizontalRotation(-FastMath.DEG_TO_RAD * 270);
+     chaseCam.setDefaultDistance(50);
+     }
+     */
 
     private void generateMaterials() {
         platformMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -126,23 +155,19 @@ public class InGameState extends AbstractAppState {
             physics.getPhysicsSpace().add(tempControl);
 
         }
-
-
-        //Make the floor physical with mass 0.0f!
-
     }
 
     private void generatePlayer() {
          Geometry playerGeo = new Geometry("player", playerModel);
          playerGeo.setMaterial(playerMaterial);
-         Node playerNode = new Node();
+         playerNode = new Node();
          playerNode.attachChild(playerGeo);
         
          /**
          * Create a CharacterControl object
          */
         CapsuleCollisionShape shape = new CapsuleCollisionShape(2f, 2f);
-        CharacterControl playerCharacter = new CharacterControl(shape, 0.05f);
+        playerCharacter = new CharacterControl(shape, 0.05f);
         playerCharacter.setJumpSpeed(P.jump_speed);
 
         /**
@@ -163,4 +188,24 @@ public class InGameState extends AbstractAppState {
         
         //throw new UnsupportedOperationException("Not yet implemented");
     }
+
+    /**
+     * Sets up the input. Spacebar jumps the character.
+     */
+    private void initInputs() {
+
+        inputManager.addMapping("light",
+                new KeyTrigger(KeyInput.KEY_L));
+        inputManager.addMapping("jump",
+                new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addListener(actionListener, "jump");
+    }
+    
+    private ActionListener actionListener = new ActionListener() {
+        public void onAction(String binding, boolean value, float tpf) {
+            if (binding.equals("jump")) {
+                playerCharacter.jump();
+            }
+        }
+    };
 }
