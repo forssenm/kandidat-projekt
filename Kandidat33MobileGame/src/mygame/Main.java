@@ -132,16 +132,16 @@ public class Main extends SimpleApplication implements ActionListener {
      * Initialize the materials used in this scene.
      */
     public void initMaterials() {
-        player_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        player_mat.setColor("Color", ColorRGBA.Red);
+        this.player_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        this.player_mat.setColor("Color", ColorRGBA.Red);
 
-        stone_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        stone_mat.setColor("Color", ColorRGBA.Blue);
+        this.stone_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        this.stone_mat.setColor("Color", ColorRGBA.Blue);
 
-        floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        this.floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture tex = assetManager.loadTexture("Textures/bluefire.jpg");
 
-        floor_mat.setTexture("ColorMap", tex);
+        this.floor_mat.setTexture("ColorMap", tex);
     }
 
     /**
