@@ -37,7 +37,7 @@ import variables.P;
 public class InGameState extends AbstractAppState {
 
     private SimpleApplication app;
-    private Node rootNode;
+    private Node inGameRootNode;
     private AssetManager assetManager;
     private AppStateManager stateManager;
     private InputManager inputManager;
@@ -61,6 +61,8 @@ public class InGameState extends AbstractAppState {
         super.initialize(stateManager, app);
         this.app = (SimpleApplication) app;
         this.rootNode = this.app.getRootNode();
+        this.inGameRootNode = new Node();
+        this.app.getRootNode().attachChild(this.inGameRootNode);
         this.assetManager = this.app.getAssetManager();
         this.stateManager = this.app.getStateManager();
         this.inputManager = this.app.getInputManager();
@@ -73,6 +75,7 @@ public class InGameState extends AbstractAppState {
     @Override
     public void cleanup() {
         super.cleanup();
+        this.app.getRootNode().detachChild(this.inGameRootNode);
     }
 
     @Override
@@ -151,33 +154,36 @@ public class InGameState extends AbstractAppState {
 
     private void generatePlatforms() {
         platforms = new LinkedList<Geometry>();
+        // Create the first platform
         Geometry firstPlatform = new Geometry("Platform", new Box(Vector3f.ZERO, P.platformLength / 2, P.platformHeight, P.platformWidth));
         firstPlatform.setMaterial(platformMaterial);
         firstPlatform.setLocalTranslation(0, 0 - 0.1f, 0);
         platforms.add(0, firstPlatform);
-        rootNode.attachChild(firstPlatform);
+        inGameRootNode.attachChild(firstPlatform);
+        // Make the first platform physical
+        RigidBodyControl tempControl = new RigidBodyControl(0.0f);
+        firstPlatform.addControl(tempControl);
+        physics.getPhysicsSpace().add(tempControl);
+        // Generate the rest of the platforms
         Geometry temp;
-        RigidBodyControl tempControl;
         for (int i = 0; i < P.platformsPerLevel; i++) {
             temp = new Geometry("Platform", new Box(Vector3f.ZERO, P.platformLength / 2, P.platformHeight, P.platformWidth));
             temp.setMaterial(platformMaterial);
             System.out.println(platforms.getFirst().getLocalTranslation().x);
-            temp.setLocalTranslation(platforms.getFirst().getLocalTranslation().x + 1 * P.platformLength,
                     platforms.getFirst().getLocalTranslation().y,
                     platforms.getFirst().getLocalTranslation().z);
             platforms.addFirst(temp);
-            rootNode.attachChild(platforms.getFirst());
+            inGameRootNode.attachChild(platforms.getFirst());
 
-            // Make the platform physical
+            // Make the platforms physical
             tempControl = new RigidBodyControl(0.0f);
             temp.addControl(tempControl);
             physics.getPhysicsSpace().add(tempControl);
-
         }
     }
 
     private void generatePlayer() {
-        Geometry playerGeo = new Geometry("player", playerModel);
+        Geometry playerGeo = new Geometry("PlayerModel", playerModel);
         playerGeo.setMaterial(playerMaterial);
         playerNode = new Node();
         playerNode.attachChild(playerGeo);
@@ -192,10 +198,10 @@ public class InGameState extends AbstractAppState {
         /**
          * Position the player
          */
-        Vector3f vt = new Vector3f(0, 10, 0);
+        Vector3f vt = new Vector3f(0, 2, 0);
         playerNode.setLocalTranslation(vt);
 
-        rootNode.attachChild(playerNode);
+        inGameRootNode.attachChild(playerNode);
 
 
 
@@ -205,16 +211,13 @@ public class InGameState extends AbstractAppState {
 
         playerCharacter.setWalkDirection(walkDirection);
 
-        //throw new UnsupportedOperationException("Not yet implemented");
     }
 
     /**
-     * Sets up the input. Spacebar jumps the character.
+     * Sets up the input. Mouseclick jumps the character.
      */
     private void initInputs() {
 
-        inputManager.addMapping("light",
-                new KeyTrigger(KeyInput.KEY_L));
         inputManager.addMapping("jump",
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(actionListener, "jump");
