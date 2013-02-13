@@ -47,6 +47,7 @@ public class InGameState extends AbstractAppState {
     private Material platformMaterial;
     private Material playerMaterial;
     private Box playerModel;
+    private Box playerDeathModel;
     private Node playerNode;
     private CharacterControl playerCharacter;
 
@@ -60,7 +61,6 @@ public class InGameState extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         this.app = (SimpleApplication) app;
-        this.rootNode = this.app.getRootNode();
         this.inGameRootNode = new Node();
         this.app.getRootNode().attachChild(this.inGameRootNode);
         this.assetManager = this.app.getAssetManager();
@@ -92,6 +92,28 @@ public class InGameState extends AbstractAppState {
 
     @Override
     public void update(float tpf) {
+        if(playerNode.getLocalTranslation().y < -1) {
+            playerDeath();
+        }
+    }
+    
+    private void playerDeath() {
+        playerNode.getControl(CharacterControl.class).setEnabled(false);
+        System.out.println("Game Over!");
+        Spatial pG = playerNode.getChild("PlayerModel");
+
+        playerNode.detachChild(pG);
+
+                //detachChildNamed("PlayerModel");
+        Geometry playerGeo = new Geometry("PlayerDeathModel", playerDeathModel);
+        
+        //playerGeo.setLocalTranslation(pG.getLocalTranslation());
+        playerGeo.setMaterial(playerMaterial);
+        playerNode.attachChild(playerGeo);
+        
+
+        setEnabled(false);
+        //stateManager.detach(this);
     }
 
     private void generateLevel() {
@@ -150,6 +172,8 @@ public class InGameState extends AbstractAppState {
     private void generateModels() {
         playerModel = new Box(Vector3f.ZERO, 2f, 2f, 3f);
         playerModel.scaleTextureCoordinates(new Vector2f(1f, .5f));
+        playerDeathModel = new Box(Vector3f.ZERO,1f, 1f, 1f);
+        playerDeathModel.scaleTextureCoordinates(new Vector2f(1f, .5f));
     }
 
     private void generatePlatforms() {
@@ -185,7 +209,7 @@ public class InGameState extends AbstractAppState {
     private void generatePlayer() {
         Geometry playerGeo = new Geometry("PlayerModel", playerModel);
         playerGeo.setMaterial(playerMaterial);
-        playerNode = new Node();
+        playerNode = new Node("PlayerNode");
         playerNode.attachChild(playerGeo);
 
         /**
