@@ -51,8 +51,6 @@ public class InGameState extends AbstractAppState {
     private Node playerNode;
     private CharacterControl playerCharacter;
 
-    
-
     /**
      * This method initializes the the InGameState
      *
@@ -100,23 +98,45 @@ public class InGameState extends AbstractAppState {
         generatePlatforms();
         generatePlayer();
         initInputs();
-        
+        initCamera();
+
     }
 
-    /*
-     private ChaseCamera chaseCam;
-     
-     private void initCamera() {
-
-     // Enable a chase cam for this target (typically the player).
-     Camera cam = new Camera();
-     chaseCam = new ChaseCamera(cam, playerNode, inputManager);
-     chaseCam.setSmoothMotion(true);
-     chaseCam.setTrailingEnabled(false);
-     chaseCam.setDefaultHorizontalRotation(-FastMath.DEG_TO_RAD * 270);
-     chaseCam.setDefaultDistance(50);
-     }
+    /**
+     * Sets up the camera to follow the player.
      */
+    private void initCamera() {
+
+        /*
+         * Set up a node a bit ahead of the player, to keep the the player
+         * to the left of the screen.
+         * Comment out this section and change camFocusNode to playerNode
+         * to get player centered.
+         */
+        Node camFocusNode = new Node();
+        camFocusNode.setLocalTranslation(playerNode.getLocalTranslation());
+        playerNode.attachChild(camFocusNode);
+        camFocusNode.move(15f, 0f, 0f);
+
+        /*
+         * Disable the default flyby camera. Hopefully this work even if some
+         * other state has already disabled it.
+         */
+        this.app.getFlyByCamera().setEnabled(false);
+        Camera cam = this.app.getCamera();
+
+        ChaseCamera chaseCam;
+        // Change camFocusNode to playerNode to center player
+        chaseCam = new ChaseCamera(cam, camFocusNode, inputManager);
+
+        // Set the style of camera chasing right
+        chaseCam.setSmoothMotion(true);
+        chaseCam.setTrailingEnabled(true);
+        chaseCam.setDefaultDistance(50);
+        // Set the camera to stay facing the side of the player
+        chaseCam.setDefaultHorizontalRotation(-FastMath.DEG_TO_RAD * 265);
+        chaseCam.setDefaultVerticalRotation(0);
+    }
 
     private void generateMaterials() {
         platformMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -124,7 +144,7 @@ public class InGameState extends AbstractAppState {
         playerMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         playerMaterial.setColor("Color", ColorRGBA.Red);
     }
-    
+
     private void generateModels() {
         playerModel = new Box(Vector3f.ZERO, 2f, 2f, 3f);
         playerModel.scaleTextureCoordinates(new Vector2f(1f, .5f));
@@ -158,12 +178,12 @@ public class InGameState extends AbstractAppState {
     }
 
     private void generatePlayer() {
-         Geometry playerGeo = new Geometry("player", playerModel);
-         playerGeo.setMaterial(playerMaterial);
-         playerNode = new Node();
-         playerNode.attachChild(playerGeo);
-        
-         /**
+        Geometry playerGeo = new Geometry("player", playerModel);
+        playerGeo.setMaterial(playerMaterial);
+        playerNode = new Node();
+        playerNode.attachChild(playerGeo);
+
+        /**
          * Create a CharacterControl object
          */
         CapsuleCollisionShape shape = new CapsuleCollisionShape(2f, 2f);
@@ -185,7 +205,7 @@ public class InGameState extends AbstractAppState {
         Vector3f walkDirection = Vector3f.UNIT_X.multLocal(P.run_speed);
 
         playerCharacter.setWalkDirection(walkDirection);
-        
+
         //throw new UnsupportedOperationException("Not yet implemented");
     }
 
