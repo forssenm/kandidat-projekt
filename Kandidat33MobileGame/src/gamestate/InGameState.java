@@ -44,10 +44,16 @@ public class InGameState extends AbstractAppState {
     private InputManager inputManager;
     private ViewPort viewPort;
     private BulletAppState physics;
-    private LinkedList<Geometry> platforms;
+    
+    // Refactor platform. 
+    // Platform controller code might be in the InGameState 
+    // but should follow a protocol.
+    private LinkedList<Geometry> platforms; 
     private Material platformMaterial;
-    private Material playerMaterial;
+    
+    // Refactor player
     private Box playerModel;
+    private Material playerMaterial;
     private Node playerNode;
     private CharacterControl playerCharacter;
 
@@ -137,22 +143,23 @@ public class InGameState extends AbstractAppState {
         firstPlatform.setLocalTranslation(0, 0 - 0.1f, 0);
         platforms.add(0, firstPlatform);
         rootNode.attachChild(firstPlatform);
-        Geometry temp;
-        RigidBodyControl tempControl;
+        Geometry platformGeometry;
+        RigidBodyControl platformRigidBodyControll;
         for (int i = 0; i < P.platformsPerLevel; i++) {
-            temp = new Geometry("Platform", new Box(Vector3f.ZERO, P.platformLength / 2, P.platformHeight, P.platformWidth));
-            temp.setMaterial(platformMaterial);
+            platformGeometry = new Geometry("Platform", new Box(Vector3f.ZERO, P.platformLength / 2, P.platformHeight, P.platformWidth));
+            platformGeometry.setMaterial(platformMaterial);
             System.out.println(platforms.getFirst().getLocalTranslation().x);
-            temp.setLocalTranslation(platforms.getFirst().getLocalTranslation().x + 1 * P.platformLength,
+            platformGeometry.setLocalTranslation(platforms.getFirst().getLocalTranslation().x + 1 * P.platformLength,
                     platforms.getFirst().getLocalTranslation().y,
                     platforms.getFirst().getLocalTranslation().z);
-            platforms.addFirst(temp);
+            platforms.addFirst(platformGeometry);
             rootNode.attachChild(platforms.getFirst());
 
             // Make the platform physical
-            tempControl = new RigidBodyControl(0.0f);
-            temp.addControl(tempControl);
-            physics.getPhysicsSpace().add(tempControl);
+            platformRigidBodyControll = new RigidBodyControl(0.0f);
+            //platformRigidBodyControll.setKinematic(true);
+            platformGeometry.addControl(platformRigidBodyControll);
+            physics.getPhysicsSpace().add(platformRigidBodyControll);
 
         }
     }
