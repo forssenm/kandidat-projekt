@@ -31,7 +31,6 @@ public class PlayerSceneObjectDataSource implements SceneObjectDataSource{
         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         material.setColor("Color", ColorRGBA.Red);
         geometry.setMaterial(material);
-        System.out.println(geometry);
         return geometry;
     }
 }

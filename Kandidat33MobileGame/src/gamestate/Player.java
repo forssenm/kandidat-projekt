@@ -28,19 +28,19 @@ import variables.P;
  * @author dagen
  */
 public class Player {
-    public Box model;
-    public Material material;
-    
-    // Hook scenegraph
+    // Scene Object
     public Spatial spatial;
+    
+    // Physics connection
     public CharacterControl characterControl;
+    
+    
     private Player(){}
     
     public void addToNode(Node node){
-        System.out.println(node);
-        System.out.println(this.spatial);
         node.attachChild(this.spatial);
     }
+    
     public void addToPhysicsSpace(PhysicsSpace physicsSpace){
         physicsSpace.add(this.characterControl);
     }
@@ -56,15 +56,16 @@ public class Player {
         player.characterControl = new CharacterControl(shape, 0.05f);
         player.characterControl.setJumpSpeed(P.jump_speed);
 
+        Vector3f walkDirection = Vector3f.UNIT_X.multLocal(P.run_speed);
+        player.characterControl.setWalkDirection(walkDirection);
+        
         /**
          * Position the player
          */
-        Vector3f vt = new Vector3f(0, 10, 0);
+        Vector3f vt = new Vector3f(0, 5, 0);
         player.spatial.setLocalTranslation(vt);
         player.spatial.addControl(player.characterControl);
-        Vector3f walkDirection = Vector3f.UNIT_X.multLocal(P.run_speed);
-
-        player.characterControl.setWalkDirection(walkDirection);
+        
         return player;
     }
 }
