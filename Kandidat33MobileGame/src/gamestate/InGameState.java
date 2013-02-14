@@ -25,6 +25,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import java.util.LinkedList;
 import variables.P;
@@ -194,6 +195,7 @@ public class InGameState extends AbstractAppState {
             temp = new Geometry("Platform", new Box(Vector3f.ZERO, P.platformLength / 2, P.platformHeight, P.platformWidth));
             temp.setMaterial(platformMaterial);
             System.out.println(platforms.getFirst().getLocalTranslation().x);
+            temp.setLocalTranslation(platforms.getFirst().getLocalTranslation().x + 1 * P.platformLength,
                     platforms.getFirst().getLocalTranslation().y,
                     platforms.getFirst().getLocalTranslation().z);
             platforms.addFirst(temp);
