@@ -1,16 +1,12 @@
 package gamestate;
 
 import com.jme3.app.Application;
-import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -19,10 +15,8 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -51,11 +45,12 @@ public class InGameState extends AbstractAppState {
     private LinkedList<Geometry> platforms; 
     private Material platformMaterial;
     
+    private Player player;
     // Refactor player
-    private Box playerModel;
-    private Material playerMaterial;
-    private Node playerNode;
-    private CharacterControl playerCharacter;
+    //private Box playerModel;
+    //private Material playerMaterial;
+    //private Node playerNode;
+    //private CharacterControl playerCharacter;
 
     
 
@@ -76,6 +71,7 @@ public class InGameState extends AbstractAppState {
         this.viewPort = this.app.getViewPort();
         this.physics = new BulletAppState();
         this.stateManager.attach(physics);
+        
         generateLevel();
     }
 
@@ -102,9 +98,14 @@ public class InGameState extends AbstractAppState {
 
     private void generateLevel() {
         generateMaterials();
-        generateModels();
         generatePlatforms();
-        generatePlayer();
+        
+        // Create player and attach it to the Scene Graph and Physics Space
+        this.player = Player.createPlayer(
+                new PlayerSceneObjectDataSource(this.assetManager));
+        this.player.addToNode(rootNode);
+        this.player.addToPhysicsSpace(physics.getPhysicsSpace());
+        
         initInputs();
         
     }
@@ -127,13 +128,9 @@ public class InGameState extends AbstractAppState {
     private void generateMaterials() {
         platformMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         platformMaterial.setColor("Color", ColorRGBA.Blue);
-        playerMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        playerMaterial.setColor("Color", ColorRGBA.Red);
-    }
-    
-    private void generateModels() {
-        playerModel = new Box(Vector3f.ZERO, 2f, 2f, 3f);
-        playerModel.scaleTextureCoordinates(new Vector2f(1f, .5f));
+        //Material playerMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        //playerMaterial.setColor("Color", ColorRGBA.Red);
+        //this.player.setMaterial(playerMaterial);
     }
 
     private void generatePlatforms() {
@@ -164,38 +161,6 @@ public class InGameState extends AbstractAppState {
         }
     }
 
-    private void generatePlayer() {
-         Geometry playerGeo = new Geometry("player", playerModel);
-         playerGeo.setMaterial(playerMaterial);
-         playerNode = new Node();
-         playerNode.attachChild(playerGeo);
-        
-         /**
-         * Create a CharacterControl object
-         */
-        CapsuleCollisionShape shape = new CapsuleCollisionShape(2f, 2f);
-        playerCharacter = new CharacterControl(shape, 0.05f);
-        playerCharacter.setJumpSpeed(P.jump_speed);
-
-        /**
-         * Position the player
-         */
-        Vector3f vt = new Vector3f(0, 10, 0);
-        playerNode.setLocalTranslation(vt);
-
-        rootNode.attachChild(playerNode);
-
-
-
-        playerNode.addControl(playerCharacter);
-        physics.getPhysicsSpace().add(playerCharacter);
-        Vector3f walkDirection = Vector3f.UNIT_X.multLocal(P.run_speed);
-
-        playerCharacter.setWalkDirection(walkDirection);
-        
-        //throw new UnsupportedOperationException("Not yet implemented");
-    }
-
     /**
      * Sets up the input. Spacebar jumps the character.
      */
@@ -211,7 +176,7 @@ public class InGameState extends AbstractAppState {
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String binding, boolean value, float tpf) {
             if (binding.equals("jump")) {
-                playerCharacter.jump();
+                player.characterControl.jump();
             }
         }
     };

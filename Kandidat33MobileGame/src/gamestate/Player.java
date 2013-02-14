@@ -3,6 +3,7 @@
  */
 package gamestate;
 
+import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
@@ -10,6 +11,7 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import variables.P;
 
@@ -30,24 +32,22 @@ public class Player {
     public Material material;
     
     // Hook scenegraph
-    public Node node;
+    public Spatial spatial;
     public CharacterControl characterControl;
     private Player(){}
     
     public void addToNode(Node node){
-        node.attachChild(this.node);
+        System.out.println(node);
+        System.out.println(this.spatial);
+        node.attachChild(this.spatial);
     }
     public void addToPhysicsSpace(PhysicsSpace physicsSpace){
         physicsSpace.add(this.characterControl);
     }
     
-    public static Player createPlayer(){
+    public static Player createPlayer(SceneObjectDataSource dataSource){
         Player player = new Player();
-        player.node = new Node();
-        
-        Geometry playerGeometry = new Geometry("player", player.model);
-        playerGeometry.setMaterial(player.material);       
-        player.node.attachChild(playerGeometry);
+        player.spatial = dataSource.getSceneObject();
         
          /**
          * Create the players CharacterControl object
@@ -60,17 +60,11 @@ public class Player {
          * Position the player
          */
         Vector3f vt = new Vector3f(0, 10, 0);
-        player.node.setLocalTranslation(vt);
-
-        player.node.addControl(player.characterControl);
+        player.spatial.setLocalTranslation(vt);
+        player.spatial.addControl(player.characterControl);
         Vector3f walkDirection = Vector3f.UNIT_X.multLocal(P.run_speed);
 
         player.characterControl.setWalkDirection(walkDirection);
-        return new Player();
-    }
-    
-    private CapsuleCollisionShape createCapsuleCollisionShape(){
-        return null;
-        
+        return player;
     }
 }
