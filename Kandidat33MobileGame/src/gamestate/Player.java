@@ -35,7 +35,27 @@ public class Player {
     public CharacterControl characterControl;
     
     
-    private Player(){}
+    public Player(SceneObjectDataSource dataSource){
+        this.spatial = dataSource.getSceneObject();
+        
+         /**
+         * Create the players CharacterControl object
+         */
+        CapsuleCollisionShape shape = new CapsuleCollisionShape(2f, 2f);
+        this.characterControl = new CharacterControl(shape, 0.05f);
+        this.characterControl.setJumpSpeed(P.jump_speed);
+
+        Vector3f walkDirection = Vector3f.UNIT_X.multLocal(P.run_speed);
+        this.characterControl.setWalkDirection(walkDirection);
+        
+        /**
+         * Position the player
+         */
+        Vector3f vt = new Vector3f(0, 5, 0);
+        this.spatial.setLocalTranslation(vt);
+        this.spatial.addControl(this.characterControl);
+        
+    }
     
     public void addToNode(Node node){
         node.attachChild(this.spatial);
@@ -45,27 +65,7 @@ public class Player {
         physicsSpace.add(this.characterControl);
     }
     
-    public static Player createPlayer(SceneObjectDataSource dataSource){
-        Player player = new Player();
-        player.spatial = dataSource.getSceneObject();
-        
-         /**
-         * Create the players CharacterControl object
-         */
-        CapsuleCollisionShape shape = new CapsuleCollisionShape(2f, 2f);
-        player.characterControl = new CharacterControl(shape, 0.05f);
-        player.characterControl.setJumpSpeed(P.jump_speed);
-
-        Vector3f walkDirection = Vector3f.UNIT_X.multLocal(P.run_speed);
-        player.characterControl.setWalkDirection(walkDirection);
-        
-        /**
-         * Position the player
-         */
-        Vector3f vt = new Vector3f(0, 5, 0);
-        player.spatial.setLocalTranslation(vt);
-        player.spatial.addControl(player.characterControl);
-        
-        return player;
+    public void jump(){
+        this.characterControl.jump();
     }
 }

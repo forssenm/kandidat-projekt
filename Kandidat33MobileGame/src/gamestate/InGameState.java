@@ -20,6 +20,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import java.util.LinkedList;
 import variables.P;
@@ -42,6 +43,8 @@ public class InGameState extends AbstractAppState {
     // Refactor platform. 
     // Platform controller code might be in the InGameState 
     // but should follow a protocol.
+    private PlatformController platformController;
+    
     private LinkedList<Geometry> platforms; 
     private Material platformMaterial;
     
@@ -72,7 +75,7 @@ public class InGameState extends AbstractAppState {
         this.physics = new BulletAppState();
         this.stateManager.attach(physics);
         
-        generateLevel();
+        setup();
     }
 
     @Override
@@ -96,20 +99,22 @@ public class InGameState extends AbstractAppState {
     public void update(float tpf) {
     }
 
-    private void generateLevel() {
-        generateMaterials();
-        generatePlatforms();
+    private void setup() {
+        PlatformFactory platformFactory = new PlatformFactory(
+                this.assetManager,
+                this.rootNode,
+                this.physics.getPhysicsSpace());
+        this.platformController = new PlatformController(platformFactory);
+        
         
         // Create player and attach it to the Scene Graph and Physics Space
-        this.player = Player.createPlayer(
-                new PlayerSceneObjectDataSource(this.assetManager));
+        this.player = new Player(new PlayerSceneObjectDataSource(this.assetManager));
         this.player.addToNode(rootNode);
         this.player.addToPhysicsSpace(physics.getPhysicsSpace());
         
         initInputs();
-        
     }
-
+    
     /*
      private ChaseCamera chaseCam;
      
@@ -124,43 +129,7 @@ public class InGameState extends AbstractAppState {
      chaseCam.setDefaultDistance(50);
      }
      */
-
-    private void generateMaterials() {
-        platformMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        platformMaterial.setColor("Color", ColorRGBA.Blue);
-        //Material playerMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        //playerMaterial.setColor("Color", ColorRGBA.Red);
-        //this.player.setMaterial(playerMaterial);
-    }
-
-    private void generatePlatforms() {
-        platforms = new LinkedList<Geometry>();
-        Geometry firstPlatform = new Geometry("Platform", new Box(Vector3f.ZERO, P.platformLength / 2, P.platformHeight, P.platformWidth));
-        firstPlatform.setMaterial(platformMaterial);
-        firstPlatform.setLocalTranslation(0, 0 - 0.1f, 0);
-        platforms.add(0, firstPlatform);
-        rootNode.attachChild(firstPlatform);
-        Geometry platformGeometry;
-        RigidBodyControl platformRigidBodyControll;
-        for (int i = 0; i < P.platformsPerLevel; i++) {
-            platformGeometry = new Geometry("Platform", new Box(Vector3f.ZERO, P.platformLength / 2, P.platformHeight, P.platformWidth));
-            platformGeometry.setMaterial(platformMaterial);
-            System.out.println(platforms.getFirst().getLocalTranslation().x);
-            platformGeometry.setLocalTranslation(platforms.getFirst().getLocalTranslation().x + 1 * P.platformLength,
-                    platforms.getFirst().getLocalTranslation().y,
-                    platforms.getFirst().getLocalTranslation().z);
-            platforms.addFirst(platformGeometry);
-            rootNode.attachChild(platforms.getFirst());
-
-            // Make the platform physical
-            platformRigidBodyControll = new RigidBodyControl(0.0f);
-            //platformRigidBodyControll.setKinematic(true);
-            platformGeometry.addControl(platformRigidBodyControll);
-            physics.getPhysicsSpace().add(platformRigidBodyControll);
-
-        }
-    }
-
+    
     /**
      * Sets up the input. Spacebar jumps the character.
      */
@@ -176,7 +145,7 @@ public class InGameState extends AbstractAppState {
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String binding, boolean value, float tpf) {
             if (binding.equals("jump")) {
-                player.characterControl.jump();
+                player.jump();
             }
         }
     };
