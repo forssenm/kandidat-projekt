@@ -16,9 +16,9 @@ import com.jme3.material.MaterialDef;
 public class P {
 
     //Platform variables
-    public static final float platformLength = 1f;
-    public static final float platformWidth = 1f;
-    public static final float platformHeight = 0.1f;
+    public static final float platformLength = 1.0f;
+    public static final float platformWidth = 2f;
+    public static final float platformHeight = 0.5f;
     public static final int platformsPerLevel = 10;
     public static final float run_speed = 0.5f;
     public static final float jump_speed = 20f;

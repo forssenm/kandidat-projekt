@@ -7,6 +7,7 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -15,8 +16,10 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -111,24 +114,24 @@ public class InGameState extends AbstractAppState {
         this.player = new Player(new PlayerSceneObjectDataSource(this.assetManager));
         this.player.addToNode(rootNode);
         this.player.addToPhysicsSpace(physics.getPhysicsSpace());
-        
+        initCamera();
         initInputs();
     }
     
-    /*
+    
      private ChaseCamera chaseCam;
      
      private void initCamera() {
 
      // Enable a chase cam for this target (typically the player).
      Camera cam = new Camera();
-     chaseCam = new ChaseCamera(cam, playerNode, inputManager);
+     chaseCam = new ChaseCamera(cam, player.spatial, inputManager);
      chaseCam.setSmoothMotion(true);
      chaseCam.setTrailingEnabled(false);
      chaseCam.setDefaultHorizontalRotation(-FastMath.DEG_TO_RAD * 270);
      chaseCam.setDefaultDistance(50);
      }
-     */
+     
     
     /**
      * Sets up the input. Spacebar jumps the character.

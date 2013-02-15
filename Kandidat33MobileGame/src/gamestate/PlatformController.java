@@ -26,9 +26,9 @@ public class PlatformController {
         
         float positions[] = {0.0f,5.0f,15.0f}; 
         
-        for(int i = 0; i < 3/*P.platformsPerLevel*/; i++){
+        for(int i = 0; i < P.platformsPerLevel; i++){
             platform = platformFactory.createPlatform();
-            platform.rigidBodyControl.setPhysicsLocation(new Vector3f(positions[i],0,0));
+            platform.rigidBodyControl.setPhysicsLocation(new Vector3f(10.0f*i,0,0));
             this.platforms.add(platform);
         }
     }
