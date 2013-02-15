@@ -16,6 +16,8 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.light.DirectionalLight;
+import com.jme3.light.SpotLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -26,6 +28,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.LightControl;
 import com.jme3.scene.shape.Box;
 import java.util.LinkedList;
 import variables.P;
@@ -51,6 +54,9 @@ public class InGameState extends AbstractAppState {
     private Box playerDeathModel;
     private Node playerNode;
     private CharacterControl playerCharacter;
+    private Vector3f playerLightPosition;
+    private SpotLight playerSpot;
+    private Vector3f directionToPlayer;
 
     /**
      * This method initializes the the InGameState
@@ -93,7 +99,12 @@ public class InGameState extends AbstractAppState {
 
     @Override
     public void update(float tpf) {
-        if(playerNode.getLocalTranslation().y < -1) {
+        directionToPlayer = playerNode.getLocalTranslation().
+                subtract(playerLightPosition);
+        playerSpot.setDirection(directionToPlayer);
+
+
+        if (playerNode.getLocalTranslation().y < -1) {
             playerDeath();
         }
     }
@@ -124,6 +135,8 @@ public class InGameState extends AbstractAppState {
         generatePlayer();
         initInputs();
         initCamera();
+        initLights();
+
 
     }
 
@@ -160,18 +173,58 @@ public class InGameState extends AbstractAppState {
         chaseCam.setDefaultDistance(50);
         // Set the camera to stay facing the side of the player
         chaseCam.setDefaultHorizontalRotation(-FastMath.DEG_TO_RAD * 265);
-        chaseCam.setDefaultVerticalRotation(0);
+        chaseCam.setDefaultVerticalRotation(FastMath.DEG_TO_RAD * 10);
     }
 
+    private void initLights() {
+        DirectionalLight sun = new DirectionalLight();
+        sun.setColor(ColorRGBA.White);
+        sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
+        inGameRootNode.addLight(sun);
+
+        playerSpot = new SpotLight();
+        SpotLight backwardSpot = new SpotLight();
+        playerSpot.setSpotRange(1000f);                           // distance
+        playerSpot.setSpotInnerAngle(15f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
+        playerSpot.setSpotOuterAngle(35f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
+        playerSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
+
+                playerLightPosition = new Vector3f(100f, 50f, 0f);
+        playerSpot.setPosition(playerLightPosition);
+        
+        // find the direction to shine in
+        directionToPlayer = playerNode.getLocalTranslation().
+                subtract(playerLightPosition);
+        playerSpot.setDirection(directionToPlayer);
+                
+        inGameRootNode.addLight(playerSpot);
+
+        backwardSpot.setSpotRange(100f);                           // distance
+        backwardSpot.setSpotOuterAngle(35f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
+        backwardSpot.setSpotInnerAngle(15f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
+        backwardSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
+        backwardSpot.setPosition(new Vector3f(200f, 30f, 0f));    // shine from above end
+        backwardSpot.setDirection(new Vector3f(-200f, -30f, 0f));             // shine along path
+
+
+        //inGameRootNode.addLight(backwardSpot);
+    }
+
+    
+    
     private void generateMaterials() {
-        platformMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        platformMaterial.setColor("Color", ColorRGBA.Blue);
-        playerMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        playerMaterial.setColor("Color", ColorRGBA.Red);
+        platformMaterial = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        platformMaterial.setBoolean("UseMaterialColors", true);
+        platformMaterial.setColor("Ambient", ColorRGBA.Blue);
+        platformMaterial.setColor("Diffuse", ColorRGBA.Blue);
+        playerMaterial = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        playerMaterial.setBoolean("UseMaterialColors", true);
+        playerMaterial.setColor("Ambient", ColorRGBA.Red);
+        playerMaterial.setColor("Diffuse", ColorRGBA.Red);
     }
 
     private void generateModels() {
-        playerModel = new Box(Vector3f.ZERO, 2f, 2f, 3f);
+        playerModel = new Box(Vector3f.ZERO, 2f, 3f, 2f);
         playerModel.scaleTextureCoordinates(new Vector2f(1f, .5f));
         playerDeathModel = new Box(Vector3f.ZERO,1f, 1f, 1f);
         playerDeathModel.scaleTextureCoordinates(new Vector2f(1f, .5f));
@@ -195,7 +248,7 @@ public class InGameState extends AbstractAppState {
             temp = new Geometry("Platform", new Box(Vector3f.ZERO, P.platformLength / 2, P.platformHeight, P.platformWidth));
             temp.setMaterial(platformMaterial);
             System.out.println(platforms.getFirst().getLocalTranslation().x);
-            temp.setLocalTranslation(platforms.getFirst().getLocalTranslation().x + 1 * P.platformLength,
+            temp.setLocalTranslation(platforms.getFirst().getLocalTranslation().x + 1.4f * P.platformLength,
                     platforms.getFirst().getLocalTranslation().y,
                     platforms.getFirst().getLocalTranslation().z);
             platforms.addFirst(temp);
@@ -224,7 +277,7 @@ public class InGameState extends AbstractAppState {
         /**
          * Position the player
          */
-        Vector3f vt = new Vector3f(0, 2, 0);
+        Vector3f vt = new Vector3f(-7, 2, 0);
         playerNode.setLocalTranslation(vt);
 
         inGameRootNode.attachChild(playerNode);
