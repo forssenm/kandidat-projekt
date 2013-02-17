@@ -41,7 +41,7 @@ public class Player {
          /**
          * Create the players CharacterControl object
          */
-        CapsuleCollisionShape shape = new CapsuleCollisionShape(0f, 4f);
+        CapsuleCollisionShape shape = new CapsuleCollisionShape(0f, 2f);
         this.characterControl = new CharacterControl(shape, 0.05f);
         this.characterControl.setJumpSpeed(P.jump_speed);
 

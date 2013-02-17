@@ -25,7 +25,7 @@ public class PlayerSceneObjectDataSource implements SceneObjectDataSource{
     }
     public Spatial getSceneObject(){
         Spatial node = new Node();
-        Box model = new Box(Vector3f.ZERO, 2f, 2f, 3f);
+        Box model = new Box(Vector3f.ZERO, 1f, 1f, 1f);
         model.scaleTextureCoordinates(new Vector2f(1f, .5f));
         Geometry geometry = new Geometry("player", model);
         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
