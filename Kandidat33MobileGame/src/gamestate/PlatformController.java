@@ -26,7 +26,7 @@ public class PlatformController {
         
         for(int i = 0; i < P.platformsPerLevel; i++){
             platform = platformFactory.createPlatform();
-            platform.rigidBodyControl.setPhysicsLocation(new Vector3f((P.platformDistance+2*P.platformLength)*i,0,0));
+            platform.getRigidBodyControl().setPhysicsLocation(new Vector3f((P.platformDistance+2*P.platformLength)*i,0,0));
             this.platforms.add(platform);
         }
     }

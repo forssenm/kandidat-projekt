@@ -15,16 +15,26 @@ import com.jme3.scene.Spatial;
  */
 public class Platform {
        // Scene Object
-    public Spatial spatial;
+    private Spatial spatial;
+    private Node node;
     
     // Physics connection
-    public RigidBodyControl rigidBodyControl;
+    private RigidBodyControl rigidBodyControl;
     
     
     public Platform(SceneObjectDataSource dataSource){
-        this.spatial = dataSource.getSceneObject();   
-        this.rigidBodyControl = new RigidBodyControl(0.0f);
-        this.spatial.addControl(this.rigidBodyControl);
+        Node node = new Node();
+        
+        Spatial spatial = dataSource.getSceneObject();
+        
+        RigidBodyControl rigidBodyControl = new RigidBodyControl(0.0f);
+        
+        spatial.addControl(this.rigidBodyControl);
+        node.attachChild(spatial);
+        
+        this.node = node;
+        this.spatial = spatial;
+        this.rigidBodyControl = rigidBodyControl;
     }
     
     public void addToNode(Node node){
@@ -34,4 +44,30 @@ public class Platform {
     public void addToPhysicsSpace(PhysicsSpace physicsSpace){
         physicsSpace.add(this.rigidBodyControl);
     }
+
+    public Spatial getSpatial() {
+        return spatial;
+    }
+
+    public void setSpatial(Spatial spatial) {
+        this.spatial = spatial;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
+    }
+
+    public RigidBodyControl getRigidBodyControl() {
+        return rigidBodyControl;
+    }
+
+    public void setRigidBodyControl(RigidBodyControl rigidBodyControl) {
+        this.rigidBodyControl = rigidBodyControl;
+    }
+    
+    
 }
