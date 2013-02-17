@@ -43,21 +43,9 @@ public class InGameState extends AbstractAppState {
     private ViewPort viewPort;
     private BulletAppState physics;
     
-    // Refactor platform. 
-    // Platform controller code might be in the InGameState 
-    // but should follow a protocol.
     private PlatformController platformController;
     
-    private LinkedList<Geometry> platforms; 
-    private Material platformMaterial;
-    
     private Player player;
-    // Refactor player
-    //private Box playerModel;
-    //private Material playerMaterial;
-    //private Node playerNode;
-    //private CharacterControl playerCharacter;
-
     
 
     /**
@@ -114,7 +102,7 @@ public class InGameState extends AbstractAppState {
         this.player = new Player(new PlayerSceneObjectDataSource(this.assetManager));
         this.player.addToNode(rootNode);
         this.player.addToPhysicsSpace(physics.getPhysicsSpace());
-        initCamera();
+        //initCamera();
         initInputs();
     }
     

@@ -5,7 +5,6 @@
 package gamestate;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,11 +23,10 @@ public class PlatformController {
         platforms = new LinkedList<Platform>();
         Platform platform;
         
-        float positions[] = {0.0f,5.0f,15.0f}; 
         
         for(int i = 0; i < P.platformsPerLevel; i++){
             platform = platformFactory.createPlatform();
-            platform.rigidBodyControl.setPhysicsLocation(new Vector3f(10.0f*i,0,0));
+            platform.rigidBodyControl.setPhysicsLocation(new Vector3f((P.platformDistance+2*P.platformLength)*i,0,0));
             this.platforms.add(platform);
         }
     }
