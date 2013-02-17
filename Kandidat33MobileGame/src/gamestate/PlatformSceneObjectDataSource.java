@@ -18,29 +18,33 @@ import variables.P;
  * @author dagen
  */
 public class PlatformSceneObjectDataSource implements SceneObjectDataSource{
-        AssetManager assetManager;
+    AssetManager assetManager;
     
     private static int counter = 0;
-            
+    private static Geometry geometery;
+    
     public PlatformSceneObjectDataSource(AssetManager assetManager){
         this.assetManager = assetManager;
     }
+    
     public Spatial getSceneObject(){
-        Box model = new Box(
-                Vector3f.ZERO, 
-                P.platformLength , 
-                P.platformHeight, 
-                P.platformWidth);
+        Geometry geometry;
+        if(this.geometery == null){
+            Box model = new Box(Vector3f.ZERO,P.platformLength,P.platformHeight,P.platformWidth);
+            
+            geometry = new Geometry("Platform" , model);
         
-        Geometry geometry = new Geometry("Platform" , model);
+            Material material = new Material(this.assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+       
+            ColorRGBA color = ColorRGBA.Blue;
+            material.setColor("Color", color);
         
-        Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        
-        ColorRGBA color = ColorRGBA.Blue;
-        material.setColor("Color", color);
-        
-        geometry.setMaterial(material);
-        //geometry.setLocalTranslation(0, 0 - 0.1f, 0);
+            geometry.setMaterial(material);
+            
+            this.geometery = geometery;
+        }else{
+            geometry = this.geometery.clone(true);
+        }
         return geometry;
     }
 }
