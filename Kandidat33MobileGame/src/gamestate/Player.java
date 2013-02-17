@@ -3,16 +3,12 @@
  */
 package gamestate;
 
-import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
-import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 import variables.P;
 
 /* Klassen är till att börja med bara 
@@ -29,6 +25,7 @@ import variables.P;
  */
 public class Player {
     // Scene Object
+    private Node node;
     public Spatial spatial;
     
     // Physics connection
@@ -36,25 +33,26 @@ public class Player {
     
     
     public Player(SceneObjectDataSource dataSource){
-        this.spatial = dataSource.getSceneObject();
+        Node node = new Node();
+        Spatial spatial = dataSource.getSceneObject();
         
-         /**
-         * Create the players CharacterControl object
-         */
         CapsuleCollisionShape shape = new CapsuleCollisionShape(0f, 2f);
-        this.characterControl = new CharacterControl(shape, 0.05f);
-        this.characterControl.setJumpSpeed(P.jump_speed);
+        CharacterControl characterControl = new CharacterControl(shape, 0.05f);
+        characterControl.setJumpSpeed(P.jump_speed);
 
         Vector3f walkDirection = Vector3f.UNIT_X.multLocal(P.run_speed);
-        this.characterControl.setWalkDirection(walkDirection);
+        characterControl.setWalkDirection(walkDirection);
         
-        /**
-         * Position the player
-         */
         Vector3f vt = new Vector3f(0, 5, 0);
-        this.spatial.setLocalTranslation(vt);
-        this.spatial.addControl(this.characterControl);
+        spatial.setLocalTranslation(vt);
         
+        
+        spatial.addControl(characterControl);
+        node.attachChild(spatial);
+        
+        this.node = node;
+        this.spatial = spatial;
+        this.characterControl = characterControl;
     }
     
     public void addToNode(Node node){
@@ -67,5 +65,29 @@ public class Player {
     
     public void jump(){
         this.characterControl.jump();
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
+    }
+
+    public Spatial getSpatial() {
+        return spatial;
+    }
+
+    public void setSpatial(Spatial spatial) {
+        this.spatial = spatial;
+    }
+
+    public CharacterControl getCharacterControl() {
+        return characterControl;
+    }
+
+    public void setCharacterControl(CharacterControl characterControl) {
+        this.characterControl = characterControl;
     }
 }
