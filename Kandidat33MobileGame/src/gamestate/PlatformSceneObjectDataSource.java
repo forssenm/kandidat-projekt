@@ -21,7 +21,7 @@ public class PlatformSceneObjectDataSource implements SceneObjectDataSource{
     AssetManager assetManager;
     
     private static int counter = 0;
-    private static Geometry geometery;
+    private static Geometry geometry;
     
     public PlatformSceneObjectDataSource(AssetManager assetManager){
         this.assetManager = assetManager;
@@ -29,7 +29,7 @@ public class PlatformSceneObjectDataSource implements SceneObjectDataSource{
     
     public Spatial getSceneObject(){
         Geometry geometry;
-        if(this.geometery == null){
+        if(this.geometry == null){
             Box model = new Box(Vector3f.ZERO,P.platformLength*2,P.platformHeight,P.platformWidth);
             
             geometry = new Geometry("Platform" , model);
@@ -44,8 +44,8 @@ public class PlatformSceneObjectDataSource implements SceneObjectDataSource{
         
             geometry.setMaterial(material);
             
-            return (this.geometery = geometry);
+            return (this.geometry = geometry);
         }
-        return (geometry = this.geometery.clone(true));
+        return (geometry = this.geometry.clone(true));
     }
 }
