@@ -23,16 +23,16 @@ public class Platform {
     
     
     public Platform(SceneObjectDataSource dataSource){
-        Node node = new Node();
-        Spatial spatial = dataSource.getSceneObject();
-        RigidBodyControl rigidBodyControl = new RigidBodyControl(0.0f);
-        
+        node = new Node();
+        spatial = dataSource.getSceneObject();
+        rigidBodyControl = new RigidBodyControl(0.0f);
+        System.out.println(spatial);
         spatial.addControl(rigidBodyControl);
         node.attachChild(spatial);
         
-        this.node = node;
-        this.spatial = spatial;
-        this.rigidBodyControl = rigidBodyControl;
+//        this.node = node;
+//        this.spatial = spatial;
+//        this.rigidBodyControl = rigidBodyControl;
     }
     
     public void addToNode(Node node){
