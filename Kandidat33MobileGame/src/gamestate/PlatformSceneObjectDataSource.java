@@ -41,7 +41,7 @@ public class PlatformSceneObjectDataSource implements SceneObjectDataSource{
         
             geometry.setMaterial(material);
             
-            return (this.geometery = geometery);
+            return (this.geometery = geometry);
         }
         return (geometry = this.geometery.clone(true));
     }
