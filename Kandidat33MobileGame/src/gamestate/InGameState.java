@@ -169,7 +169,9 @@ public class InGameState extends AbstractAppState {
      * Sets up the input. Mouseclick jumps the character.
      */
     private void initInputs() {
-
+        inputManager.addMapping("jump",
+                new KeyTrigger(KeyInput.KEY_SPACE));
+        
         inputManager.addMapping("jump",
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(actionListener, "jump");
