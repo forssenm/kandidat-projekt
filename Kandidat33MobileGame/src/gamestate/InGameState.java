@@ -79,41 +79,20 @@ public class InGameState extends AbstractAppState {
 
     @Override
     public void update(float tpf) {
-        if(playerNode.getLocalTranslation().y < -1) {
-            playerDeath();
-        }
     }
     
-    private void playerDeath() {
-        playerNode.getControl(CharacterControl.class).setEnabled(false);
-        System.out.println("Game Over!");
-        Spatial pG = playerNode.getChild("PlayerModel");
-
-        playerNode.detachChild(pG);
-
-                //detachChildNamed("PlayerModel");
-        Geometry playerGeo = new Geometry("PlayerDeathModel", playerDeathModel);
-        
-        //playerGeo.setLocalTranslation(pG.getLocalTranslation());
-        playerGeo.setMaterial(playerMaterial);
-        playerNode.attachChild(playerGeo);
-        
-
-        setEnabled(false);
-        //stateManager.detach(this);
-    }
 
     private void setup() {
         PlatformFactory platformFactory = new PlatformFactory(
                 this.assetManager,
-                this.rootNode,
+                this.inGameRootNode,
                 this.physics.getPhysicsSpace());
         this.platformController = new PlatformController(platformFactory);
         
         
         // Create player and attach it to the Scene Graph and Physics Space
         this.player = new Player(new PlayerSceneObjectDataSource(this.assetManager));
-        this.player.addToNode(rootNode);
+        this.player.addToNode(inGameRootNode);
         this.player.addToPhysicsSpace(physics.getPhysicsSpace());
         initCamera();
         initInputs();
