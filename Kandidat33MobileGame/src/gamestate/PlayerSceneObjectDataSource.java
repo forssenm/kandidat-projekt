@@ -28,8 +28,15 @@ public class PlayerSceneObjectDataSource implements SceneObjectDataSource{
         Box model = new Box(Vector3f.ZERO, 1f, 1f, 1f);
         model.scaleTextureCoordinates(new Vector2f(1f, .5f));
         Geometry geometry = new Geometry("player", model);
-        Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        material.setColor("Color", ColorRGBA.Red);
+        Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+
+        ColorRGBA color = ColorRGBA.Red;
+        material.setBoolean("UseMaterialColors", true);
+        material.setColor("Ambient", color);
+        material.setColor("Diffuse", ColorRGBA.Blue);
+        material.setColor("Specular", ColorRGBA.Green);
+        material.setFloat("Shininess",12);
+
         geometry.setMaterial(material);
         return geometry;
     }
