@@ -30,14 +30,17 @@ public class PlatformSceneObjectDataSource implements SceneObjectDataSource{
     public Spatial getSceneObject(){
         Geometry geometry;
         if(this.geometery == null){
-            Box model = new Box(Vector3f.ZERO,P.platformLength,P.platformHeight,P.platformWidth);
+            Box model = new Box(Vector3f.ZERO,P.platformLength*2,P.platformHeight,P.platformWidth);
             
             geometry = new Geometry("Platform" , model);
         
-            Material material = new Material(this.assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+            Material material = new Material(this.assetManager, "Common/MatDefs/Light/Lighting.j3md");
        
             ColorRGBA color = ColorRGBA.Blue;
-            material.setColor("Color", color);
+            material.setBoolean("UseMaterialColors", true);
+            material.setColor("Ambient", color);
+            material.setColor("Diffuse", color);
+            material.setColor("Specular", color);
         
             geometry.setMaterial(material);
             
