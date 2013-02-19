@@ -13,9 +13,19 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.light.DirectionalLight;
+import com.jme3.light.SpotLight;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.LightControl;
+import com.jme3.scene.shape.Box;
+import java.util.LinkedList;
+import variables.P;
 
 /**
  * This class handles all the in-game things
@@ -36,6 +46,9 @@ public class InGameState extends AbstractAppState {
     
     private Player player;
     
+    private Vector3f playerLightPosition;
+    private SpotLight playerSpot;
+    private Vector3f directionToPlayer;
 
     /**
      * This method initializes the the InGameState
@@ -79,8 +92,10 @@ public class InGameState extends AbstractAppState {
 
     @Override
     public void update(float tpf) {
+        directionToPlayer = player.getNode().getLocalTranslation().
+                subtract(playerLightPosition);
+        playerSpot.setDirection(directionToPlayer);
     }
-    
 
     private void setup() {
         PlatformFactory platformFactory = new PlatformFactory(
@@ -88,14 +103,16 @@ public class InGameState extends AbstractAppState {
                 this.inGameRootNode,
                 this.physics.getPhysicsSpace());
         this.platformController = new PlatformController(platformFactory);
-        
-        
+
+
         // Create player and attach it to the Scene Graph and Physics Space
         this.player = new Player(new PlayerSceneObjectDataSource(this.assetManager));
         this.player.addToNode(inGameRootNode);
         this.player.addToPhysicsSpace(physics.getPhysicsSpace());
         initCamera();
         initInputs();
+        initLights();
+
     }
     
     
@@ -110,6 +127,43 @@ public class InGameState extends AbstractAppState {
         this.chaseCam.setDefaultDistance(25);
      }
      
+
+    
+
+    private void initLights() {
+        DirectionalLight sun = new DirectionalLight();
+        sun.setColor(ColorRGBA.White);
+        sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
+        inGameRootNode.addLight(sun);
+
+        playerSpot = new SpotLight();
+        SpotLight backwardSpot = new SpotLight();
+        playerSpot.setSpotRange(1000f);                           // distance
+        playerSpot.setSpotInnerAngle(15f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
+        playerSpot.setSpotOuterAngle(35f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
+        playerSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
+
+                playerLightPosition = new Vector3f(100f, 50f, 0f);
+        playerSpot.setPosition(playerLightPosition);
+        
+        // find the direction to shine in
+        directionToPlayer = player.getNode().getLocalTranslation().
+                subtract(playerLightPosition);
+        playerSpot.setDirection(directionToPlayer);
+                
+        inGameRootNode.addLight(playerSpot);
+
+        backwardSpot.setSpotRange(100f);                           // distance
+        backwardSpot.setSpotOuterAngle(35f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
+        backwardSpot.setSpotInnerAngle(15f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
+        backwardSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
+        backwardSpot.setPosition(new Vector3f(200f, 30f, 0f));    // shine from above end
+        backwardSpot.setDirection(new Vector3f(-200f, -30f, 0f));             // shine along path
+
+
+        //inGameRootNode.addLight(backwardSpot);
+    }
+
     
     /**
      * Sets up the input. Mouseclick jumps the character.
