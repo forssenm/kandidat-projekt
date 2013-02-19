@@ -43,7 +43,7 @@ public class Player {
         Vector3f walkDirection = Vector3f.UNIT_X.multLocal(P.run_speed);
         characterControl.setWalkDirection(walkDirection);
         
-        Vector3f vt = new Vector3f(0, 5, 0);
+        Vector3f vt = new Vector3f(0, 15f, 0);
         spatial.setLocalTranslation(vt);
         
         

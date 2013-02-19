@@ -7,7 +7,6 @@ package gamestate;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import java.util.LinkedList;
-import java.util.List;
 import variables.P;
 
 /**
@@ -16,23 +15,32 @@ import variables.P;
  */
 public class PlatformController {
     private AssetManager assetManager;
-    public List<Platform> platforms;
+    public LinkedList<Platform> platforms;
     
     
     public PlatformController(PlatformFactory platformFactory){
         platforms = new LinkedList<Platform>();
         Platform platform;
-        
-        
-        for(int i = 0; i < P.platformsPerLevel; i++){
+        Double random;
+        //Adding the first platform
+        platform = platformFactory.createPlatform();
+        platform.getRigidBodyControl().setPhysicsLocation(new Vector3f(10f,10f,0));
+        platforms.add(platform);
+        //Adding all the following platforms
+        for(int i = 1; i < P.platformsPerLevel; i++){
+            random = 5*Math.random();
             platform = platformFactory.createPlatform();
-            platform.getRigidBodyControl().setPhysicsLocation(new Vector3f((P.platformDistance+2*P.platformLength)*i,0,0));
-            this.platforms.add(platform);
+            platform.getRigidBodyControl().setPhysicsLocation(new Vector3f((P.platformDistance+2*P.platformLength)*i,(float)(platforms.getLast().getRigidBodyControl().getPhysicsLocation().y*random),0));
+            this.platforms.addLast(platform);
         }
     }
     
     public void addPlatform(Platform platform){
         this.platforms.add(platform);
         
+    }
+    
+    public void deletePlatform() {
+        platforms.remove(0);
     }
 }
