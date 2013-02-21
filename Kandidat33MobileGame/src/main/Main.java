@@ -2,6 +2,7 @@ package main;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.renderer.RenderManager;
+import gamestate.InGameState;
 import menustate.InMainMenuState;
 
 /**
@@ -18,12 +19,11 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         //flyCam.setEnabled(false);
-        stateManager.attach(new InMainMenuState());
+        stateManager.attach(new InGameState());
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        //TODO: add update code
     }
 
     @Override
