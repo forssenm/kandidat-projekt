@@ -26,11 +26,11 @@ public class PlatformSceneObjectDataSource implements SceneObjectDataSource{
     public PlatformSceneObjectDataSource(AssetManager assetManager){
         this.assetManager = assetManager;
     }
-    
+
     public Spatial getSceneObject(){
         Geometry geometry;
         if(this.geometry == null){
-            Box model = new Box(Vector3f.ZERO,P.platformLength*2,P.platformHeight,P.platformWidth);
+            Box model = new Box(Vector3f.ZERO,P.platformLength,P.platformHeight,P.platformWidth);
             
             geometry = new Geometry("Platform" , model);
         

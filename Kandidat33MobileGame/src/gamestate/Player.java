@@ -36,7 +36,7 @@ public class Player {
         Node node = new Node();
         Spatial spatial = dataSource.getSceneObject();
         
-        CapsuleCollisionShape shape = new CapsuleCollisionShape(0f, 2f);
+        CapsuleCollisionShape shape = new CapsuleCollisionShape(1f,0.5f);
         CharacterControl characterControl = new CharacterControl(shape, 0.05f);
         characterControl.setJumpSpeed(P.jump_speed);
 

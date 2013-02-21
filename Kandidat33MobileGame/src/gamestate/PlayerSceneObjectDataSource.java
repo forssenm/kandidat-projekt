@@ -33,8 +33,8 @@ public class PlayerSceneObjectDataSource implements SceneObjectDataSource{
         ColorRGBA color = ColorRGBA.Red;
         material.setBoolean("UseMaterialColors", true);
         material.setColor("Ambient", color);
-        material.setColor("Diffuse", ColorRGBA.Blue);
-        material.setColor("Specular", ColorRGBA.Green);
+        material.setColor("Diffuse", color);
+        material.setColor("Specular", color);
         material.setFloat("Shininess",12);
 
         geometry.setMaterial(material);

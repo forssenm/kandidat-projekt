@@ -92,7 +92,7 @@ public class InGameState extends AbstractAppState {
 
     @Override
     public void update(float tpf) {
-        directionToPlayer = player.getNode().getLocalTranslation().
+        directionToPlayer = player.getSpatial().getLocalTranslation().
                 subtract(playerLightPosition);
         playerSpot.setDirection(directionToPlayer);
     }
@@ -139,15 +139,15 @@ public class InGameState extends AbstractAppState {
         playerSpot = new SpotLight();
         SpotLight backwardSpot = new SpotLight();
         playerSpot.setSpotRange(1000f);                           // distance
-        playerSpot.setSpotInnerAngle(15f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
-        playerSpot.setSpotOuterAngle(35f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
+        playerSpot.setSpotInnerAngle(10f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
+        playerSpot.setSpotOuterAngle(15f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
         playerSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
 
                 playerLightPosition = new Vector3f(100f, 50f, 0f);
         playerSpot.setPosition(playerLightPosition);
         
         // find the direction to shine in
-        directionToPlayer = player.getNode().getLocalTranslation().
+        directionToPlayer = player.getSpatial().getLocalTranslation().
                 subtract(playerLightPosition);
         playerSpot.setDirection(directionToPlayer);
                 
