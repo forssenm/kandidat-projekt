@@ -19,10 +19,10 @@ import variables.P;
  */
 public class PlatformSceneObjectDataSource implements SceneObjectDataSource{
     AssetManager assetManager;
-    
+
     private static int counter = 0;
     private static Geometry geometry;
-    
+
     public PlatformSceneObjectDataSource(AssetManager assetManager){
         this.assetManager = assetManager;
     }
@@ -40,7 +40,7 @@ public class PlatformSceneObjectDataSource implements SceneObjectDataSource{
             material.setBoolean("UseMaterialColors", true);
             material.setColor("Ambient", color);
             material.setColor("Diffuse", color);
-            material.setColor("Specular", color);
+            material.setColor("Specular", ColorRGBA.White);
         
             geometry.setMaterial(material);
             

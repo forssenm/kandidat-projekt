@@ -138,7 +138,7 @@ public class InGameState extends AbstractAppState {
         //this.chaseCam.setSmoothMotion(true);
         this.chaseCam.setTrailingEnabled(false);
         this.chaseCam.setDefaultHorizontalRotation(-FastMath.DEG_TO_RAD * 270);
-        this.chaseCam.setDefaultDistance(25);
+        this.chaseCam.setDefaultDistance(50);
      }
      
 
@@ -148,13 +148,13 @@ public class InGameState extends AbstractAppState {
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.White);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
-        inGameRootNode.addLight(sun);
+        //inGameRootNode.addLight(sun);
 
         playerSpot = new SpotLight();
         SpotLight backwardSpot = new SpotLight();
         playerSpot.setSpotRange(1000f);                           // distance
-        playerSpot.setSpotInnerAngle(10f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
-        playerSpot.setSpotOuterAngle(15f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
+        playerSpot.setSpotInnerAngle(8f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
+        playerSpot.setSpotOuterAngle(12f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
         playerSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
 
                 playerLightPosition = new Vector3f(100f, 50f, 0f);
