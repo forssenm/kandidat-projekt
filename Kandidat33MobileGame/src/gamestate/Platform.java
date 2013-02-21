@@ -67,5 +67,8 @@ public class Platform {
         this.rigidBodyControl = rigidBodyControl;
     }
     
+    public float getPlatformX() {
+        return this.getSpatial().getLocalTranslation().x;
+    }
     
 }

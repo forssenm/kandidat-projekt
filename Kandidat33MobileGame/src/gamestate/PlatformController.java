@@ -24,16 +24,19 @@ public class PlatformController {
         Platform platform;
         Random random;
         int randomNumber;
+        
         //Adding the first platform
         platform = platformFactory.createPlatform();
         platform.getRigidBodyControl().setPhysicsLocation(new Vector3f(5f,10f,0));
         platforms.add(platform);
+        
         //Adding all the following platforms
         for(int i = 1; i < P.platformsPerLevel; i++){
             random=new Random();
             randomNumber=(random.nextInt(9)-4);
             platform = platformFactory.createPlatform();
-            platform.getRigidBodyControl().setPhysicsLocation(new Vector3f((P.platformDistance+2*P.platformLength)*i,(float)(platforms.getLast().getRigidBodyControl().getPhysicsLocation().y+randomNumber),0));
+            platform.getRigidBodyControl().setPhysicsLocation(new Vector3f((P.platformDistance+2*P.platformLength)*i,
+                        (float)(platforms.getLast().getRigidBodyControl().getPhysicsLocation().y+randomNumber),0));
             this.platforms.addLast(platform);
         }
     }

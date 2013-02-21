@@ -25,6 +25,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.LightControl;
 import com.jme3.scene.shape.Box;
 import java.util.LinkedList;
+import java.util.Random;
 import variables.P;
 
 /**
@@ -95,6 +96,19 @@ public class InGameState extends AbstractAppState {
         directionToPlayer = player.getSpatial().getLocalTranslation().
                 subtract(playerLightPosition);
         playerSpot.setDirection(directionToPlayer);
+        
+        //Check if the first platform can be moved
+        if(player.getSpatial().getLocalTranslation().x - platformController.platforms.getFirst().getPlatformX() > 10) {
+            System.out.println("Flytta");
+            Random random=new Random();
+            int randomNumber=(random.nextInt(9)-4);
+            Platform newPlatform = platformController.platforms.getFirst();
+            Platform previousPlatform = platformController.platforms.getLast(); 
+            newPlatform.getRigidBodyControl().setPhysicsLocation(new Vector3f((platformController.platforms.getLast().getSpatial().getLocalTranslation().x+2*P.platformLength),
+                (float)(previousPlatform.getRigidBodyControl().getPhysicsLocation().y+randomNumber),0));
+            platformController.platforms.addLast(newPlatform);
+            platformController.platforms.removeFirst();
+        }
     }
 
     private void setup() {
