@@ -31,7 +31,7 @@ public class PlatformController {
         //Adding all the following platforms
         for(int i = 1; i < P.platformsPerLevel; i++){
             random=new Random();
-            randomNumber=(random.nextInt(8)-4);
+            randomNumber=(random.nextInt(9)-4);
             platform = platformFactory.createPlatform();
             platform.getRigidBodyControl().setPhysicsLocation(new Vector3f((P.platformDistance+2*P.platformLength)*i,(float)(platforms.getLast().getRigidBodyControl().getPhysicsLocation().y+randomNumber),0));
             this.platforms.addLast(platform);
