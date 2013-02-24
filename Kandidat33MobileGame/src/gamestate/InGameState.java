@@ -5,6 +5,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
@@ -50,7 +51,9 @@ public class InGameState extends AbstractAppState {
     private Vector3f playerLightPosition;
     private SpotLight playerSpot;
     private Vector3f directionToPlayer;
-
+    
+    private AudioNode audioBackground; 
+    
     /**
      * This method initializes the the InGameState
      *
@@ -126,6 +129,7 @@ public class InGameState extends AbstractAppState {
         initCamera();
         initInputs();
         initLights();
+        initAudio();
 
     }
     
@@ -198,4 +202,14 @@ public class InGameState extends AbstractAppState {
             }
         }
     };
+    
+    private void initAudio(){
+        this.audioBackground = new AudioNode(assetManager, "Sound/Music/SpookyMusicForRunning.ogg", false);
+        this.audioBackground.setLooping(true);  // activate continuous playing
+        this.audioBackground.setPositional(false);
+        this.audioBackground.setLocalTranslation(Vector3f.ZERO.clone());
+        this.audioBackground.setVolume(3);
+        this.inGameRootNode.attachChild(this.audioBackground);
+        this.audioBackground.play(); // play continuously!
+    }
 }
