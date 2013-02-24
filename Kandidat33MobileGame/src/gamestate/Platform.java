@@ -6,6 +6,7 @@ package gamestate;
 
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
@@ -69,6 +70,16 @@ public class Platform {
     
     public float getPlatformX() {
         return this.getSpatial().getLocalTranslation().x;
+    }
+    
+    public Vector3f getPlatformPosition() {
+        return spatial.getLocalTranslation();
+    }
+    
+    public void setPlatformPosition(Vector3f position) {
+        rigidBodyControl.setEnabled(false);
+        spatial.setLocalTranslation(position);
+        rigidBodyControl.setEnabled(true);
     }
     
 }

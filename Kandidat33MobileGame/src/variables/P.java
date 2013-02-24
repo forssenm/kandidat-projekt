@@ -20,13 +20,7 @@ public class P {
     public static final float platformWidth = 2f;
     public static final float platformHeight = 0.5f;
     public static final float platformDistance = 6.0f;
-<<<<<<< HEAD
     public static final int platformsPerLevel = 3;
-    public static final float run_speed = 0.1f;
+    public static final float run_speed = 0.15f;
     public static final float jump_speed = 20f;
-=======
-    public static final int platformsPerLevel = 10;
-    public static final float run_speed = 0.2f;
-    public static final float jump_speed = 15f;
->>>>>>> Changed the look
 }

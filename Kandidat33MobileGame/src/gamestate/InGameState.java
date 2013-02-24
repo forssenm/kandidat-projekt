@@ -103,9 +103,9 @@ public class InGameState extends AbstractAppState {
             Random random=new Random();
             int randomNumber=(random.nextInt(9)-4);
             Platform newPlatform = platformController.platforms.getFirst();
-            Platform previousPlatform = platformController.platforms.getLast(); 
-            newPlatform.getRigidBodyControl().setPhysicsLocation(new Vector3f((platformController.platforms.getLast().getSpatial().getLocalTranslation().x+2*P.platformLength),
-                (float)(previousPlatform.getRigidBodyControl().getPhysicsLocation().y+randomNumber),0));
+            Platform previousPlatform = platformController.platforms.getLast();
+            Vector3f newPosition = previousPlatform.getPlatformPosition().add(new Vector3f(2*P.platformLength,randomNumber,0));
+            newPlatform.setPlatformPosition(newPosition);
             platformController.platforms.addLast(newPlatform);
             platformController.platforms.removeFirst();
         }
