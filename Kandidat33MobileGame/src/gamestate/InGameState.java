@@ -99,9 +99,9 @@ public class InGameState extends AbstractAppState {
 
     @Override
     public void update(float tpf) {
-        directionToPlayer = player.getSpatial().getLocalTranslation().
-                subtract(playerLightPosition);
-        playerSpot.setDirection(directionToPlayer);
+        //directionToPlayer = player.getSpatial().getLocalTranslation().
+        //        subtract(playerLightPosition);
+        //playerSpot.setDirection(directionToPlayer);
         
         //Check if the first platform can be moved
         if(player.getSpatial().getLocalTranslation().x - platformController.platforms.getFirst().getPlatformX() > 10) {
@@ -118,7 +118,7 @@ public class InGameState extends AbstractAppState {
     }
 
     private void setup() {
-                inGameRootNode.setShadowMode(ShadowMode.Off);
+        inGameRootNode.setShadowMode(ShadowMode.Off);
 
         PlatformFactory platformFactory = new PlatformFactory(
                 this.assetManager,
@@ -157,23 +157,24 @@ public class InGameState extends AbstractAppState {
         sun.setColor(ColorRGBA.White);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
         
-        inGameRootNode.addLight(sun);
+        //inGameRootNode.addLight(sun);
 
         playerSpot = new SpotLight();
-        SpotLight backwardSpot = new SpotLight();
         playerSpot.setSpotRange(1000f);                           // distance
         playerSpot.setSpotInnerAngle(8f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
         playerSpot.setSpotOuterAngle(12f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
         playerSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
 
+        ShadowedSpotlightControl ssc = new ShadowedSpotlightControl(playerSpot);
+        player.getSpatial().addControl(ssc);
         playerLightPosition = new Vector3f(100f, 50f, 0f);
         playerSpot.setPosition(playerLightPosition);
 
         // find the direction to shine in
-        directionToPlayer = player.getSpatial().getLocalTranslation().
+        /*directionToPlayer = player.getSpatial().getLocalTranslation().
                 subtract(playerLightPosition);
         playerSpot.setDirection(directionToPlayer);
-        
+        */
 
         inGameRootNode.addLight(playerSpot);
 
@@ -196,7 +197,8 @@ public class InGameState extends AbstractAppState {
         shadowRenderer.setFilterMode(PssmShadowRenderer.FilterMode.Dither);
 
         viewPort.addProcessor(shadowRenderer);
-        
+        ssc.setShadowRenderer(shadowRenderer);
+
     }
 
 
