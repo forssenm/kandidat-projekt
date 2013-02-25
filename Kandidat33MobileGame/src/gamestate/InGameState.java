@@ -105,12 +105,12 @@ public class InGameState extends AbstractAppState {
         
         //Check if the first platform can be moved
         if(player.getSpatial().getLocalTranslation().x - platformController.platforms.getFirst().getPlatformX() > 10) {
-            System.out.println("Flytta");
-            Random random=new Random();
-            int randomNumber=(random.nextInt(9)-4);
+            Random random = new Random();
+            int randomNumber = (random.nextInt(9)-4);
             Platform newPlatform = platformController.platforms.getFirst();
             Platform previousPlatform = platformController.platforms.getLast();
-            Vector3f newPosition = previousPlatform.getPlatformPosition().add(new Vector3f(2*P.platformLength,randomNumber,0));
+            Vector3f newPosition = previousPlatform.getPlatformPosition().add(
+                    new Vector3f(2*P.platformLength + P.platformDistance,randomNumber,0));
             newPlatform.setPlatformPosition(newPosition);
             platformController.platforms.addLast(newPlatform);
             platformController.platforms.removeFirst();
@@ -152,7 +152,6 @@ public class InGameState extends AbstractAppState {
      
 
     
-
     private void initLights() {
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.White);
@@ -167,9 +166,9 @@ public class InGameState extends AbstractAppState {
         playerSpot.setSpotOuterAngle(12f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
         playerSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
 
-                playerLightPosition = new Vector3f(100f, 50f, 0f);
+        playerLightPosition = new Vector3f(100f, 50f, 0f);
         playerSpot.setPosition(playerLightPosition);
-        
+
         // find the direction to shine in
         directionToPlayer = player.getSpatial().getLocalTranslation().
                 subtract(playerLightPosition);
@@ -200,7 +199,7 @@ public class InGameState extends AbstractAppState {
         
     }
 
-    
+
     /**
      * Sets up the input. Mouseclick jumps the character.
      */
