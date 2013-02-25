@@ -7,6 +7,7 @@ import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import variables.P;
@@ -49,6 +50,7 @@ public class Player {
         
         spatial.addControl(characterControl);
         node.attachChild(spatial);
+        spatial.setShadowMode(ShadowMode.Cast);
         
         this.node = node;
         this.spatial = spatial;

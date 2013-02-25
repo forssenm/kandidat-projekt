@@ -21,10 +21,13 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.LightControl;
 import com.jme3.scene.shape.Box;
+import com.jme3.shadow.BasicShadowRenderer;
+import com.jme3.shadow.PssmShadowRenderer;
 import java.util.LinkedList;
 import java.util.Random;
 import variables.P;
@@ -115,6 +118,8 @@ public class InGameState extends AbstractAppState {
     }
 
     private void setup() {
+                inGameRootNode.setShadowMode(ShadowMode.Off);
+
         PlatformFactory platformFactory = new PlatformFactory(
                 this.assetManager,
                 this.inGameRootNode,
@@ -152,7 +157,8 @@ public class InGameState extends AbstractAppState {
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.White);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
-        //inGameRootNode.addLight(sun);
+        
+        inGameRootNode.addLight(sun);
 
         playerSpot = new SpotLight();
         SpotLight backwardSpot = new SpotLight();
@@ -168,18 +174,30 @@ public class InGameState extends AbstractAppState {
         directionToPlayer = player.getSpatial().getLocalTranslation().
                 subtract(playerLightPosition);
         playerSpot.setDirection(directionToPlayer);
-                
+        
+
         inGameRootNode.addLight(playerSpot);
 
-        backwardSpot.setSpotRange(100f);                           // distance
-        backwardSpot.setSpotOuterAngle(35f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
-        backwardSpot.setSpotInnerAngle(15f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
-        backwardSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
-        backwardSpot.setPosition(new Vector3f(200f, 30f, 0f));    // shine from above end
-        backwardSpot.setDirection(new Vector3f(-200f, -30f, 0f));             // shine along path
+        /*
+         SpotLight backwardSpot = new SpotLight();
+         backwardSpot.setSpotRange(100f);                           // distance
+         backwardSpot.setSpotOuterAngle(35f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
+         backwardSpot.setSpotInnerAngle(15f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
+         backwardSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
+         backwardSpot.setPosition(new Vector3f(200f, 30f, 0f));    // shine from above end
+         backwardSpot.setDirection(new Vector3f(-200f, -30f, 0f));             // shine along path
+         inGameRootNode.addLight(backwardSpot);
+         */
 
+        PssmShadowRenderer shadowRenderer = new PssmShadowRenderer(assetManager, 512,3);
+        shadowRenderer.setDirection(new Vector3f(0, -1, 0).normalizeLocal());
+        shadowRenderer.setLambda(0.55f);
+        shadowRenderer.setShadowIntensity(0.6f);
+        shadowRenderer.setCompareMode(PssmShadowRenderer.CompareMode.Software);
+        shadowRenderer.setFilterMode(PssmShadowRenderer.FilterMode.Dither);
 
-        //inGameRootNode.addLight(backwardSpot);
+        viewPort.addProcessor(shadowRenderer);
+        
     }
 
     

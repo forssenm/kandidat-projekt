@@ -7,6 +7,7 @@ package gamestate;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
@@ -30,6 +31,7 @@ public class Platform {
         System.out.println(spatial);
         spatial.addControl(rigidBodyControl);
         node.attachChild(spatial);
+        spatial.setShadowMode(ShadowMode.Receive);
         
 //        this.node = node;
 //        this.spatial = spatial;
