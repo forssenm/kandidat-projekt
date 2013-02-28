@@ -51,9 +51,6 @@ public class InGameState extends AbstractAppState {
     
     private Player player;
     
-    private Vector3f playerLightPosition;
-    private SpotLight playerSpot;
-    private Vector3f directionToPlayer;
     
     private AudioNode audioBackground; 
     
@@ -151,24 +148,22 @@ public class InGameState extends AbstractAppState {
      }
      
 
-    
+
     private void initLights() {
         DirectionalLight sun = new DirectionalLight();
-        sun.setColor(ColorRGBA.White);
+        sun.setColor(ColorRGBA.Green);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
         
         //inGameRootNode.addLight(sun);
 
-        playerSpot = new SpotLight();
+        SpotLight playerSpot = new SpotLight();
         playerSpot.setSpotRange(1000f);                           // distance
-        playerSpot.setSpotInnerAngle(8f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
-        playerSpot.setSpotOuterAngle(12f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
+        playerSpot.setSpotInnerAngle(4f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
+        playerSpot.setSpotOuterAngle(20f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
         playerSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
 
         ShadowedSpotlightControl ssc = new ShadowedSpotlightControl(playerSpot);
         player.getSpatial().addControl(ssc);
-        playerLightPosition = new Vector3f(100f, 50f, 0f);
-        playerSpot.setPosition(playerLightPosition);
 
         // find the direction to shine in
         /*directionToPlayer = player.getSpatial().getLocalTranslation().

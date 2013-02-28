@@ -53,7 +53,7 @@ public class ShadowedSpotlightControl implements Control {
         time += tpf;
         Vector3f positionOffset = defaultPositionOffset.
                 add(0f, 0f, 0f);
-        Vector3f directionOffset = new Vector3f((float)(10*Math.sin(time)),0f,(float)(4*Math.sin(1.4*time)));
+        Vector3f directionOffset = new Vector3f((float)(5*Math.sin(time)),0f,(float)(10*Math.sin(1.4*time)));
         
         
         Vector3f spatialPosition = spatial.getLocalTranslation();
