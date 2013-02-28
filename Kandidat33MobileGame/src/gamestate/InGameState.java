@@ -150,12 +150,15 @@ public class InGameState extends AbstractAppState {
 
 
     private void initLights() {
+        
+        /*
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.Green);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
         
-        //inGameRootNode.addLight(sun);
-
+        inGameRootNode.addLight(sun);
+        */ 
+        
         SpotLight playerSpot = new SpotLight();
         playerSpot.setSpotRange(1000f);                           // distance
         playerSpot.setSpotInnerAngle(4f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
@@ -165,24 +168,7 @@ public class InGameState extends AbstractAppState {
         ShadowedSpotlightControl ssc = new ShadowedSpotlightControl(playerSpot);
         player.getSpatial().addControl(ssc);
 
-        // find the direction to shine in
-        /*directionToPlayer = player.getSpatial().getLocalTranslation().
-                subtract(playerLightPosition);
-        playerSpot.setDirection(directionToPlayer);
-        */
-
         inGameRootNode.addLight(playerSpot);
-
-        /*
-         SpotLight backwardSpot = new SpotLight();
-         backwardSpot.setSpotRange(100f);                           // distance
-         backwardSpot.setSpotOuterAngle(35f * FastMath.DEG_TO_RAD); // outer light cone (edge of the light)
-         backwardSpot.setSpotInnerAngle(15f * FastMath.DEG_TO_RAD); // inner light cone (central beam)
-         backwardSpot.setColor(ColorRGBA.White.mult(1.3f));         // light color
-         backwardSpot.setPosition(new Vector3f(200f, 30f, 0f));    // shine from above end
-         backwardSpot.setDirection(new Vector3f(-200f, -30f, 0f));             // shine along path
-         inGameRootNode.addLight(backwardSpot);
-         */
 
         PssmShadowRenderer shadowRenderer = new PssmShadowRenderer(assetManager, 512,3);
         shadowRenderer.setDirection(new Vector3f(0, -1, 0).normalizeLocal());
