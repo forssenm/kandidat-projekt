@@ -167,6 +167,7 @@ public class InGameState extends AbstractAppState {
 
         ShadowedSpotlightControl ssc = new ShadowedSpotlightControl(playerSpot);
         player.getSpatial().addControl(ssc);
+        ssc.setDefaultPositionOffset(new Vector3f(-10,50,0));
 
         inGameRootNode.addLight(playerSpot);
 

@@ -25,7 +25,7 @@ public class ShadowedSpotlightControl implements Control {
     Spatial spatial;
     SpotLight spotlight;
     PssmShadowRenderer shadowRenderer;
-    Vector3f defaultPositionOffset = new Vector3f(0,50,100);
+    Vector3f defaultPositionOffset = new Vector3f(0,50,0);
     
     public ShadowedSpotlightControl(SpotLight spotlight) {
         super();
@@ -66,7 +66,7 @@ public class ShadowedSpotlightControl implements Control {
         Vector3f lightPos = spatialPosition.add(positionOffset);
         
         spotlight.setPosition(lightPos);
-        spotlight.setDirection(spatialPosition.subtract(lightPos));
+        spotlight.setDirection((spatialPosition.subtract(lightPos)).add(directionOffset));
 
         if (shadowRenderer != null) {
             shadowRenderer.setDirection(spotlight.getDirection());
