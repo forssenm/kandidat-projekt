@@ -1,5 +1,9 @@
 package gamestate;
 
+import com.jme3.animation.AnimChannel;
+import com.jme3.animation.AnimControl;
+import com.jme3.animation.AnimEventListener;
+import com.jme3.animation.LoopMode;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
@@ -37,7 +41,7 @@ import variables.P;
  *
  * @author forssenm
  */
-public class InGameState extends AbstractAppState {
+public class InGameState extends AbstractAppState  implements AnimEventListener{
 
     private SimpleApplication app;
     private Node inGameRootNode;
@@ -54,13 +58,36 @@ public class InGameState extends AbstractAppState {
     
     private AudioNode audioBackground; 
     
+    //Animationer
+     private AnimChannel channel;
+     private AnimControl control;
+     
+public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
+    // unused but required method for bone animation
+  }
+  
+  public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
+      //unused but required method for bone animation
+    /*if (animName.equals("Walk")) {
+      channel.setAnim("stand", 0.50f);
+      channel.setLoopMode(LoopMode.DontLoop);
+      channel.setSpeed(1f);
+    }*/
+  }
+  //End animationer
+    
+ 
     /**
      * This method initializes the the InGameState
      *
      * @param stateManager
      * @param app
      */
+    
+    
     @Override
+
+    
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         this.app = (SimpleApplication) app;
@@ -133,6 +160,17 @@ public class InGameState extends AbstractAppState {
         initLights();
         initAudio();
 
+        //animations for player
+        //control = player_geo.getChild("Cube").getControl(AnimControl.class);
+        control = ((Node)this.player.spatial).getChild("Cube").getControl(AnimControl.class);
+        control.addListener(this);
+        channel = control.createChannel();
+    //channel.setAnim("Action.001");
+    //channel.setAnim("stand");
+        channel.setAnim("Action.001");
+        channel.setLoopMode(LoopMode.Loop);
+  
+        
     }
     
     
