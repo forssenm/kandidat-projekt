@@ -35,13 +35,16 @@ public class PlatformSceneObjectDataSource implements SceneObjectDataSource{
             geometry = new Geometry("Platform" , model);
         
             Material material = new Material(this.assetManager, "Common/MatDefs/Light/Lighting.j3md");
-       
-            ColorRGBA color = ColorRGBA.Blue;
+           // Material material = new Material(this.assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+            material.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
+            /*ColorRGBA color = ColorRGBA.Blue;
             material.setBoolean("UseMaterialColors", true);
             material.setColor("Ambient", color);
             material.setColor("Diffuse", color);
             material.setColor("Specular", ColorRGBA.White);
-        
+        */
+          //  material.setTexture("ColorMap", this.assetManager.loadTexture("Textures/BrickWall.jpg"));
+            
             geometry.setMaterial(material);
             
             return (this.geometry = geometry);
