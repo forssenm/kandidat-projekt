@@ -24,8 +24,8 @@ public class PlayerSceneObjectDataSource implements SceneObjectDataSource{
         this.assetManager = assetManager;
     }
     public Spatial getSceneObject(){
-        Spatial node = new Node();
-        Box model = new Box(Vector3f.ZERO, 1f, 1f, 1f);
+        //Spatial node = new Node();
+        /*Box model = new Box(Vector3f.ZERO, 1f, 1f, 1f);
         model.scaleTextureCoordinates(new Vector2f(1f, .5f));
         Geometry geometry = new Geometry("player", model);
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
@@ -37,7 +37,10 @@ public class PlayerSceneObjectDataSource implements SceneObjectDataSource{
         material.setColor("Specular", color);
         material.setFloat("Shininess",12);
 
-        geometry.setMaterial(material);
-        return geometry;
+        geometry.setMaterial(material);*/
+                Node player_geo = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
+        player_geo.scale(2);     
+        return player_geo;
+        //return geometry;
     }
 }
