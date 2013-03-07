@@ -27,7 +27,7 @@ public class Platform extends Geometry {
      * 
      * @param dataSource 
      */
-    public Platform(AssetManager assetManager, PhysicsSpace physicsSpace){
+    public Platform(AssetManager assetManager){
         super("Platform");
         Box model =
             new Box(Vector3f.ZERO, P.platformLength, P.platformHeight, P.platformWidth);
