@@ -24,12 +24,11 @@ import com.jme3.scene.Node;
 import variables.P;
 
 /**
- * This class handles all the in-game things
+ * This class handles aspects of the actual game. 
  *
  * @author forssenm
  */
 public class InGameState extends AbstractAppState {
-
     private SimpleApplication app;
     private Node inGameRootNode;
     private AssetManager assetManager;
@@ -59,6 +58,7 @@ public class InGameState extends AbstractAppState {
         this.physics = new BulletAppState();
         this.stateManager.attach(physics);
         
+        this.stateManager.attach(new RunningState());
         initLevel();
         initPlayer();
         initCamera();
@@ -70,7 +70,7 @@ public class InGameState extends AbstractAppState {
 
         inGameRootNode.addLight(sun);
     }
-
+   
     public void initLevel() {
         LevelControl levelControl = new LevelControl(
                 assetManager, physics.getPhysicsSpace());
@@ -131,14 +131,9 @@ public class InGameState extends AbstractAppState {
      }
 
     /**
-     * Sets up the input. Mouseclick jumps the character.
+     * Sets up the user inputs. Jump is triggered by
      */
     private void initInputs() {
-        inputManager.addMapping("jump",
-                new KeyTrigger(KeyInput.KEY_SPACE));
-        
-        inputManager.addMapping("jump",
-                new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(actionListener, "jump");
     }
     
