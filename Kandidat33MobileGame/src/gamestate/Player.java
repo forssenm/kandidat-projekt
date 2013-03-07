@@ -3,6 +3,7 @@
  */
 package gamestate;
 
+import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
@@ -27,6 +28,53 @@ import variables.P;
  * 
  * @author dagen
  */
+public class Player extends Node {
+    
+    private float playerRunSpeed;
+    private float playerJumpSpeed;
+    private CapsuleCollisionShape playerShape;
+    private CharacterControl playerControl;
+    private Node playerModel;
+    
+    public Player(AssetManager am) {
+        playerRunSpeed = P.run_speed;
+        playerJumpSpeed = P.jump_speed;
+        
+        playerShape = new CapsuleCollisionShape(1f,0.5f);
+        playerControl = new CharacterControl(playerShape, 0.05f);
+        playerControl.setWalkDirection(Vector3f.UNIT_X.multLocal(playerRunSpeed));
+        playerControl.setJumpSpeed(playerJumpSpeed);
+        this.addControl(playerControl);
+        
+        this.setLocalTranslation(new Vector3f(0, 15f, 0));
+        
+        //Sets the model of the player
+        playerModel = (Node)am.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
+        this.attachChild(playerModel);
+    }
+    
+    public void Jump() {
+        playerControl.jump();
+    }
+    
+    public void increasePlayerSpeed() {
+        // TODO: Implement method
+    }
+    
+    public CharacterControl getPlayerControl() {
+        return this.playerControl;
+    }
+    
+    public CapsuleCollisionShape getPlayerShape() {
+        return this.playerShape;
+    }
+    
+    public Node getPlayerModel() {
+        return this.playerModel;
+    }
+}
+
+/*
 public class Player {
     // Scene Object
     private Node node;
@@ -34,13 +82,13 @@ public class Player {
     
     // Physics connection
     public CharacterControl characterControl;
-    
+    */
     /**
      * Generates the player.
      * @param dataSource An object that generates the spatial to be used to
      * represent the player.
      */
-    public Player(SceneObjectDataSource dataSource){
+    /*public Player(SceneObjectDataSource dataSource){
         Node node = new Node();
         // get the spatial (model, material definition etc)
         Spatial spatial = dataSource.getSceneObject();
@@ -104,3 +152,4 @@ public class Player {
         this.characterControl = characterControl;
     }
 }
+*/
