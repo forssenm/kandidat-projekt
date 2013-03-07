@@ -31,16 +31,16 @@ public class LevelControl implements Control {
     
     private Node levelNode;
     private LinkedList<Node> chunks;
-    private AssetManager am;
-    private PhysicsSpace pSpace;
+    private AssetManager assetManager;
+    private PhysicsSpace physicsSpace;
     
     /**
      * Creates a new LevelControl.
      * 
      */
-    public LevelControl(AssetManager am, PhysicsSpace pSpace) {
-        this.am = am;
-        this.pSpace = pSpace;   
+    public LevelControl(AssetManager assetManager, PhysicsSpace physicsSpace) {
+        this.assetManager = assetManager;
+        this.physicsSpace = physicsSpace;   
     }
 
     /**
@@ -69,7 +69,8 @@ public class LevelControl implements Control {
     
     private void generateStartingChunks() {
         chunks = new LinkedList<Node>();
-        for (int i = 1; i<5; i++){
+        // generate 5 chunks
+        for (int i = 0; i<5; i++){
             generateNextChunk();
         }
     }
@@ -77,6 +78,8 @@ public class LevelControl implements Control {
     /**
      * Generate a new chunk of the level, placing it directly after the
      * last chunk.
+     * In the current implementation, a chunk is simply one platform.
+     * @pre generateStartingChunks has been run once.
      * @return 
      */
     private Node generateNextChunk() {
@@ -85,10 +88,9 @@ public class LevelControl implements Control {
             xPos = 0;
         } else {
             xPos = this.chunks.getLast().getLocalTranslation().getX() + P.chunkLength;
-
         }
         System.out.println(xPos);
-        Platform platform = new Platform(this.am);
+        Platform platform = new Platform(this.assetManager);
         Node chunk = new Node();
         chunk.attachChild(platform);
         addChunkToPhysicsSpace(chunk);
@@ -100,6 +102,15 @@ public class LevelControl implements Control {
         return chunk;
     }
     
+    /**
+     * Moves one chunk to another position.
+     * Use this instead of simply chunk.setLocalTranslation in order to
+     * keep any physics objects in the chunk from decoupling with the physics
+     * space.
+     * @param chunk The chunk to move
+     * @param position The position to move it to, relative to the node this
+     * LevelControl is attached to.
+     */
     private void moveChunkTo(Node chunk, Vector3f position) {
         disablePhysicsOfChunk(chunk);
         chunk.setLocalTranslation(position);
@@ -115,7 +126,7 @@ public class LevelControl implements Control {
         // traverse the scenegraph starting from the chunk node
         chunk.depthFirstTraversal(new SceneGraphVisitor() {
             public void visit(Spatial spatial) {
-                pSpace.addAll(spatial);
+                physicsSpace.addAll(spatial);
             }
         });
     }    
