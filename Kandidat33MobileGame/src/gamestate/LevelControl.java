@@ -9,6 +9,7 @@ import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
@@ -68,11 +69,8 @@ public class LevelControl implements Control {
     
     private void generateStartingChunks() {
         chunks = new LinkedList<Node>();
-        chunks.add(new Node());
-        chunks.addLast(generateNextChunk());
-        chunks.removeFirst();
         for (int i = 1; i<5; i++){
-            chunks.addLast(generateNextChunk());
+            generateNextChunk();
         }
     }
     
@@ -82,15 +80,30 @@ public class LevelControl implements Control {
      * @return 
      */
     private Node generateNextChunk() {
-        float xPos = this.chunks.getLast().getLocalTranslation().getX() + P.chunkLength;
+        float xPos;
+        if (chunks.isEmpty())  {
+            xPos = 0;
+        } else {
+            xPos = this.chunks.getLast().getLocalTranslation().getX() + P.chunkLength;
+
+        }
+        System.out.println(xPos);
         Platform platform = new Platform(this.am);
         Node chunk = new Node();
         chunk.attachChild(platform);
-        platform.setLocalTranslation(xPos+P.platformDistance, 0f, 0f);
-        
         addChunkToPhysicsSpace(chunk);
+
+        moveChunkTo(chunk, new Vector3f(xPos+P.platformDistance, 0f, 0f));
+        
         levelNode.attachChild(chunk);
+        chunks.addLast(chunk);
         return chunk;
+    }
+    
+    private void moveChunkTo(Node chunk, Vector3f position) {
+        disablePhysicsOfChunk(chunk);
+        chunk.setLocalTranslation(position);
+        enablePhysicsOfChunk(chunk);
     }
     
     /**

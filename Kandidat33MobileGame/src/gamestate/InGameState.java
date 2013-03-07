@@ -92,11 +92,12 @@ public class InGameState extends AbstractAppState {
         player = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
         inGameRootNode.attachChild(player);
         
-        CharacterControl playerControl = new CharacterControl(new CapsuleCollisionShape(1f,0.5f), 0.05f);
+        CharacterControl playerControl = new CharacterControl(new CapsuleCollisionShape(1f, 0.5f), 0.05f);
         playerControl.setWalkDirection(Vector3f.UNIT_X.multLocal(P.run_speed));
         playerControl.setJumpSpeed(P.jump_speed);
+        player.setLocalTranslation(new Vector3f(0, 3f, 0));
+
         player.addControl(playerControl);
-        player.setLocalTranslation(new Vector3f(0, 15f, 0));
         physics.getPhysicsSpace().addAll(player);
     }
 
