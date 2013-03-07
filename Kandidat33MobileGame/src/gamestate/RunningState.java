@@ -82,9 +82,9 @@ public class RunningState extends AbstractAppState implements ActionListener{
     public void onAction(String name, boolean isPressed, float tpf) {
         //TODO implement jumping hereor even better: implement it in a PlayerControl
         if(name.equals("jump") && isPressed){
-            //Button pressed
+            System.out.println("Button down");
         }else{
-            //Button released
+            System.out.println("Button up");
         }
     }
 }
