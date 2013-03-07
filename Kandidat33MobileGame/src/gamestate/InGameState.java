@@ -59,6 +59,7 @@ public class InGameState extends AbstractAppState {
         this.stateManager.attach(physics);
         
         this.stateManager.attach(new RunningState());
+        
         initLevel();
         initPlayer();
         initCamera();
