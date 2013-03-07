@@ -28,7 +28,7 @@ import variables.P;
 public class LevelControl implements Control {
 
     
-    private Spatial levelNode;
+    private Node levelNode;
     private LinkedList<Node> chunks;
     private AssetManager am;
     private PhysicsSpace pSpace;
@@ -39,18 +39,23 @@ public class LevelControl implements Control {
      */
     public LevelControl(AssetManager am, PhysicsSpace pSpace) {
         this.am = am;
-        this.pSpace = pSpace;
-        
+        this.pSpace = pSpace;   
     }
 
-
     /**
-     * Sets the spatial of this control.
-     * This spatial is used for reference position and should not be moved.
-     * @param spatial 
+     * Sets the spatial of this control. This spatial is used for reference
+     * position and should not be moved.
+     *
+     * @param spatial The spatial to attach the entire level to - must be a
+     * Node!
      */
     public void setSpatial(Spatial spatial) {
-        this.levelNode = spatial;
+        assert (spatial instanceof Node);
+        if (levelNode != null) {
+            levelNode.detachAllChildren();
+        }
+        this.levelNode = (Node) spatial;
+        generateStartingChunks();
     }
 
     /**
@@ -59,6 +64,16 @@ public class LevelControl implements Control {
      * @param tpf 
      */
     public void update(float tpf) {
+    }
+    
+    private void generateStartingChunks() {
+        chunks = new LinkedList<Node>();
+        chunks.add(new Node());
+        chunks.addLast(generateNextChunk());
+        chunks.removeFirst();
+        for (int i = 1; i<5; i++){
+            chunks.addLast(generateNextChunk());
+        }
     }
     
     /**
@@ -74,6 +89,7 @@ public class LevelControl implements Control {
         platform.setLocalTranslation(xPos+P.platformDistance, 0f, 0f);
         
         addChunkToPhysicsSpace(chunk);
+        levelNode.attachChild(chunk);
         return chunk;
     }
     
