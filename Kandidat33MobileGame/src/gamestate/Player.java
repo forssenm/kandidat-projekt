@@ -21,7 +21,10 @@ import variables.P;
  */
 
 /**
- *
+ * Class for keeping everything relating to the player in one place.
+ * Currently keeps the spatial (along with the model) and the physics control
+ * object which makes the player run and fall.
+ * 
  * @author dagen
  */
 public class Player {
@@ -32,25 +35,33 @@ public class Player {
     // Physics connection
     public CharacterControl characterControl;
     
-    
+    /**
+     * Generates the player.
+     * @param dataSource An object that generates the spatial to be used to
+     * represent the player.
+     */
     public Player(SceneObjectDataSource dataSource){
         Node node = new Node();
+        // get the spatial (model, material definition etc)
         Spatial spatial = dataSource.getSceneObject();
         
+        // create a CharacterControl, controlling the (physical) behaviour of
+        // the player.
         CapsuleCollisionShape shape = new CapsuleCollisionShape(1f,0.5f);
         CharacterControl characterControl = new CharacterControl(shape, 0.05f);
-        characterControl.setJumpSpeed(P.jump_speed);
 
+        // set the constant walking direction and jump speed
         Vector3f walkDirection = Vector3f.UNIT_X.multLocal(P.run_speed);
         characterControl.setWalkDirection(walkDirection);
+        characterControl.setJumpSpeed(P.jump_speed);
         
+        // Place the player in the world
         Vector3f vt = new Vector3f(0, 15f, 0);
         spatial.setLocalTranslation(vt);
         
         
         spatial.addControl(characterControl);
         node.attachChild(spatial);
-        spatial.setShadowMode(ShadowMode.Cast);
         
         this.node = node;
         this.spatial = spatial;
