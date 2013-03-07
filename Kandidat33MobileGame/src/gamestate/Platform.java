@@ -25,7 +25,6 @@ public class Platform extends Geometry {
     
     /**
      * 
-     * @param dataSource 
      */
     public Platform(AssetManager assetManager){
         super("Platform");

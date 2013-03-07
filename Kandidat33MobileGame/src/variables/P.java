@@ -23,4 +23,6 @@ public class P {
     public static final int platformsPerLevel = 3;
     public static final float run_speed = 0.15f;
     public static final float jump_speed = 20f;
+    
+    public static final float chunkLength = 12.0f;
 }
