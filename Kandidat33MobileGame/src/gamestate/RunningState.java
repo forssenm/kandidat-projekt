@@ -16,7 +16,7 @@ import com.jme3.input.controls.MouseButtonTrigger;
  * <code>KeyInput.KEY_SPACE</code> and <code>MouseInput.BUTTON_LEFT</code>.
  * <br/> <br/>
  * Relavant things to add to this class could be to switch 
- * the players animation.
+ * controls related to the player.
  * @author dagen
  */
 public class RunningState extends AbstractAppState implements ActionListener{
