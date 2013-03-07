@@ -23,7 +23,7 @@ public class RunningControl extends AbstractControl implements PhysicsControl, A
     private CharacterControl characterControl;
     
     /** 
-     * {@inheritDoc}
+     * Sets the spatial of the <code>RunningControl</code>.
      */
     @Override
     public void setSpatial(Spatial spatial){
@@ -40,7 +40,8 @@ public class RunningControl extends AbstractControl implements PhysicsControl, A
     }
     
     /** 
-     * {@inheritDoc}
+     * Creates a clone of this <code>RunningControl</code> 
+     * compatible with <code>spatial</code>.
      */
     public Control cloneForSpatial(Spatial spatial) {
         RunningControl control = new RunningControl();
@@ -51,23 +52,27 @@ public class RunningControl extends AbstractControl implements PhysicsControl, A
     }
     
     /** 
-     * {@inheritDoc}
+     * Sets the <code>PhysicsSpace</code> of this <code>RunningControl</code>
+     * @param space the <code>PhysicsSpace</code>
      */
+    /* Connects internal CharacterControl*/
     public void setPhysicsSpace(PhysicsSpace space) {
         physicsSpace = space;
-        // Connect internal CharacterConrol
-        physicsSpace.add(getCharacterControl());
+        
+        /* Connects internal CharacterControl*/
+        physicsSpace.add(getCharacterControl()); 
     }
     
     /** 
-     * {@inheritDoc}
+     * Returns the <code>PhysicsSpace</code> of this <code>RunningControl</code>
+     * @return physicsSpace the <code>PhysicsSpace.
      */
     public PhysicsSpace getPhysicsSpace() {
         return physicsSpace;
     }
     
     /**
-     * {@inheritDoc} 
+     * This method currently does nothing. 
      */
     @Override
     protected void controlUpdate(float tpf) {
@@ -78,7 +83,7 @@ public class RunningControl extends AbstractControl implements PhysicsControl, A
     }
 
     /**
-     * {@inheritDoc} 
+     * This method currently does nothing. 
      */
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
@@ -165,7 +170,8 @@ public class RunningControl extends AbstractControl implements PhysicsControl, A
      * the same jump behaviour as <code>CharacterControl</code>.
      */
     public void onAction(String name, boolean isPressed, float tpf) {
-        if(name.equals("jump") && isPressed){ // Button down
+        if(name.equals("jump") && isPressed){ 
+            // Button down
             this.getCharacterControl().jump();
         }else{ 
             // Button up
