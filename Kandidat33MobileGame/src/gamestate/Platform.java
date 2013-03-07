@@ -4,83 +4,57 @@
  */
 package gamestate;
 
+import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
+import variables.P;
 
 /**
  *
  * @author dagen
  */
-public class Platform {
-       // Scene Object
-    private Spatial spatial;
-    private Node node;
-    
-    // Physics connection
-    private RigidBodyControl rigidBodyControl;
+public class Platform extends Geometry {
     
     
-    public Platform(SceneObjectDataSource dataSource){
-        node = new Node();
-        spatial = dataSource.getSceneObject();
-        rigidBodyControl = new RigidBodyControl(0.0f);
-        System.out.println(spatial);
-        spatial.addControl(rigidBodyControl);
-        node.attachChild(spatial);
-        spatial.setShadowMode(ShadowMode.Receive);
+    /**
+     * 
+     * @param dataSource 
+     */
+    public Platform(AssetManager assetManager, PhysicsSpace physicsSpace){
+        super("Platform");
+        Box model =
+            new Box(Vector3f.ZERO, P.platformLength, P.platformHeight, P.platformWidth);
+        this.mesh = model;
         
-//        this.node = node;
-//        this.spatial = spatial;
-//        this.rigidBodyControl = rigidBodyControl;
-    }
-    
-    public void addToNode(Node node){
-        node.attachChild(this.spatial);
-    }
-    
-    public void addToPhysicsSpace(PhysicsSpace physicsSpace){
-        physicsSpace.add(this.rigidBodyControl);
-    }
+        Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        material.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
+        this.setMaterial(material);
 
-    public Spatial getSpatial() {
-        return spatial;
-    }
+        RigidBodyControl rigidBodyControl = new RigidBodyControl(0.0f);
+        this.addControl(rigidBodyControl);
 
-    public void setSpatial(Spatial spatial) {
-        this.spatial = spatial;
+        this.setShadowMode(ShadowMode.Receive);
     }
-
-    public Node getNode() {
-        return node;
-    }
-
-    public void setNode(Node node) {
-        this.node = node;
-    }
-
-    public RigidBodyControl getRigidBodyControl() {
-        return rigidBodyControl;
-    }
-
-    public void setRigidBodyControl(RigidBodyControl rigidBodyControl) {
-        this.rigidBodyControl = rigidBodyControl;
-    }
-    
-    public float getPlatformX() {
-        return this.getSpatial().getLocalTranslation().x;
+   
+    public float getX() {
+        return this.getLocalTranslation().x;
     }
     
     public Vector3f getPlatformPosition() {
-        return spatial.getLocalTranslation();
+        return this.getLocalTranslation();
     }
     
     public void setPlatformPosition(Vector3f position) {
+        RigidBodyControl rigidBodyControl = this.getControl(RigidBodyControl.class);
         rigidBodyControl.setEnabled(false);
-        spatial.setLocalTranslation(position);
+        this.setLocalTranslation(position);
         rigidBodyControl.setEnabled(true);
     }
     

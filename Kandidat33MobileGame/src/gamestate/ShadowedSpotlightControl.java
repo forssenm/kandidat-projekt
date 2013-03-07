@@ -79,9 +79,10 @@ public class ShadowedSpotlightControl implements Control {
     public void update(float tpf) {
         time += tpf;
         Vector3f positionOffset = defaultPositionOffset.
-                add((float)(20*Math.sin(time)),
+                add(Vector3f.ZERO);/*
+                (float)(20*Math.sin(time)),
                 (float)(10*(-1-2*Math.sin(2*time))),
-                (float)(10*Math.sin(1.4*time)));
+                (float)(10*Math.sin(1.4*time)));*/
         Vector3f directionOffset = new Vector3f(0f,0f,0f);
         
         
