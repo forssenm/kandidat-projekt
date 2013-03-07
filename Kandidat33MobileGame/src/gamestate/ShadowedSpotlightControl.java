@@ -16,7 +16,10 @@ import com.jme3.shadow.PssmShadowRenderer;
 import java.io.IOException;
 
 /**
- *
+ * A class to keep a SpotLight focussed on a spatial.
+ * Optionally also keeps a PssmShadowRenderer in the same diretion,
+ * making sure the shadow follows the light's movements.
+ * 
  * @author jonatankilhamn
  */
 public class ShadowedSpotlightControl implements Control {
@@ -27,26 +30,46 @@ public class ShadowedSpotlightControl implements Control {
     PssmShadowRenderer shadowRenderer;
     Vector3f defaultPositionOffset = new Vector3f(0,50,0);
     
+    /**
+     * @param spotlight The spotlight to keep aimed at a spatial.
+     */
     public ShadowedSpotlightControl(SpotLight spotlight) {
         super();
         this.spotlight = spotlight;
     }
 
+    /**
+     * @Inheritdoc
+     */
     public Control cloneForSpatial(Spatial spatial) {
         ShadowedSpotlightControl newSSC = new ShadowedSpotlightControl((SpotLight)spotlight.clone());
         newSSC.setSpatial(spatial);
         return newSSC;
     }
 
+    /**
+     * @Inheritdoc
+     */
     public void setSpatial(Spatial spatial) {
         this.spatial = spatial;
         update(0f);
     }
     
+    /**
+     * Sets the shadowrenderer to follow this light.
+     * More than one shadowrenderers can be active in a scene, and could
+     * then follow one light each.
+     * @param shadowRenderer 
+     */
     public void setShadowRenderer(PssmShadowRenderer shadowRenderer) {
         this.shadowRenderer = shadowRenderer;
     }
     
+    /**
+     * Sets the default relative position between the spotlight
+     * and the spatial it is shining on.
+     * @param defaultPositionOffset 
+     */
     public void setDefaultPositionOffset(Vector3f defaultPositionOffset) {
         this.defaultPositionOffset = defaultPositionOffset;
     }
