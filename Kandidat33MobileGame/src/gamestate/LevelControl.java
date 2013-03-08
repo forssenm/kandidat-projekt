@@ -33,14 +33,17 @@ public class LevelControl implements Control {
     private LinkedList<Node> chunks;
     private AssetManager assetManager;
     private PhysicsSpace physicsSpace;
+    private Spatial player;
     
     /**
      * Creates a new LevelControl.
      * 
      */
-    public LevelControl(AssetManager assetManager, PhysicsSpace physicsSpace) {
+    public LevelControl(AssetManager assetManager, PhysicsSpace physicsSpace,
+            Spatial player) {
         this.assetManager = assetManager;
-        this.physicsSpace = physicsSpace;   
+        this.physicsSpace = physicsSpace;
+        this.player = player;
     }
 
     /**

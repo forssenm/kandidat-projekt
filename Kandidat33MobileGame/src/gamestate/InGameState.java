@@ -60,21 +60,20 @@ public class InGameState extends AbstractAppState{
 
         
         
-        initLevel();
         initPlayer();
+        initLevel();
         initCamera();
         initInputs();
 
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.Green);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
-
         inGameRootNode.addLight(sun);
     }
    
     public void initLevel() {
         LevelControl levelControl = new LevelControl(
-                assetManager, physics.getPhysicsSpace());
+                assetManager, physics.getPhysicsSpace(), player);
         Node level = new Node();
         level.addControl(levelControl);
         inGameRootNode.attachChild(level);
