@@ -6,29 +6,21 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
-import com.jme3.input.KeyInput;
-import com.jme3.input.MouseInput;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
-import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
-import variables.P;
 
 /**
- * This class handles aspects of the actual game. 
+ * This class handles setting up the game. 
  *
  * @author forssenm
  */
-public class InGameState extends AbstractAppState {
+public class InGameState extends AbstractAppState{
     private SimpleApplication app;
     private Node inGameRootNode;
     private AssetManager assetManager;
@@ -38,6 +30,9 @@ public class InGameState extends AbstractAppState {
     private BulletAppState physics;
     
     private Node player;
+    
+    private ChaseCamera chaseCam;
+     
     
     /**
      * This method initializes the the InGameState
@@ -56,9 +51,14 @@ public class InGameState extends AbstractAppState {
         this.inputManager = this.app.getInputManager();
         this.viewPort = this.app.getViewPort();
         this.physics = new BulletAppState();
-        this.stateManager.attach(physics);
         
+        this.inputManager.clearMappings();
+        this.inputManager.clearRawInputListeners();
+        
+        this.stateManager.attach(physics);
         this.stateManager.attach(new RunningState());
+
+        
         
         initLevel();
         initPlayer();
@@ -83,14 +83,9 @@ public class InGameState extends AbstractAppState {
     public void initPlayer() {
         player = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
         inGameRootNode.attachChild(player);
-        
-        CharacterControl playerControl = new CharacterControl(new CapsuleCollisionShape(1f, 0.5f), 0.05f);
-        playerControl.setWalkDirection(Vector3f.UNIT_X.multLocal(P.run_speed));
-        playerControl.setJumpSpeed(P.jump_speed);
-        player.setLocalTranslation(new Vector3f(0, 3f, 0));
 
-        player.addControl(playerControl);
-        physics.getPhysicsSpace().addAll(player);
+        player.addControl(new RunningControl());
+        this.physics.getPhysicsSpace().addAll(player);
     }
 
     @Override
@@ -110,12 +105,13 @@ public class InGameState extends AbstractAppState {
             System.out.println("InGameState is now inactive");
         }
     }
-
+    
+    /**{inheritDoc}*/
     @Override
     public void update(float tpf) {
+        /* Does nothing */
     }
 
-     private ChaseCamera chaseCam;
      
      /**
       * Initializes the camera.
@@ -123,7 +119,7 @@ public class InGameState extends AbstractAppState {
       * the right angle.
       */
      private void initCamera() {
-        this.app.getFlyByCamera().setEnabled(false);
+        //this.app.getFlyByCamera().setEnabled(false);
         this.chaseCam = new ChaseCamera(this.app.getCamera(), this.player, this.inputManager);
         //this.chaseCam.setSmoothMotion(true);
         this.chaseCam.setTrailingEnabled(false);
@@ -135,15 +131,6 @@ public class InGameState extends AbstractAppState {
      * Sets up the user inputs. Jump is triggered by
      */
     private void initInputs() {
-        inputManager.addListener(actionListener, "jump");
+        inputManager.addListener(player.getControl(RunningControl.class), "jump");
     }
-    
-    private ActionListener actionListener = new ActionListener() {
-        public void onAction(String binding, boolean value, float tpf) {
-            if (binding.equals("jump")) {
-                player.getControl(CharacterControl.class).jump();
-            }
-        }
-    };
-
 }
