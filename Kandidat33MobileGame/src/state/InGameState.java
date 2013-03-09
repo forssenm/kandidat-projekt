@@ -55,9 +55,6 @@ public class InGameState extends AbstractAppState{
         this.viewPort = this.app.getViewPort();
         this.physics = new BulletAppState();
         
-        this.inputManager.clearMappings();
-        this.inputManager.clearRawInputListeners();
-        
         this.stateManager.attach(physics);
         this.stateManager.attach(new RunningState());
 
