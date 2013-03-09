@@ -85,7 +85,7 @@ public class InGameState extends AbstractAppState{
     public void initPlayer() {
         player = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
         inGameRootNode.attachChild(player);
-
+        player.setLocalTranslation(0.0f, 3.0f, 0.0f);
         player.addControl(new RunningControl());
         this.physics.getPhysicsSpace().addAll(player);
     }
