@@ -1,4 +1,4 @@
-package menustate;
+package state;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
@@ -9,7 +9,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.input.InputManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
-import gamestate.InGameState;
+import state.InGameState;
 
 /**
  * This class handles all the menu things

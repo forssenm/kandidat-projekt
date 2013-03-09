@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package gamestate;
+package control;
 
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;

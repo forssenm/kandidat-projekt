@@ -1,4 +1,4 @@
-package gamestate;
+package control;
 
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;

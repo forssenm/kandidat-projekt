@@ -1,4 +1,4 @@
-package gamestate;
+package control;
 
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;

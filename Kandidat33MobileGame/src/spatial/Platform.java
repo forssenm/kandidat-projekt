@@ -1,4 +1,4 @@
-package gamestate;
+package spatial;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.control.RigidBodyControl;

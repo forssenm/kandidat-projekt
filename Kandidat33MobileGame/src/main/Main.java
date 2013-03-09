@@ -4,8 +4,8 @@ import com.jme3.app.DebugKeysAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.renderer.RenderManager;
-import gamestate.InGameState;
-import menustate.InMainMenuState;
+import state.InGameState;
+import state.InMainMenuState;
 
 /**
  * test
