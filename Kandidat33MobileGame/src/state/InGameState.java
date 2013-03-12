@@ -1,5 +1,6 @@
 package state;
 
+import audio.MusicNode;
 import control.LevelControl;
 import state.RunningState;
 import control.RunningControl;
@@ -8,6 +9,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
@@ -69,6 +71,8 @@ public class InGameState extends AbstractAppState{
         sun.setColor(ColorRGBA.Green);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
         inGameRootNode.addLight(sun);
+        
+        initAudio();
     }
    
     public void initLevel() {
@@ -87,6 +91,12 @@ public class InGameState extends AbstractAppState{
         this.physics.getPhysicsSpace().addAll(player);
     }
 
+    private void initAudio(){
+        MusicNode musicNode = new MusicNode(assetManager, "Sound/Music/SpookyMusicForRunning.ogg");
+        inGameRootNode.attachChild(musicNode);
+        musicNode.play();
+    }
+    
     @Override
     public void cleanup() {
         super.cleanup();
