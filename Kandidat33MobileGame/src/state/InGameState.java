@@ -30,7 +30,7 @@ public class InGameState extends AbstractAppState{
     public static final String LEVEL_NODE = "Level Node";
     
     private SimpleApplication app;
-    private Node inGameRootNode;
+    private Node gameNode;
     private AssetManager assetManager;
     private AppStateManager stateManager;
     private InputManager inputManager;
@@ -52,8 +52,8 @@ public class InGameState extends AbstractAppState{
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         this.app = (SimpleApplication) app;
-        this.inGameRootNode = new Node();
-        this.app.getRootNode().attachChild(this.inGameRootNode);
+        this.gameNode = new Node(GAME_NODE);
+        this.app.getRootNode().attachChild(this.gameNode);
         this.assetManager = this.app.getAssetManager();
         this.stateManager = this.app.getStateManager();
         this.inputManager = this.app.getInputManager();
@@ -73,7 +73,7 @@ public class InGameState extends AbstractAppState{
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.Green);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
-        inGameRootNode.addLight(sun);
+        gameNode.addLight(sun);
         
         initAudio();
     }
@@ -83,12 +83,12 @@ public class InGameState extends AbstractAppState{
                 assetManager, physics.getPhysicsSpace(), player);
         Node level = new Node();
         level.addControl(levelControl);
-        inGameRootNode.attachChild(level);
+        gameNode.attachChild(level);
     }
     
     public void initPlayer() {
         player = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
-        inGameRootNode.attachChild(player);
+        gameNode.attachChild(player);
         player.setLocalTranslation(0.0f, 3.0f, 0.0f);
         player.addControl(new RunningControl());
         this.physics.getPhysicsSpace().addAll(player);
@@ -96,14 +96,14 @@ public class InGameState extends AbstractAppState{
 
     private void initAudio(){
         MusicNode musicNode = new MusicNode(assetManager, "Sound/Music/SpookyMusicForRunning.ogg");
-        inGameRootNode.attachChild(musicNode);
+        gameNode.attachChild(musicNode);
         musicNode.play();
     }
     
     @Override
     public void cleanup() {
         super.cleanup();
-        this.app.getRootNode().detachChild(this.inGameRootNode);
+        this.app.getRootNode().detachChild(this.gameNode);
     }
 
     @Override
