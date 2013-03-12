@@ -26,6 +26,9 @@ import com.jme3.scene.Node;
  * @author forssenm
  */
 public class InGameState extends AbstractAppState{
+    public static final String GAME_NODE = "Game Node";
+    public static final String LEVEL_NODE = "Level Node";
+    
     private SimpleApplication app;
     private Node inGameRootNode;
     private AssetManager assetManager;
