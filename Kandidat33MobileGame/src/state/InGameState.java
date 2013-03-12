@@ -81,7 +81,7 @@ public class InGameState extends AbstractAppState{
     public void initLevel() {
         LevelControl levelControl = new LevelControl(
                 assetManager, physics.getPhysicsSpace(), player);
-        Node level = new Node();
+        Node level = new Node(LEVEL_NODE);
         level.addControl(levelControl);
         gameNode.attachChild(level);
     }
