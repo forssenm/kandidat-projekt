@@ -19,6 +19,7 @@ import com.jme3.scene.control.Control;
 import spatial.Platform;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Random;
 import variables.P;
 
 /**
@@ -69,12 +70,22 @@ public class LevelControl implements Control {
      * @param tpf 
      */
     public void update(float tpf) {
+        if (this.player.getLocalTranslation().getX() >
+                chunks.getFirst().getLocalTranslation().getX() + 60) {
+            deleteChunk(chunks.removeFirst());
+            generateNextChunk();
+        }
+    }
+    
+    private void deleteChunk(Node chunk) {
+        removeChunkFromPhysicsSpace(chunk);
+        levelNode.detachChild(chunk);
     }
     
     private void generateStartingChunks() {
         chunks = new LinkedList<Node>();
         // generate 5 chunks
-        for (int i = 0; i<5; i++){
+        for (int i = 0; i<10; i++){
             generateNextChunk();
         }
     }
@@ -94,12 +105,19 @@ public class LevelControl implements Control {
             xPos = this.chunks.getLast().getLocalTranslation().getX() + P.chunkLength;
         }
         System.out.println(xPos);
+        
+                        // generate new platform position
+        Random random = new Random();
+        int randomNumber = (random.nextInt(6) - 3);
+        Vector3f newChunkPosition =
+                new Vector3f(xPos + P.platformDistance, randomNumber, 0f);
+        
         Platform platform = new Platform(this.assetManager);
         Node chunk = new Node();
         chunk.attachChild(platform);
         addChunkToPhysicsSpace(chunk);
 
-        moveChunkTo(chunk, new Vector3f(xPos+P.platformDistance, 0f, 0f));
+        moveChunkTo(chunk, newChunkPosition);
         
         levelNode.attachChild(chunk);
         chunks.addLast(chunk);
@@ -133,7 +151,22 @@ public class LevelControl implements Control {
                 physicsSpace.addAll(spatial);
             }
         });
-    }    
+    }
+
+    /**
+     * Removes all objects with a PhysicsControl in a chunk from the
+     * PhysicsSpace. "In a chunk" is the same as "attached to a Node".
+     *
+     * @param chunk 
+     */
+    private void removeChunkFromPhysicsSpace(Node chunk) {
+        // traverse the scenegraph starting from the chunk node
+        chunk.depthFirstTraversal(new SceneGraphVisitor() {
+            public void visit(Spatial spatial) {
+                physicsSpace.removeAll(spatial);
+            }
+        });
+    }   
 
     /**
      * Disables the physics of all objects in a chunk.
