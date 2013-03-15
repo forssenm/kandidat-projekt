@@ -72,7 +72,7 @@ public class LevelControl implements Control {
      */
     public void update(float tpf) {
         if (this.player.getLocalTranslation().getX() >
-                chunks.getFirst().getLocalTranslation().getX() + 60) {
+                chunks.getFirst().getLocalTranslation().getX() + P.chunkLength + 60) {
             deleteChunk(chunks.removeFirst());
             generateNextChunk();
         }
@@ -110,21 +110,26 @@ public class LevelControl implements Control {
         } else {
             xPos = this.chunks.getLast().getLocalTranslation().getX() + P.chunkLength;
         }
-
         // generate a new chunk position
-        Random random = new Random();
-        int randomNumber = (random.nextInt(6) - 3);
         Vector3f newChunkPosition =
-                new Vector3f(xPos, randomNumber, 0f);
+                new Vector3f(xPos, 0f, 0f);
+
+        // generate platform positions
+        Random random = new Random();
+        int rand1 = random.nextInt(6) - 3;
+        int rand2 = rand1 + random.nextInt(6) - 3;
         
-        // generate one platform
-        Platform platform = new Platform(this.assetManager);
+        // generate two platforms
+        Platform platform1 = new Platform(this.assetManager, 0f, rand1);
+        Platform platform2 = new Platform(this.assetManager, P.platformLength+P.platformDistance, rand2);
+        
         
         // generate the background wall
         Wall wall = new Wall(this.assetManager);
         
         // attach everything physical to the node
-        chunk.attachChild(platform);
+        chunk.attachChild(platform1);
+        chunk.attachChild(platform2);
         addChunkToPhysicsSpace(chunk);
         // attach everything else to the node
         chunk.attachChild(wall);

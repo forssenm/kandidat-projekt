@@ -23,5 +23,5 @@ public class P {
     public static final float run_speed = 0.15f;
     public static final float jump_speed = 20f;
     
-    public static final float chunkLength = 15.0f;
+    public static final float chunkLength = 30.0f;
 }

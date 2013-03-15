@@ -23,12 +23,12 @@ public class Platform extends Geometry {
      * @param assetManager is used to load the geometry and 
      * texture of the <code>Platform</code>.
      */
-    public Platform(AssetManager assetManager){
+    public Platform(AssetManager assetManager, float x, float y){
         super("Platform");
         Box model =
             new Box(Vector3f.ZERO, P.platformLength/2, P.platformHeight/2, P.platformWidth/2);
         this.mesh = model;
-        this.setLocalTranslation(P.platformLength/2,0,0);
+        this.setLocalTranslation(P.platformLength/2 + x,y,0);
         
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         material.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
@@ -38,6 +38,10 @@ public class Platform extends Geometry {
         this.addControl(rigidBodyControl);
 
         this.setShadowMode(ShadowMode.Receive);
+    }
+    
+    public Platform(AssetManager assetManager) {
+        this(assetManager, 0f, 0f);
     }
     
     /**
