@@ -45,7 +45,7 @@ public class InMainMenuState extends AbstractAppState {
         this.viewPort = this.app.getViewPort();
         this.physics = this.stateManager.getState(BulletAppState.class);
         setEnabled(true);
-        //loadGui();
+        loadGui();
     }
     
     @Override
@@ -68,8 +68,8 @@ public class InMainMenuState extends AbstractAppState {
  
     @Override
     public void update(float tpf) {
-        this.setEnabled(false);
-        stateManager.attach(new InGameState());
+        //this.setEnabled(false);
+        //stateManager.attach(new InGameState());
     }
     
     private void loadGui() {
