@@ -12,7 +12,7 @@ import state.InMainMenuState;
  * @author normenhansen
  */
 public class Main extends SimpleApplication {
-
+    
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
@@ -25,7 +25,8 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {
-        stateManager.attach(new InGameState());
+//        stateManager.attach(new InGameState());
+        stateManager.attach(new InMainMenuState());
     }
 
     @Override

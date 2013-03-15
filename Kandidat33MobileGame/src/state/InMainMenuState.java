@@ -7,9 +7,10 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.input.InputManager;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
-import state.InGameState;
+import de.lessvoid.nifty.Nifty;
 
 /**
  * This class handles all the menu things
@@ -25,6 +26,7 @@ public class InMainMenuState extends AbstractAppState {
     private InputManager inputManager;
     private ViewPort viewPort;
     private BulletAppState physics;
+    private Nifty nifty;
     
     
     /**
@@ -43,8 +45,9 @@ public class InMainMenuState extends AbstractAppState {
         this.viewPort = this.app.getViewPort();
         this.physics = this.stateManager.getState(BulletAppState.class);
         setEnabled(true);
+        //loadGui();
     }
-
+    
     @Override
     public void cleanup() {
         super.cleanup();
@@ -67,5 +70,12 @@ public class InMainMenuState extends AbstractAppState {
     public void update(float tpf) {
         this.setEnabled(false);
         stateManager.attach(new InGameState());
+    }
+    
+    private void loadGui() {
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, app.getAudioRenderer(), app.getGuiViewPort());
+        nifty = niftyDisplay.getNifty();
+        nifty.fromXml("/xmlgui/SplashScreen.xml", "start");
+        app.getGuiViewPort().addProcessor(niftyDisplay);
     }
 }
