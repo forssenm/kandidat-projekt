@@ -15,13 +15,13 @@ import com.jme3.material.MaterialDef;
  */
 public class P {
 
-    //Platform variables
-    public static final float platformLength = 6.0f;
-    public static final float platformWidth = 2f;
-    public static final float platformHeight = 0.5f;
+    //level variables
+    public static final float platformLength = 12.0f;
+    public static final float platformWidth = 4f;
+    public static final float platformHeight = 1f;
     public static final float platformDistance = 3.0f;
     public static final float run_speed = 0.15f;
     public static final float jump_speed = 20f;
     
-    public static final float chunkLength = 12.0f;
+    public static final float chunkLength = 15.0f;
 }

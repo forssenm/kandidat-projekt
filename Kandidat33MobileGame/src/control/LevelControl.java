@@ -20,6 +20,7 @@ import spatial.Platform;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
+import spatial.Wall;
 import variables.P;
 
 /**
@@ -98,25 +99,36 @@ public class LevelControl implements Control {
      * @return 
      */
     private Node generateNextChunk() {
+
+        // generate the node to attach everything to
+        Node chunk = new Node();
+
+        // find the x position to place the new chunk in
         float xPos;
         if (chunks.isEmpty())  {
-            xPos = 0;
+            xPos = -3;
         } else {
             xPos = this.chunks.getLast().getLocalTranslation().getX() + P.chunkLength;
         }
-        System.out.println(xPos);
-        
-                        // generate new platform position
+
+        // generate a new chunk position
         Random random = new Random();
         int randomNumber = (random.nextInt(6) - 3);
         Vector3f newChunkPosition =
-                new Vector3f(xPos + P.platformDistance, randomNumber, 0f);
+                new Vector3f(xPos, randomNumber, 0f);
         
+        // generate one platform
         Platform platform = new Platform(this.assetManager);
-        Node chunk = new Node();
+        
+        // generate the background wall
+        Wall wall = new Wall(this.assetManager);
+        
+        // attach everything physical to the node
         chunk.attachChild(platform);
         addChunkToPhysicsSpace(chunk);
-
+        // attach everything else to the node
+        chunk.attachChild(wall);
+        
         moveChunkTo(chunk, newChunkPosition);
         
         levelNode.attachChild(chunk);

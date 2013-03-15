@@ -26,8 +26,9 @@ public class Platform extends Geometry {
     public Platform(AssetManager assetManager){
         super("Platform");
         Box model =
-            new Box(Vector3f.ZERO, P.platformLength, P.platformHeight, P.platformWidth);
+            new Box(Vector3f.ZERO, P.platformLength/2, P.platformHeight/2, P.platformWidth/2);
         this.mesh = model;
+        this.setLocalTranslation(P.platformLength/2,0,0);
         
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         material.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
