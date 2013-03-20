@@ -150,18 +150,6 @@ public class InGameState extends AbstractAppState{
         super.cleanup();
         this.app.getRootNode().detachChild(this.gameNode);
     }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        if (enabled) {
-            //Initiate the things that are needed when the state is active
-            System.out.println("InGameState is now active");
-        } else {
-            //Remove the things not needed when the state is inactive
-            System.out.println("InGameState is now inactive");
-        }
-    }
     
     /**{inheritDoc}*/
     @Override
