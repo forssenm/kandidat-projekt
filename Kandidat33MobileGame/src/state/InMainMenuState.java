@@ -11,6 +11,8 @@ import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.NiftyEventSubscriber;
+import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
 
 /**
  * This class handles all the menu things
@@ -27,12 +29,12 @@ public class InMainMenuState extends AbstractAppState {
     private ViewPort viewPort;
     private BulletAppState physics;
     private Nifty nifty;
-    
-    
+
     /**
      * This method should initialize the main menu screen
+     *
      * @param stateManager
-     * @param app 
+     * @param app
      */
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -44,10 +46,10 @@ public class InMainMenuState extends AbstractAppState {
         this.inputManager = this.app.getInputManager();
         this.viewPort = this.app.getViewPort();
         this.physics = this.stateManager.getState(BulletAppState.class);
-        setEnabled(true);
+//        setEnabled(true);
         loadGui();
     }
-    
+
     @Override
     public void cleanup() {
         super.cleanup();
@@ -63,19 +65,27 @@ public class InMainMenuState extends AbstractAppState {
             //Remove the things not needed when the state is inactive
             System.out.println("InMainMenuState is now inactive");
             cleanup();
-      }
+        }
     }
- 
+
     @Override
     public void update(float tpf) {
         //this.setEnabled(false);
         //stateManager.attach(new InGameState());
     }
-    
+
     private void loadGui() {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, app.getAudioRenderer(), app.getGuiViewPort());
         nifty = niftyDisplay.getNifty();
-        nifty.fromXml("/xmlgui/SplashScreen.xml", "start");
+        nifty.subscribeAnnotations(this);
+        nifty.fromXml("/xmlgui/SplashScreen.xml", "splashScreen");
         app.getGuiViewPort().addProcessor(niftyDisplay);
+    }
+
+    @NiftyEventSubscriber(id = "playButton")
+    public void onClick(String id, NiftyMousePrimaryClickedEvent event) {
+        nifty.exit();
+        this.setEnabled(false);
+        stateManager.attach(new InGameState());
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty>
-    <screen id="start"
+    <screen id="splashScreen"
         controller="control.SplashScreenController">
         <layer childLayout="center">
             <image id="imageId" filename="/Textures/bluefire.jpg">

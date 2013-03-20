@@ -24,7 +24,6 @@ public class SplashScreenController implements ScreenController {
     public void bind(final Nifty newNifty, final Screen newScreen) {
         this.nifty = newNifty;
         this.image = newScreen.findElementByName("imageId");
-        System.out.println("Startar screenen");
     }
 
     @Override
@@ -34,7 +33,6 @@ public class SplashScreenController implements ScreenController {
 
     @Override
     public void onEndScreen() {
-        System.out.println("Nu är det slut");
     }
 
     class FadeInEnd implements EndNotify {
@@ -51,7 +49,7 @@ public class SplashScreenController implements ScreenController {
         @Override
         public void perform() {
             System.out.println("fadeOut has ended.");
-            nifty.getScreen("start").endScreen(null);
+            nifty.fromXml("/xmlgui/MainMenuScreen.xml", "mainMenuScreen" );
         }
     }
 }
