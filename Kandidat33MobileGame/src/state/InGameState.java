@@ -21,9 +21,22 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 
 /**
- * This class handles setting up the game. 
- *
- * @author forssenm
+ * This state is activated to start the game. The class sets up  
+ * the different <code>Node</code>s and attaches relevant controls to them.
+ * 
+ * The level/scene is setup using a <code>LevelControl</code> to continously 
+ * generate scene-chunks whene the player moves. 
+ * <br/><br/>
+ * The player is setup with a
+ * <code>RunningControl</code> which keeps the player moving to the right and 
+ * handles jump-events.
+ * <br/><br/>
+ * Background music is set to play.
+ * <br/><br/>
+ * Lights are added
+ * <br/><br/>
+ * The camera is set to follow the player with a <code>ChaseCam</code>
+ * @author forssenm, dagson
  */
 public class InGameState extends AbstractAppState{
     public static final String GAME_NODE = "Game Node";
@@ -43,8 +56,12 @@ public class InGameState extends AbstractAppState{
      
     
     /**
-     * This method initializes the the InGameState
+     * This method initializes the the InGameState and thus getts the game 
+     * ready for playing. That implies setting up the level, player, camera and 
+     * music by using a combination of <code>Node</code>s and 
+     * <code>Control</code>s.
      *
+     * @see Node
      * @param stateManager
      * @param app
      */
@@ -76,13 +93,30 @@ public class InGameState extends AbstractAppState{
         initAudio();
     }
    
-    public void initLevel() {
+    /**
+     * This method creates a node with an attached <code>LevelControl</code> 
+     * which will generate platforms as the player moves.  
+     * 
+     * @see LevelControl
+     */
+    private void initLevel() {
         LevelControl levelControl = new LevelControl(
                 assetManager, physics.getPhysicsSpace(), player);
         gameNode.addControl(levelControl);
     }
     
-    public void initPlayer() {
+    /**
+     * This method creates a node for the player. Also the default player model 
+     * is loaded and attached. A <code>RunningControl</code> is attached to 
+     * control the physics of the player. 
+     * <br/>
+     * <br/>
+     * The pleyers startposition is set to <code>( 0.0f, 3.0f, 0.0f )</code>.
+     * 
+     * @see RunningControl
+     * @see RunningState
+     */
+    private void initPlayer() {
         player = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
         gameNode.attachChild(player);
         player.setLocalTranslation(0.0f, 3.0f, 0.0f);
@@ -90,14 +124,29 @@ public class InGameState extends AbstractAppState{
         this.physics.getPhysicsSpace().addAll(player);
     }
 
+    /**
+     * This method creates a <code>MusicNode</code> for the background music,
+     * loads the default music file and starts playing.
+     */
     private void initAudio(){
         MusicNode musicNode = new MusicNode(assetManager, "Sound/Music/SpookyMusicForRunning.ogg");
         gameNode.attachChild(musicNode);
         musicNode.play();
     }
     
+    /**
+     * This method is for cleaning up everything created by this 
+     * <code>GameState</code>. <br/><br/>
+     * 
+     * 
+     */
     @Override
     public void cleanup() {
+        /* This implementation is incomplete 
+         * If this class is keept as reference then things under the gameNode 
+         * will not be garbarge collected. That might be intended or it might 
+         * not be.
+         */
         super.cleanup();
         this.app.getRootNode().detachChild(this.gameNode);
     }
