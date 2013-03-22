@@ -120,8 +120,8 @@ public class LevelControl implements Control {
         int rand2 = rand1 + random.nextInt(6) - 3;
         
         // generate two platforms
-        Platform platform1 = new Platform(this.assetManager, 0f, rand1);
-        Platform platform2 = new Platform(this.assetManager, P.platformLength+P.platformDistance, rand2);
+        Platform platform1 = new Platform(this.assetManager, new Vector3f(0f, rand1, 0f), P.platformLength, P.platformHeight, P.platformWidth);
+        Platform platform2 = new Platform(this.assetManager, new Vector3f(P.platformLength+P.platformDistance, rand2, 0), P.platformLength, P.platformHeight, P.platformWidth);
         
         
         // generate the background wall
