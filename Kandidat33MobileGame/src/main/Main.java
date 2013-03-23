@@ -4,8 +4,10 @@ import com.jme3.app.DebugKeysAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.renderer.RenderManager;
+import com.jme3.system.AppSettings;
 import state.InGameState;
 import state.InMainMenuState;
+import variables.P;
 
 /**
  * test
@@ -25,7 +27,9 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {
-//        stateManager.attach(new InGameState());
+        P.screenWidth = settings.getWidth();
+        P.screenHeight = settings.getHeight();
+        //stateManager.attach(new InGameState());
         stateManager.attach(new InMainMenuState());
     }
 

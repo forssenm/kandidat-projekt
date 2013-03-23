@@ -1,12 +1,13 @@
 package spatial;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import com.jme3.texture.Texture;
 import variables.P;
 
 /**
@@ -28,10 +29,17 @@ public class Wall extends Geometry {
             new Box(new Vector3f(P.chunkLength/2,0,-P.platformWidth/2), P.chunkLength/2, 40, 0);
         this.mesh = model;
         
+        //Loads the texture and repeats it over the chunk in its correct size 
+        //(so that each brick will not be bigger in pixels, or stretched, if 
+        //the resolution is higher is greater than 640x480)
+        Texture texture = assetManager.loadTexture("Textures/bricks.jpg");
+        texture.setWrap(Texture.WrapMode.Repeat);
+        this.mesh.scaleTextureCoordinates(new Vector2f(Math.round(18f*P.screenWidth/640), Math.round(40f*P.screenHeight/480)));
+        
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        material.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
+        material.setTexture("DiffuseMap", texture);
         this.setMaterial(material);
-
+ 
         this.setShadowMode(ShadowMode.Receive);
     }
 }
