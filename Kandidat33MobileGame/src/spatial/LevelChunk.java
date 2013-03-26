@@ -7,6 +7,7 @@ package spatial;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.light.Light;
+import com.jme3.light.PointLight;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.SceneGraphVisitor;
@@ -39,19 +40,23 @@ public class LevelChunk extends Node {
         disablePhysics();
         super.setLocalTranslation(v);
         enablePhysics();
+        for (Light light : lights) {
+            if (light instanceof PointLight) {
+                PointLight pointLight = ((PointLight)light);
+                pointLight.setPosition(v.add(pointLight.getPosition()));
+            }
+        }
     }
     
     @Override
+    /**
+     * 
+     */
     public void addLight(Light light) {
         lights.add(light);
         levelRootNode.addLight(light);
     }
     
-    @Override
-    public void removeLight(Light light) {
-        lights.remove(light);
-        levelRootNode.removeLight(light);
-    }
     
     /**
      * Removes this chunk from the level.
@@ -59,7 +64,7 @@ public class LevelChunk extends Node {
     public void remove() {
         removeFromPhysicsSpace();
         for (Light light : lights) {
-            removeLight(light);
+            levelRootNode.removeLight(light);
         }
         this.getParent().detachChild(this);
     }
@@ -67,9 +72,8 @@ public class LevelChunk extends Node {
     /**
      * Adds all objects with a PhysicsControl in this chunk to the PhysicsSpace.
      *
-     * @param chunk
      */
-    private void addToPhysicsSpace() {
+    public void addToPhysicsSpace() {
         // traverse the scenegraph starting from the chunk node
         this.depthFirstTraversal(new SceneGraphVisitor() {
             public void visit(Spatial spatial) {
@@ -82,7 +86,6 @@ public class LevelChunk extends Node {
      * Removes all objects with a PhysicsControl in this chunk from the
      * PhysicsSpace.
      *
-     * @param chunk 
      */
     private void removeFromPhysicsSpace() {
         // traverse the scenegraph starting from the chunk node
@@ -95,7 +98,6 @@ public class LevelChunk extends Node {
 
     /**
      * Disables the physics of all objects in this chunk.
-     * @param chunk 
      */
     private void disablePhysics() {
         // traverse the scenegraph starting from the chunk node

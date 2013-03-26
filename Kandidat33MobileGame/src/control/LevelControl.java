@@ -9,6 +9,8 @@ import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
+import com.jme3.light.PointLight;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -20,6 +22,7 @@ import spatial.Platform;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
+import spatial.LevelChunk;
 import spatial.Wall;
 import variables.P;
 
@@ -32,8 +35,8 @@ import variables.P;
 public class LevelControl implements Control {
 
     
-    private Node levelNode;
-    private LinkedList<Node> chunks;
+    private Node gameNode;
+    private LinkedList<LevelChunk> chunks;
     private AssetManager assetManager;
     private PhysicsSpace physicsSpace;
     private Spatial player;
@@ -58,10 +61,10 @@ public class LevelControl implements Control {
      */
     public void setSpatial(Spatial spatial) {
         assert (spatial instanceof Node);
-        if (levelNode != null) {
-            levelNode.detachAllChildren();
+        if (gameNode != null) {
+            gameNode.detachAllChildren();
         }
-        this.levelNode = (Node) spatial;
+        this.gameNode = (Node) spatial;
         generateStartingChunks();
     }
 
@@ -78,13 +81,12 @@ public class LevelControl implements Control {
         }
     }
     
-    private void deleteChunk(Node chunk) {
-        removeChunkFromPhysicsSpace(chunk);
-        levelNode.detachChild(chunk);
+    private void deleteChunk(LevelChunk chunk) {
+        chunk.remove();
     }
     
     private void generateStartingChunks() {
-        chunks = new LinkedList<Node>();
+        chunks = new LinkedList<LevelChunk>();
         // generate 5 chunks
         for (int i = 0; i<10; i++){
             generateNextChunk();
@@ -101,7 +103,7 @@ public class LevelControl implements Control {
     private Node generateNextChunk() {
 
         // generate the node to attach everything to
-        Node chunk = new Node();
+        LevelChunk chunk = new LevelChunk(this.physicsSpace,gameNode);
 
         // find the x position to place the new chunk in
         float xPos;
@@ -127,98 +129,31 @@ public class LevelControl implements Control {
         // generate the background wall
         Wall wall = new Wall(this.assetManager);
         
+        // generate a point light source of a random colour
+        PointLight light = new PointLight();
+        light.setRadius(40);
+        light.setPosition(new Vector3f(15f, 10f, 6f));
+        if (rand1 < -2) {
+            light.setColor(ColorRGBA.Blue);
+        } else if (rand1 < 2) {
+            light.setColor(ColorRGBA.Red);
+        } else {
+            light.setColor(ColorRGBA.Green);
+        }
+        chunk.addLight(light);
+        
         // attach everything physical to the node
         chunk.attachChild(platform1);
         chunk.attachChild(platform2);
-        addChunkToPhysicsSpace(chunk);
+        chunk.addToPhysicsSpace();
         // attach everything else to the node
         chunk.attachChild(wall);
         
-        moveChunkTo(chunk, newChunkPosition);
+        chunk.setLocalTranslation(newChunkPosition);
         
-        levelNode.attachChild(chunk);
+        gameNode.attachChild(chunk);
         chunks.addLast(chunk);
         return chunk;
-    }
-    
-    /**
-     * Moves one chunk to another position.
-     * Use this instead of simply chunk.setLocalTranslation in order to
-     * keep any physics objects in the chunk from decoupling with the physics
-     * space.
-     * @param chunk The chunk to move
-     * @param position The position to move it to, relative to the node this
-     * LevelControl is attached to.
-     */
-    private void moveChunkTo(Node chunk, Vector3f position) {
-        disablePhysicsOfChunk(chunk);
-        chunk.setLocalTranslation(position);
-        enablePhysicsOfChunk(chunk);
-    }
-    
-    /**
-     * Adds all objects with a PhysicsControl in a chunk to the PhysicsSpace.
-     * "In a chunk" is the same as "attached to a Node".
-     * @param chunk 
-     */
-    private void addChunkToPhysicsSpace(Node chunk) {
-        // traverse the scenegraph starting from the chunk node
-        chunk.depthFirstTraversal(new SceneGraphVisitor() {
-            public void visit(Spatial spatial) {
-                physicsSpace.addAll(spatial);
-            }
-        });
-    }
-
-    /**
-     * Removes all objects with a PhysicsControl in a chunk from the
-     * PhysicsSpace. "In a chunk" is the same as "attached to a Node".
-     *
-     * @param chunk 
-     */
-    private void removeChunkFromPhysicsSpace(Node chunk) {
-        // traverse the scenegraph starting from the chunk node
-        chunk.depthFirstTraversal(new SceneGraphVisitor() {
-            public void visit(Spatial spatial) {
-                physicsSpace.removeAll(spatial);
-            }
-        });
-    }   
-
-    /**
-     * Disables the physics of all objects in a chunk.
-     * "In a chunk" is the same as "attached to a Node".
-     * @param chunk 
-     */
-    private void disablePhysicsOfChunk(Node chunk) {
-        // traverse the scenegraph starting from the chunk node
-        chunk.depthFirstTraversal(new SceneGraphVisitor() {
-            public void visit(Spatial spatial) {
-                // get the PhysicsControl if there is any
-                PhysicsControl physicsControl = spatial.getControl(PhysicsControl.class);
-                if (physicsControl != null) {
-                    physicsControl.setEnabled(false);
-                }
-            }
-        });
-    }
-
-    /**
-     * Enables the physics of all objects in a chunk.
-     * "In a chunk" is the same as "attached to a Node".
-     * @param chunk 
-     */
-    private void enablePhysicsOfChunk(Node chunk) {
-        // traverse the scenegraph starting from the chunk node
-        chunk.depthFirstTraversal(new SceneGraphVisitor() {
-            public void visit(Spatial spatial) {
-                // get the PhysicsControl if there is any
-                PhysicsControl physicsControl = spatial.getControl(PhysicsControl.class);
-                if (physicsControl != null) {
-                    physicsControl.setEnabled(true);
-                }
-            }
-        });
     }
 
     public void render(RenderManager rm, ViewPort vp) {
