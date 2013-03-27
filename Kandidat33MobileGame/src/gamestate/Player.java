@@ -27,7 +27,6 @@ import variables.P;
 public class Player {
     // Scene Object
     private Node node;
-    private Node meshNode;
     public Spatial spatial;
     
     // Physics connection
@@ -36,8 +35,6 @@ public class Player {
     
     public Player(SceneObjectDataSource dataSource){
         Node node = new Node();
-       // meshNode = new Node();
-        this.meshNode = new Node();
         Spatial spatial = dataSource.getSceneObject();
         
         CapsuleCollisionShape shape = new CapsuleCollisionShape(1f,0.5f);
@@ -52,14 +49,9 @@ public class Player {
         
         
         spatial.addControl(characterControl);
-        //node.attachChild(spatial);
-        meshNode.attachChild(spatial);
-        node.attachChild(meshNode);
+        node.attachChild(spatial);
         spatial.setShadowMode(ShadowMode.Cast);
-      //  node.rotate(0, 0, 1);
-      //  node.scale(5);
-        spatial.scale(1);  // scale funkar på spatial
-        spatial.rotate(2,12,5); //rotate gör ingenting
+        
         this.node = node;
         this.spatial = spatial;
         this.characterControl = characterControl;
@@ -81,9 +73,6 @@ public class Player {
         return node;
     }
 
-    public Node getMeshNode() {
-        return meshNode;
-    }
     public void setNode(Node node) {
         this.node = node;
     }

@@ -24,7 +24,6 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import com.jme3.math.Quaternion;
 import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
@@ -46,7 +45,6 @@ public class InGameState extends AbstractAppState  implements AnimEventListener{
 
     private SimpleApplication app;
     private Node inGameRootNode;
-    private Node playerOuterNode;
     private AssetManager assetManager;
     private AppStateManager stateManager;
     private InputManager inputManager;
@@ -128,9 +126,7 @@ public void onAnimChange(AnimControl control, AnimChannel channel, String animNa
         //directionToPlayer = player.getSpatial().getLocalTranslation().
         //        subtract(playerLightPosition);
         //playerSpot.setDirection(directionToPlayer);
-        //player.getSpatial().scale(0.99f);
-      //  player.getMeshNode().rotate(0,0.01f,0);
-       
+        
         //Check if the first platform can be moved
         if(player.getSpatial().getLocalTranslation().x - platformController.platforms.getFirst().getPlatformX() > 10) {
             Random random = new Random();
@@ -157,12 +153,7 @@ public void onAnimChange(AnimControl control, AnimChannel channel, String animNa
 
         // Create player and attach it to the Scene Graph and Physics Space
         this.player = new Player(new PlayerSceneObjectDataSource(this.assetManager));
-        //this.player.addToNode(inGameRootNode);
-        ///this.player.addToNode(inGameRootNode);
-        //Sätter Playerns node istället för playerns spatial 
-        inGameRootNode.attachChild(this.player.getNode());
-        //kommentera ut raden nedan för att få allt att bete sig "som innan" 
-       // player.getMeshNode().rotate(0,3.14f,0); //Ställer gubben rätt, men varför blir ljuset fel?
+        this.player.addToNode(inGameRootNode);
         this.player.addToPhysicsSpace(physics.getPhysicsSpace());
         initCamera();
         initInputs();
