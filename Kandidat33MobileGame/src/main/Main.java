@@ -5,6 +5,8 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import state.InGameState;
 import state.InMainMenuState;
 import variables.P;
@@ -23,6 +25,7 @@ public class Main extends SimpleApplication {
     public Main(){
         /* This call to super makes sure to not load the flyCam. */
         super(new StatsAppState(), new DebugKeysAppState());
+        Logger.getLogger("").setLevel(Level.SEVERE);
     }
     
     @Override
