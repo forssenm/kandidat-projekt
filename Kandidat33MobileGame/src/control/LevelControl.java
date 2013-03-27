@@ -6,16 +6,16 @@ package control;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
-import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.light.PointLight;
+import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
-import com.jme3.scene.SceneGraphVisitor;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import spatial.Platform;
@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.Random;
 import spatial.LevelChunk;
 import spatial.Wall;
+import spatial.WindowFrame;
 import variables.P;
 
 /**
@@ -129,6 +130,21 @@ public class LevelControl implements Control {
         // generate the background wall
         Wall wall = new Wall(this.assetManager);
         
+        // generate a windowframe
+        Vector3f windowPos = new Vector3f(5f,5f,0f);
+        WindowFrame window = new WindowFrame(this.assetManager, windowPos);
+        
+        // generate a light shining out the window
+        SpotLight windowLight = new SpotLight();
+        windowLight.setSpotOuterAngle(15f * FastMath.DEG_TO_RAD);
+        windowLight.setSpotInnerAngle(13f * FastMath.DEG_TO_RAD);
+        Vector3f windowLightDir = new Vector3f(0f, -10f, 20f);
+        windowLight.setPosition(windowPos.subtract(windowLightDir));
+        windowLight.setDirection(windowLightDir);
+        windowLight.setSpotRange(100f);
+        chunk.addLight(windowLight);
+        
+        
         // generate a point light source of a random colour
         PointLight light = new PointLight();
         light.setRadius(40);
@@ -142,12 +158,14 @@ public class LevelControl implements Control {
         }
         chunk.addLight(light);
         
+        
         // attach everything physical to the node
         chunk.attachChild(platform1);
         chunk.attachChild(platform2);
         chunk.addToPhysicsSpace();
         // attach everything else to the node
         chunk.attachChild(wall);
+        chunk.attachChild(window);
         
         chunk.setLocalTranslation(newChunkPosition);
         

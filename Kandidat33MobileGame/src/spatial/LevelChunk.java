@@ -8,6 +8,7 @@ import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.light.Light;
 import com.jme3.light.PointLight;
+import com.jme3.light.SpotLight;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.SceneGraphVisitor;
@@ -44,6 +45,9 @@ public class LevelChunk extends Node {
             if (light instanceof PointLight) {
                 PointLight pointLight = ((PointLight)light);
                 pointLight.setPosition(v.add(pointLight.getPosition()));
+            } else if (light instanceof SpotLight) {
+                SpotLight spotLight = ((SpotLight)light);
+                spotLight.setPosition(v.add(spotLight.getPosition()));
             }
         }
     }
