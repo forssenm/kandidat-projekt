@@ -37,7 +37,7 @@ public class Platform extends Geometry {
         RigidBodyControl rigidBodyControl = new RigidBodyControl(0.0f);
         this.addControl(rigidBodyControl);
 
-        this.setShadowMode(ShadowMode.Receive);
+        this.setShadowMode(ShadowMode.CastAndReceive);
     }
     
     /**

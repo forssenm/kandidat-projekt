@@ -116,7 +116,7 @@ public class LevelControl implements Control {
         // generate a new chunk position
         Vector3f newChunkPosition =
                 new Vector3f(xPos, 0f, 0f);
-
+        
         // generate platform positions
         Random random = new Random();
         int rand1 = random.nextInt(6) - 3;
@@ -138,17 +138,16 @@ public class LevelControl implements Control {
         SpotLight windowLight = new SpotLight();
         windowLight.setSpotOuterAngle(15f * FastMath.DEG_TO_RAD);
         windowLight.setSpotInnerAngle(13f * FastMath.DEG_TO_RAD);
-        Vector3f windowLightDir = new Vector3f(0f, -10f, 20f);
-        windowLight.setPosition(windowPos.subtract(windowLightDir));
-        windowLight.setDirection(windowLightDir);
-        windowLight.setSpotRange(100f);
+        windowLight.setPosition(windowPos.subtract(P.windowLightDirection));
+        windowLight.setDirection(P.windowLightDirection);
+        windowLight.setSpotRange(100f);        
         chunk.addLight(windowLight);
         
         
         // generate a point light source of a random colour
         PointLight light = new PointLight();
         light.setRadius(40);
-        light.setPosition(new Vector3f(15f, 10f, 6f));
+        light.setPosition(new Vector3f(15f, 10f, 0f));
         if (rand1 < -2) {
             light.setColor(ColorRGBA.Blue);
         } else if (rand1 < 2) {
@@ -157,6 +156,7 @@ public class LevelControl implements Control {
             light.setColor(ColorRGBA.Green);
         }
         chunk.addLight(light);
+        
         
         
         // attach everything physical to the node

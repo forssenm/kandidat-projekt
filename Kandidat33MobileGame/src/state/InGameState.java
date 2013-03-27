@@ -18,7 +18,10 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
+import com.jme3.shadow.PssmShadowRenderer;
+import variables.P;
 
 /**
  * This state is activated to start the game. The class sets up  
@@ -103,6 +106,16 @@ public class InGameState extends AbstractAppState{
         LevelControl levelControl = new LevelControl(
                 assetManager, physics.getPhysicsSpace(), player);
         gameNode.addControl(levelControl);
+        /*
+        PssmShadowRenderer shadowRenderer = new PssmShadowRenderer(assetManager, 512,1);
+        shadowRenderer.setDirection(P.windowLightDirection.normalize());
+        shadowRenderer.setLambda(0.55f);
+        shadowRenderer.setShadowIntensity(0.6f);
+        shadowRenderer.setCompareMode(PssmShadowRenderer.CompareMode.Software);
+        shadowRenderer.setFilterMode(PssmShadowRenderer.FilterMode.Dither);
+
+        viewPort.addProcessor(shadowRenderer);
+        */
     }
     
     /**
@@ -118,6 +131,7 @@ public class InGameState extends AbstractAppState{
      */
     private void initPlayer() {
         player = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
+        player.setShadowMode(RenderQueue.ShadowMode.Cast);
         gameNode.attachChild(player);
         player.setLocalTranslation(0.0f, 3.0f, 0.0f);
         player.addControl(new RunningControl());
