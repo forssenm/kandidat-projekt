@@ -132,6 +132,7 @@ public class InGameState extends AbstractAppState{
     private void initPlayer() {
         player = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
         player.setShadowMode(RenderQueue.ShadowMode.Cast);
+        player.setName("player");
         gameNode.attachChild(player);
         player.setLocalTranslation(0.0f, 3.0f, 0.0f);
         player.addControl(new RunningControl());

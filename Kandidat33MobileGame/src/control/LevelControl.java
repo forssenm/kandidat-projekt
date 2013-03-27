@@ -6,6 +6,8 @@ package control;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.light.PointLight;
@@ -22,6 +24,7 @@ import spatial.Platform;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
+import spatial.Hazard;
 import spatial.LevelChunk;
 import spatial.Wall;
 import spatial.WindowFrame;
@@ -157,11 +160,16 @@ public class LevelControl implements Control {
         }
         chunk.addLight(light);
         
+        Hazard hazard = new Hazard(assetManager);
+        hazard.setLocalTranslation(10f,3f,0f);
+        HazardControl hazardControl = new HazardControl(new BoxCollisionShape(new Vector3f(1,1,1)));
+        hazard.addControl(hazardControl);
         
-        
+        this.physicsSpace.addCollisionListener(hazardControl);
         // attach everything physical to the node
         chunk.attachChild(platform1);
         chunk.attachChild(platform2);
+        chunk.attachChild(hazard);
         chunk.addToPhysicsSpace();
         // attach everything else to the node
         chunk.attachChild(wall);
