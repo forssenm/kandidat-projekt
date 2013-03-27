@@ -1,25 +1,36 @@
 package main;
 
+import com.jme3.app.DebugKeysAppState;
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.StatsAppState;
 import com.jme3.renderer.RenderManager;
-import gamestate.InGameState;
-import menustate.InMainMenuState;
+import com.jme3.system.AppSettings;
+import state.InGameState;
+import state.InMainMenuState;
+import variables.P;
 
 /**
  * test
  * @author normenhansen
  */
 public class Main extends SimpleApplication {
-
+    
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
     }
 
+    public Main(){
+        /* This call to super makes sure to not load the flyCam. */
+        super(new StatsAppState(), new DebugKeysAppState());
+    }
+    
     @Override
     public void simpleInitApp() {
-        //flyCam.setEnabled(false);
-        stateManager.attach(new InGameState());
+        P.screenWidth = settings.getWidth();
+        P.screenHeight = settings.getHeight();
+        //stateManager.attach(new InGameState());
+        stateManager.attach(new InMainMenuState());
     }
 
     @Override
