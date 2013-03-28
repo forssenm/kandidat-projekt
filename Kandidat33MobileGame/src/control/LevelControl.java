@@ -165,7 +165,9 @@ public class LevelControl implements Control {
         Hazard hazard = new Hazard(assetManager);
         hazard.setLocalTranslation(10f,3f,0f);
         GhostControl hazardGhostControl = new GhostControl(new BoxCollisionShape(new Vector3f(1,1,1)));
-        hazard.addControl(hazardGhostControl);        
+        hazard.addControl(hazardGhostControl);
+        FireballControl fireballControl = new FireballControl();
+        hazard.addControl(fireballControl);
         
         // attach everything physical to the node
         chunk.attachChild(platform1);
