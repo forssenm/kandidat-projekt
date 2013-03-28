@@ -11,6 +11,7 @@ import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
+import com.jme3.light.Light;
 import com.jme3.light.PointLight;
 import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
@@ -135,32 +136,21 @@ public class LevelControl implements Control {
         Wall wall = new Wall(this.assetManager);
         
         // generate a windowframe
-        Vector3f windowPos = new Vector3f(5f,5f,0f);
+        Vector3f windowPos = new Vector3f(5f, 5f, 0f);
         WindowFrame window = new WindowFrame(this.assetManager, windowPos);
+
+        /*
+         * This code creates a spotlight for each window. Slow on the phone.
+         // generate a light shining out the window
+         chunk.addLight(getWindowLight(windowPos));
+         */
         
-        // generate a light shining out the window
-        SpotLight windowLight = new SpotLight();
-        windowLight.setSpotOuterAngle(15f * FastMath.DEG_TO_RAD);
-        windowLight.setSpotInnerAngle(13f * FastMath.DEG_TO_RAD);
-        windowLight.setPosition(windowPos.subtract(P.windowLightDirection));
-        windowLight.setDirection(P.windowLightDirection);
-        windowLight.setSpotRange(100f);        
-        chunk.addLight(windowLight);
-        
-        
-        // generate a point light source of a random colour
-        PointLight light = new PointLight();
-        light.setRadius(40);
-        light.setPosition(new Vector3f(15f, 10f, 0f));
-        if (rand1 < -2) {
-            light.setColor(ColorRGBA.Blue);
-        } else if (rand1 < 2) {
-            light.setColor(ColorRGBA.Red);
-        } else {
-            light.setColor(ColorRGBA.Green);
-        }
-        chunk.addLight(light);
-        
+        /*
+         * This code creates a light of random colour. Slow on the phone.
+         // generate a point light source of a random colour
+         chunk.addLight(getColouredLight());
+         */
+
         // attach everything physical to the node
         chunk.attachChild(platform1);
         chunk.attachChild(platform2);
@@ -176,7 +166,16 @@ public class LevelControl implements Control {
         chunks.addLast(chunk);
         return chunk;
     }
-
+    
+    public Light getWindowLight(Vector3f windowPosition) {
+                SpotLight windowLight = new SpotLight();
+        windowLight.setSpotOuterAngle(15f * FastMath.DEG_TO_RAD);
+        windowLight.setSpotInnerAngle(13f * FastMath.DEG_TO_RAD);
+        windowLight.setPosition(windowPosition.subtract(P.windowLightDirection));
+        windowLight.setDirection(P.windowLightDirection);
+        windowLight.setSpotRange(100f);
+        return windowLight;
+    }
     
     /* Creates a fireball hazard floating in the air.*/
     private Hazard createHazard(){
@@ -187,6 +186,22 @@ public class LevelControl implements Control {
         FireballControl fireballControl = new FireballControl();
         hazard.addControl(fireballControl);
         return hazard;
+    }
+
+        public Light getColouredLight() {
+        Random random = new Random();
+        int rand = random.nextInt(6);
+            PointLight light = new PointLight();
+        light.setRadius(40);
+        light.setPosition(new Vector3f(15f, 10f, 0f));
+        if (rand < 3) {
+            light.setColor(ColorRGBA.Blue);
+        } else if (rand < 5) {
+            light.setColor(ColorRGBA.Red);
+        } else {
+            light.setColor(ColorRGBA.Green);
+        }
+        return light;
     }
     
     public void render(RenderManager rm, ViewPort vp) {
