@@ -11,5 +11,5 @@ import spatial.Player;
  */
 public interface HazardControl extends Control {
 
-    public void collideWithPlayer(Player player);
+    public void collideWithPlayer(Spatial player);
 }

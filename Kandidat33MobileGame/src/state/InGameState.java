@@ -25,6 +25,7 @@ import com.jme3.scene.Node;
 import com.jme3.shadow.PssmShadowRenderer;
 import variables.P;
 import com.jme3.scene.Spatial;
+import control.HazardControl;
 
 /**
  * This state is activated to start the game. The class sets up  
@@ -207,23 +208,22 @@ public class InGameState extends AbstractAppState{
             public void collision(PhysicsCollisionEvent event) {
                 if (event.getNodeA().getName().equals("player")
                         && event.getNodeB().getName().equals("hazard")) {
-                    final Spatial spatial = event.getNodeA();
-                    System.out.println("Hit player");
+                    event.getNodeB().getControl(HazardControl.class).collideWithPlayer(event.getNodeA());
                 } else if (event.getNodeB().getName().equals("player")
                         && event.getNodeA().getName().equals("hazard")) {
-                    final Spatial spatial = event.getNodeB();
-                    System.out.println("Hit player");
+                    event.getNodeA().getControl(HazardControl.class).collideWithPlayer(event.getNodeB());
                 }
-
-                if (event.getNodeA().getName().equals("player")
-                        && event.getNodeB().getName().equals("nothazard")) {
-                    final Spatial spatial = event.getNodeA();
-                    System.out.println("foo");
-                } else if (event.getNodeB().getName().equals("player")
-                        && event.getNodeA().getName().equals("nothazard")) {
-                    final Spatial spatial = event.getNodeB();
-                    System.out.println("bar");
-                }
+                /*
+                 if (event.getNodeA().getName().equals("player")
+                 && event.getNodeB().getName().equals("nothazard")) {
+                 final Spatial spatial = event.getNodeA();
+                 System.out.println("foo");
+                 } else if (event.getNodeB().getName().equals("player")
+                 && event.getNodeA().getName().equals("nothazard")) {
+                 final Spatial spatial = event.getNodeB();
+                 System.out.println("bar");
+                 }
+                 */
             }
         };
         this.physics.getPhysicsSpace().addCollisionListener(physicsCollisionListener);     
