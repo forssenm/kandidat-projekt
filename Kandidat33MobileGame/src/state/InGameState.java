@@ -88,6 +88,7 @@ public class InGameState extends AbstractAppState{
         
         initPlayer();
         initLevel();
+        initCollisions();
         initCamera();
         initInputs();
 
@@ -201,7 +202,7 @@ public class InGameState extends AbstractAppState{
         inputManager.addListener(player.getControl(RunningControl.class), "jump");
     }
 
-    private void initHazardCollisions() {
+    private void initCollisions() {
         PhysicsCollisionListener physicsCollisionListener = new PhysicsCollisionListener() {
             public void collision(PhysicsCollisionEvent event) {
                 if (event.getNodeA().getName().equals("player")
