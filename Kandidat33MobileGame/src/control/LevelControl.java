@@ -142,19 +142,26 @@ public class LevelControl implements Control {
         /*
          * This code creates a spotlight for each window. Slow on the phone.
          // generate a light shining out the window
-         chunk.addLight(getWindowLight(windowPos));
+         chunk.addLight(createWindowLight(windowPos));
          */
         
         /*
          * This code creates a light of random colour. Slow on the phone.
          // generate a point light source of a random colour
-         chunk.addLight(getColouredLight());
+         chunk.addLight(createColouredLight());
          */
-
+        
+        /*
+         * This code creates a FireballControl-type hazard floating in mid-air,
+         * triggering the first time the player bumps into it. Doesn't work on
+         * the phone.
+        // generate a hazard.
+        chunk.attachChild(createHazard());
+         */
+        
         // attach everything physical to the node
         chunk.attachChild(platform1);
         chunk.attachChild(platform2);
-        chunk.attachChild(createHazard());
         chunk.addToPhysicsSpace();
         // attach everything else to the node
         chunk.attachChild(wall);
@@ -166,9 +173,10 @@ public class LevelControl implements Control {
         chunks.addLast(chunk);
         return chunk;
     }
-    
-    public Light getWindowLight(Vector3f windowPosition) {
-                SpotLight windowLight = new SpotLight();
+
+    /* Creates a spotlight shining through a window at a given position */
+    private Light createWindowLight(Vector3f windowPosition) {
+        SpotLight windowLight = new SpotLight();
         windowLight.setSpotOuterAngle(15f * FastMath.DEG_TO_RAD);
         windowLight.setSpotInnerAngle(13f * FastMath.DEG_TO_RAD);
         windowLight.setPosition(windowPosition.subtract(P.windowLightDirection));
@@ -177,18 +185,8 @@ public class LevelControl implements Control {
         return windowLight;
     }
     
-    /* Creates a fireball hazard floating in the air.*/
-    private Hazard createHazard(){
-        Hazard hazard = new Hazard(assetManager);
-        hazard.setLocalTranslation(10f,3f,0f);
-        GhostControl hazardGhostControl = new GhostControl(new BoxCollisionShape(new Vector3f(1,1,1)));
-        hazard.addControl(hazardGhostControl);
-        FireballControl fireballControl = new FireballControl();
-        hazard.addControl(fireballControl);
-        return hazard;
-    }
-
-        public Light getColouredLight() {
+    /* Creates a light of a random colour, a bit above and in front of the player */
+    private Light createColouredLight() {
         Random random = new Random();
         int rand = random.nextInt(6);
             PointLight light = new PointLight();
@@ -203,6 +201,18 @@ public class LevelControl implements Control {
         }
         return light;
     }
+    
+    /* Creates a fireball hazard floating in the air.*/
+    private Hazard createHazard(){
+        Hazard hazard = new Hazard(assetManager);
+        hazard.setLocalTranslation(10f,3f,0f);
+        GhostControl hazardGhostControl = new GhostControl(new BoxCollisionShape(new Vector3f(1,1,1)));
+        hazard.addControl(hazardGhostControl);
+        FireballControl fireballControl = new FireballControl();
+        hazard.addControl(fireballControl);
+        return hazard;
+    }
+
     
     public void render(RenderManager rm, ViewPort vp) {
     }
