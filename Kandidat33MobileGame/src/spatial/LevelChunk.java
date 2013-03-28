@@ -78,12 +78,7 @@ public class LevelChunk extends Node {
      *
      */
     public void addToPhysicsSpace() {
-        // traverse the scenegraph starting from the chunk node
-        this.depthFirstTraversal(new SceneGraphVisitor() {
-            public void visit(Spatial spatial) {
-                physicsSpace.addAll(spatial);
-            }
-        });
+        physicsSpace.addAll(this);
     }
 
     /**
@@ -92,12 +87,7 @@ public class LevelChunk extends Node {
      *
      */
     private void removeFromPhysicsSpace() {
-        // traverse the scenegraph starting from the chunk node
-        this.depthFirstTraversal(new SceneGraphVisitor() {
-            public void visit(Spatial spatial) {
-                physicsSpace.removeAll(spatial);
-            }
-        });
+        physicsSpace.removeAll(this);
     }   
 
     /**

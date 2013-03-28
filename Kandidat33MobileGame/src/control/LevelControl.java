@@ -109,7 +109,7 @@ public class LevelControl implements Control {
 
         // generate the node to attach everything to
         LevelChunk chunk = new LevelChunk(this.physicsSpace,gameNode);
-
+        
         // find the x position to place the new chunk in
         float xPos;
         if (chunks.isEmpty())  {
@@ -161,7 +161,7 @@ public class LevelControl implements Control {
         }
         chunk.addLight(light);
         
-        // creates a standard hazard floating in the air.
+        // creates a fireball hazard floating in the air.
         Hazard hazard = new Hazard(assetManager);
         hazard.setLocalTranslation(10f,3f,0f);
         GhostControl hazardGhostControl = new GhostControl(new BoxCollisionShape(new Vector3f(1,1,1)));
