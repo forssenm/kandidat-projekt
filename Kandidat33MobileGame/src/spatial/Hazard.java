@@ -13,22 +13,31 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 
 /**
- *
+ * A class for a general hazard.
+ * TODO: make this class abstract
  * @author dagen
  */
 public class Hazard extends Node {
-
+    
     public Hazard(AssetManager assetManager) {
         super("hazard");
+        
+        // switch out this code in order to load another model
         Box model =
                 new Box(Vector3f.ZERO, 1, 1, 1);
-
         Geometry geometry = new Geometry("", model);
-        this.attachChild(geometry);
-
         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         material.setColor("Color", ColorRGBA.Blue);
-        this.setMaterial(material);
+        geometry.setMaterial(material);
+        this.attachChild(geometry);
+        
+        // a custom model would be loaded like this:
+        /*
+         * Node model = (Node)assetManager.loadModel("Models/wizardStuff/fireball.j3o");
+         * this.attachChild(model);
+         */
+
+
 
     }
 }

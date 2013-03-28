@@ -160,6 +160,7 @@ public class LevelControl implements Control {
         }
         chunk.addLight(light);
         
+        // creates a standard hazard floating in the air.
         Hazard hazard = new Hazard(assetManager);
         hazard.setLocalTranslation(10f,3f,0f);
         HazardControl hazardControl = new HazardControl(new BoxCollisionShape(new Vector3f(1,1,1)));
