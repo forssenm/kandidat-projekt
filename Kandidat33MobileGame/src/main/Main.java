@@ -26,6 +26,7 @@ public class Main extends SimpleApplication {
         /* This call to super makes sure to not load the flyCam. */
         super(new StatsAppState(), new DebugKeysAppState());
         Logger.getLogger("").setLevel(Level.SEVERE);
+        Logger.getLogger("Kandidat").setLevel(Level.FINE);
     }
     
     @Override
