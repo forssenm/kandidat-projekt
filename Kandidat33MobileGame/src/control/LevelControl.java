@@ -7,6 +7,7 @@ package control;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
@@ -163,10 +164,9 @@ public class LevelControl implements Control {
         // creates a standard hazard floating in the air.
         Hazard hazard = new Hazard(assetManager);
         hazard.setLocalTranslation(10f,3f,0f);
-        HazardControl hazardControl = new HazardControl(new BoxCollisionShape(new Vector3f(1,1,1)));
-        hazard.addControl(hazardControl);
+        GhostControl hazardGhostControl = new GhostControl(new BoxCollisionShape(new Vector3f(1,1,1)));
+        hazard.addControl(hazardGhostControl);        
         
-        this.physicsSpace.addCollisionListener(hazardControl);
         // attach everything physical to the node
         chunk.attachChild(platform1);
         chunk.attachChild(platform2);
