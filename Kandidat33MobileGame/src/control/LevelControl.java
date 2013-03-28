@@ -161,18 +161,10 @@ public class LevelControl implements Control {
         }
         chunk.addLight(light);
         
-        // creates a fireball hazard floating in the air.
-        Hazard hazard = new Hazard(assetManager);
-        hazard.setLocalTranslation(10f,3f,0f);
-        GhostControl hazardGhostControl = new GhostControl(new BoxCollisionShape(new Vector3f(1,1,1)));
-        hazard.addControl(hazardGhostControl);
-        FireballControl fireballControl = new FireballControl();
-        hazard.addControl(fireballControl);
-        
         // attach everything physical to the node
         chunk.attachChild(platform1);
         chunk.attachChild(platform2);
-        chunk.attachChild(hazard);
+        chunk.attachChild(createHazard());
         chunk.addToPhysicsSpace();
         // attach everything else to the node
         chunk.attachChild(wall);
@@ -185,6 +177,18 @@ public class LevelControl implements Control {
         return chunk;
     }
 
+    
+    /* Creates a fireball hazard floating in the air.*/
+    private Hazard createHazard(){
+        Hazard hazard = new Hazard(assetManager);
+        hazard.setLocalTranslation(10f,3f,0f);
+        GhostControl hazardGhostControl = new GhostControl(new BoxCollisionShape(new Vector3f(1,1,1)));
+        hazard.addControl(hazardGhostControl);
+        FireballControl fireballControl = new FireballControl();
+        hazard.addControl(fireballControl);
+        return hazard;
+    }
+    
     public void render(RenderManager rm, ViewPort vp) {
     }
 
