@@ -26,6 +26,7 @@ import com.jme3.shadow.PssmShadowRenderer;
 import variables.P;
 import com.jme3.scene.Spatial;
 import control.HazardControl;
+import control.PlayerControl;
 
 /**
  * This state is activated to start the game. The class sets up  
@@ -140,7 +141,10 @@ public class InGameState extends AbstractAppState{
         player.setName("player");
         gameNode.attachChild(player);
         player.setLocalTranslation(0.0f, 3.0f, 0.0f);
-        player.addControl(new RunningControl());
+        PlayerControl playerControl = new PlayerControl(1f,6f,5f);
+        playerControl.setWalkDirection(Vector3f.UNIT_X.mult(4));
+        playerControl.setJumpForce(Vector3f.UNIT_Y.mult(50));
+        player.addControl(playerControl);
         this.physics.getPhysicsSpace().addAll(player);
     }
 
@@ -200,7 +204,7 @@ public class InGameState extends AbstractAppState{
      * Sets up the user inputs. Jump is triggered by
      */
     private void initInputs() {
-        inputManager.addListener(player.getControl(RunningControl.class), "jump");
+        inputManager.addListener(player.getControl(PlayerControl.class), "jump");
     }
 
     private void initCollisions() {
