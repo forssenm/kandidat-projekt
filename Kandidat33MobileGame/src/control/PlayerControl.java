@@ -61,9 +61,6 @@ import java.util.logging.Logger;
  * A RigidBody with cylinder collision shape is used and its velocity is set
  * continuously, a ray test is used to check if the character is on the ground.
  *
- * The character keeps his own local coordinate system which adapts based on the
- * gravity working on the character so the character will always stand upright.
- *
  * Forces in the local x/z plane are dampened while those in the local y
  * direction are applied fully (e.g. jumping, falling).
  *
@@ -80,7 +77,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * Local z-forward quaternion for the "local absolute" z-forward direction.
      */
     protected final Quaternion localForwardRotation = new Quaternion(Quaternion.DIRECTION_Z);
-
     /**
      * Stores final spatial location, corresponds to RigidBody location.
      */
@@ -91,12 +87,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      */
     protected final Quaternion rotation = new Quaternion(Quaternion.DIRECTION_Z);
     protected final Vector3f rotatedViewDirection = new Vector3f(0, 0, 1);
-    protected final Vector3f walkDirection = new Vector3f();
+    protected final Vector3f walkVelocity = new Vector3f();
     protected final Vector3f velocity = new Vector3f();
     protected float jumpForce;
-    protected boolean jumpInNextTick = false;
+    protected boolean initiateJumpInNextTick = false;
     protected boolean onGround = false;
-    protected boolean jumping = false;
+    protected boolean abortJumpInNextTick = false;
+    protected float gravity = -40f;
 
     /**
      * Only used for serialization, do not use this constructor.
@@ -106,8 +103,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     /**
-     * Creates a new character with the given properties. The
-     * jumpForce will be set to an upwards force of 5x mass.
+     * Creates a new character with the given properties. The jumpForce will be
+     * set to an upwards force of 5x mass.
      *
      * @param radius
      * @param height
@@ -128,7 +125,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         rigidBody.getPhysicsLocation(location);
         //rotation has been set through viewDirection
         applyPhysicsTransform(location, rotation);
-    
+
     }
 
     @Override
@@ -143,41 +140,52 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * @param tpf
      */
     public void prePhysicsTick(PhysicsSpace space, float tpf) {
+
+        // running
         checkOnGround();
 
         if (onGround) {
-            float designatedVelocity = walkDirection.length();
+            float designatedVelocity = walkVelocity.length();
 
             if (designatedVelocity > 0) {
                 TempVars vars = TempVars.get();
                 Vector3f walkingVelocityAdjustment = vars.vect1;
                 //normalize walkdirection
-                walkingVelocityAdjustment.set(walkDirection).normalizeLocal();
+                walkingVelocityAdjustment.set(walkVelocity).normalizeLocal();
                 //check for the existing velocity in the desired direction
-                float existingVelocity = velocity.dot(walkDirection.normalize());
+                float existingWalkingSpeed = velocity.dot(walkVelocity.normalize());
                 //calculate the final velocity in the desired direction
-                float finalVelocity = designatedVelocity - existingVelocity;
-                walkingVelocityAdjustment.multLocal(finalVelocity);
+                float finalWalkingSpeed = designatedVelocity - existingWalkingSpeed;
+                walkingVelocityAdjustment.multLocal(finalWalkingSpeed);
                 //add resulting vector to existing velocity
                 velocity.addLocal(walkingVelocityAdjustment);
                 vars.release();
-            } else {
             }
-            rigidBody.setLinearVelocity(velocity);
+        }
+
+        
+        // jumping
+        float designatedUpwardsVelocity = 0;
+        
+        if (initiateJumpInNextTick) {
+            initiateJumpInNextTick = false;
+            designatedUpwardsVelocity = jumpForce;
         }
         
-        //float designatedUpwardsVelocity;
-
-        if (jumpInNextTick) {
-            //designatedUpwardsVelocity = jumpForce;
-            //TODO: precalculate initiateJump force
-            TempVars vars = TempVars.get();
-            Vector3f rotatedJumpForce = vars.vect1;
-            rotatedJumpForce.set(Vector3f.UNIT_Y.mult(jumpForce));
-            rigidBody.applyImpulse(localForwardRotation.multLocal(rotatedJumpForce), Vector3f.ZERO);
-            jumpInNextTick = false;
-            vars.release();
+        if (abortJumpInNextTick) {
+            abortJumpInNextTick = false;
+            if (velocity.getY() > jumpForce * 0.61f) {
+                designatedUpwardsVelocity = jumpForce * 0.61f;
+            }
         }
+        
+        if (designatedUpwardsVelocity > 0) {
+            velocity.setY(designatedUpwardsVelocity);
+        }
+        
+        // updating the velocity including both running and jumping
+        rigidBody.setLinearVelocity(velocity);
+
     }
 
     /**
@@ -203,27 +211,32 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     /**
      * Makes the character jump with the set jump force.
      */
-    public void initiateJump() {
+    private void initiateJump() {
         if (!onGround) {
             return;
         }
-        jumpInNextTick = true;
+        initiateJumpInNextTick = true;
     }
-    
+
+    /**
+     * Makes the character abort the ascent in a jump. Calling this partway
+     * through a jump makes the jump shorter.
+     */
     private void abortJump() {
-        jumping = false;
+        abortJumpInNextTick = true;
     }
 
     /**
      * Set the jump force.
-     * @param jumpForce The new initiateJump force
+     *
+     * @param jumpForce The new jump force
      */
     public void setJumpForce(float jumpForce) {
         this.jumpForce = jumpForce;
     }
 
     /**
-     * Gets the current initiateJump force. The default is 5 * character mass.
+     * Gets the current jump force. The default is 5 * character mass.
      * @return The current jumpforce.
      */
     public float getJumpForce() {
@@ -249,7 +262,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * @param vec The movement direction and speed in m/s
      */
     public void setWalkDirection(Vector3f vec) {
-        walkDirection.set(vec);
+        walkVelocity.set(vec);
     }
 
     /**
@@ -259,9 +272,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * @return
      */
     public Vector3f getWalkDirection() {
-        return walkDirection;
+        return walkVelocity;
     }
-
 
     /**
      * Get the current linear velocity along the three axes of the character.
@@ -273,7 +285,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     public Vector3f getVelocity() {
         return velocity;
     }
-
 
     /**
      * This checks if the character is on the ground by doing a ray test.
@@ -289,23 +300,27 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         for (PhysicsRayTestResult physicsRayTestResult : results) {
             if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
                 onGround = true;
+                abortJumpInNextTick = false;
                 return;
             }
         }
         onGround = false;
     }
-    
-        /** 
-     * Responds to the action "initiateJump" by making the player initiateJump. Currently have 
-     * the same initiateJump behaviour as <code>CharacterControl</code>.
+
+    /**
+     * Responds to the action "initiateJump" by making the player initiateJump.
+     * Currently have the same initiateJump behaviour as
+     * <code>CharacterControl</code>.
      */
     public void onAction(String name, boolean isPressed, float tpf) {
-        if(name.equals("jump") && isPressed){ 
-            // Button down
-            initiateJump();
-        }else{
-            // Button up
-            abortJump();
+        if (name.equals("jump")) {
+            if (isPressed) {
+                // Button down
+                initiateJump();
+            } else {
+                // Button up
+                abortJump();
+            }
         }
     }
 
@@ -373,6 +388,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     @Override
     protected void addPhysics(PhysicsSpace space) {
         space.addCollisionObject(rigidBody);
+        rigidBody.setGravity(new Vector3f(0f,gravity,0f));
         space.addTickListener(this);
     }
 
@@ -403,6 +419,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         oc.write(height, "height", 1);
         oc.write(mass, "mass", 1);
         oc.write(jumpForce, "jumpForce", 5);
+        
     }
 
     @Override
@@ -413,7 +430,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         this.height = in.readFloat("height", 2);
         this.mass = in.readFloat("mass", 80);
         this.jumpForce = in.readFloat("jumpForce", mass * 5);
-        
+
         rigidBody = new PhysicsRigidBody(getShape(), mass);
         rigidBody.setAngularFactor(0);
     }

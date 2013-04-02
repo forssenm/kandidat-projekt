@@ -13,30 +13,28 @@ import control.PlayerControl;
 import variables.P;
 
 /**
- * Class for keeping everything relating to the player in one place.
- * Currently keeps the spatial (along with the model) and the physics control
- * object which makes the player run and fall.
- * 
+ * Class for keeping everything relating to the player in one place. Currently
+ * keeps the spatial (along with the model) and the physics control object which
+ * makes the player run and fall.
+ *
  * @author dagen
  */
 public class Player extends Node {
-    
+
     private float playerRunSpeed;
     private float playerJumpSpeed;
-    
     private CapsuleCollisionShape playerShape;
     private PlayerControl playerControl;
-    
     private Node playerModel;
-    
-    
+
     /**
-     * Constructs a <code>Player</code> object which is a <Code>Node</code> 
-     * with the players 3D-model attached to it. The <code>Player</code> also 
-     * has a <code>CharacterControl</code> with a <code>CapsuleControl</code> 
-     * attached. 
-     * @param assetManager is used for loading the players assets i.e. 3D-model 
-     * and textures. 
+     * Constructs a
+     * <code>Player</code> object which is a
+     * <Code>Node</code> with the players 3D-model attached to it. The
+     * <code>Player</code> also has a
+     * <code>PlayerControl</code> attached.
+     * @param assetManager is used for loading the players assets i.e. 3D-model
+     * and textures.
      */
     public Player(AssetManager assetManager) {
         super("player");
@@ -48,24 +46,24 @@ public class Player extends Node {
 
         // starting position
         this.setLocalTranslation(0.0f, 3.0f, 0.0f);
-        
+
         // set up the physics control
-        PlayerControl playerControl = new PlayerControl(1f, 12f, 20f);
+        playerControl = new PlayerControl(1f, 4f, 20f);
         playerControl.setWalkDirection(Vector3f.UNIT_X.mult(playerRunSpeed));
         playerControl.setJumpForce(playerJumpSpeed);
         this.addControl(playerControl);
-        
+
         //Sets the model of the player
-        playerModel = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
+        playerModel = (Node) assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
 
         this.attachChild(playerModel);
         playerModel.setLocalTranslation(0f, 1f, 0f);
 
     }
-    
+
     /**
-     * 
-     * @return a reference to the players 3D-model.  
+     *
+     * @return a reference to the players 3D-model.
      */
     public Node getPlayerModel() {
         return this.playerModel;
