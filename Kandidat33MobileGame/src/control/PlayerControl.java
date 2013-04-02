@@ -1,0 +1,458 @@
+/*
+ * Copyright (c) 2009-2012 jMonkeyEngine
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
+ *   without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package control;
+
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.PhysicsTickListener;
+import com.jme3.bullet.collision.PhysicsRayTestResult;
+import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
+import com.jme3.bullet.objects.PhysicsRigidBody;
+import com.jme3.export.InputCapsule;
+import com.jme3.export.JmeExporter;
+import com.jme3.export.JmeImporter;
+import com.jme3.export.OutputCapsule;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.Control;
+import com.jme3.util.TempVars;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * This is intended to be a replacement for the internal bullet character class.
+ * A RigidBody with cylinder collision shape is used and its velocity is set
+ * continuously, a ray test is used to check if the character is on the ground.
+ *
+ * The character keeps his own local coordinate system which adapts based on the
+ * gravity working on the character so the character will always stand upright.
+ *
+ * Forces in the local x/z plane are dampened while those in the local y
+ * direction are applied fully (e.g. jumping, falling).
+ *
+ * @author normenhansen
+ */
+public class PlayerControl extends AbstractPhysicsControl implements PhysicsTickListener, ActionListener {
+
+    protected static final Logger logger = Logger.getLogger(PlayerControl.class.getName());
+    protected PhysicsRigidBody rigidBody;
+    protected float radius;
+    protected float height;
+    protected float mass;
+    /**
+     * Local z-forward quaternion for the "local absolute" z-forward direction.
+     */
+    protected final Quaternion localForwardRotation = new Quaternion(Quaternion.DIRECTION_Z);
+    /**
+     * Is a z-forward vector based on the view direction and the current local
+     * x/z plane.
+     */
+    protected final Vector3f viewDirection = new Vector3f(0, 0, 1);
+    /**
+     * Stores final spatial location, corresponds to RigidBody location.
+     */
+    protected final Vector3f location = new Vector3f();
+    /**
+     * Stores final spatial rotation, is a z-forward rotation based on the view
+     * direction and the current local x/z plane. See also rotatedViewDirection.
+     */
+    protected final Quaternion rotation = new Quaternion(Quaternion.DIRECTION_Z);
+    protected final Vector3f rotatedViewDirection = new Vector3f(0, 0, 1);
+    protected final Vector3f walkDirection = new Vector3f();
+    protected final Vector3f jumpForce;
+    protected final Vector3f physicsDampening = new Vector3f(0.3f, 0, 0.3f);
+    protected final Vector3f scale = new Vector3f(1, 1, 1);
+    protected final Vector3f velocity = new Vector3f();
+    protected boolean jump = false;
+    protected boolean onGround = false;
+
+    /**
+     * Only used for serialization, do not use this constructor.
+     */
+    public PlayerControl() {
+        jumpForce = new Vector3f();
+    }
+
+    /**
+     * Creates a new character with the given properties. The
+     * jumpForce will be set to an upwards force of 5x mass.
+     *
+     * @param radius
+     * @param height
+     * @param mass
+     */
+    public PlayerControl(float radius, float height, float mass) {
+        this.radius = radius;
+        this.height = height;
+        this.mass = mass;
+        rigidBody = new PhysicsRigidBody(getShape(), mass);
+        jumpForce = new Vector3f(0, mass * 5, 0);
+        rigidBody.setAngularFactor(0);
+    }
+
+    @Override
+    public void update(float tpf) {
+        super.update(tpf);
+        rigidBody.getPhysicsLocation(location);
+        //rotation has been set through viewDirection
+        applyPhysicsTransform(location, rotation);
+    
+    }
+
+    @Override
+    public void render(RenderManager rm, ViewPort vp) {
+        super.render(rm, vp);
+    }
+
+    /**
+     * Used internally, don't call manually
+     *
+     * @param space
+     * @param tpf
+     */
+    public void prePhysicsTick(PhysicsSpace space, float tpf) {
+        checkOnGround();
+
+        //TODO: this damping (physicsInfluence) is not framerate decoupled
+//        Vector3f physicsPlane = localForwardRotation.mult(physicsDampening);
+//        Vector3f counter = velocity.mult(physicsPlane).negateLocal().multLocal(tpf * 100.0f);
+//        velocity.addLocal(counter);
+//        debugTools.setGreenArrow(location, counter);
+
+
+        if (onGround) {
+            float designatedVelocity = walkDirection.length();
+
+            if (designatedVelocity > 0) {
+                TempVars vars = TempVars.get();
+                Vector3f walkingVelocityAdjustment = vars.vect1;
+                //normalize walkdirection
+                walkingVelocityAdjustment.set(walkDirection).normalizeLocal();
+                //check for the existing velocity in the desired direction
+                float existingVelocity = velocity.dot(walkDirection.normalize());
+                //calculate the final velocity in the desired direction
+                float finalVelocity = designatedVelocity - existingVelocity;
+                walkingVelocityAdjustment.multLocal(finalVelocity);
+                //add resulting vector to existing velocity
+                velocity.addLocal(walkingVelocityAdjustment);
+                vars.release();
+            } else {
+            }
+            rigidBody.setLinearVelocity(velocity);
+        }
+        if (jump) {
+            //TODO: precalculate jump force
+            TempVars vars = TempVars.get();
+            Vector3f rotatedJumpForce = vars.vect1;
+            rotatedJumpForce.set(jumpForce);
+            rigidBody.applyImpulse(localForwardRotation.multLocal(rotatedJumpForce), Vector3f.ZERO);
+            jump = false;
+            vars.release();
+        }
+    }
+
+    /**
+     * Used internally, don't call manually
+     *
+     * @param space
+     * @param tpf
+     */
+    public void physicsTick(PhysicsSpace space, float tpf) {
+        rigidBody.getLinearVelocity(velocity);
+    }
+
+    /**
+     * Move the character somewhere. Note the character also takes the location
+     * of any spatial its being attached to in the moment it is attached.
+     *
+     * @param vec The new character location.
+     */
+    public void warp(Vector3f vec) {
+        setPhysicsLocation(vec);
+    }
+
+    /**
+     * Makes the character jump with the set jump force.
+     */
+    public void jump() {
+        if (!onGround) {
+            return;
+        }
+        jump = true;
+    }
+
+    /**
+     * Set the jump force as a Vector3f. The jump force is local to the
+     * characters coordinate system, which normally is always z-forward (in
+     * world coordinates, parent coordinates when set to applyLocalPhysics)
+     *
+     * @param jumpForce The new jump force
+     */
+    public void setJumpForce(Vector3f jumpForce) {
+        this.jumpForce.set(jumpForce);
+    }
+
+    /**
+     * Gets the current jump force. The default is 5 * character mass in y
+     * direction.
+     *
+     * @return
+     */
+    public Vector3f getJumpForce() {
+        return jumpForce;
+    }
+
+    /**
+     * Check if the character is on the ground. This is determined by a ray test
+     * in the center of the character and might return false even if the
+     * character is not falling yet.
+     *
+     * @return
+     */
+    public boolean isOnGround() {
+        return onGround;
+    }
+
+    /**
+     * Sets the walk direction of the character. This parameter is framerate
+     * independent and the character will move continuously in the direction
+     * given by the vector with the speed given by the vector length in m/s.
+     *
+     * @param vec The movement direction and speed in m/s
+     */
+    public void setWalkDirection(Vector3f vec) {
+        walkDirection.set(vec);
+    }
+
+    /**
+     * Gets the current walk direction and speed of the character. The length of
+     * the vector defines the speed.
+     *
+     * @return
+     */
+    public Vector3f getWalkDirection() {
+        return walkDirection;
+    }
+
+    /**
+     * Gets the current view direction, note this doesn't need to correspond
+     * with the spatials forward direction.
+     *
+     * @return
+     */
+    public Vector3f getViewDirection() {
+        return viewDirection;
+    }
+
+    /**
+     * Get the current linear velocity along the three axes of the character.
+     * This is prepresented in world coordinates, parent coordinates when the
+     * control is set to applyLocalPhysics.
+     *
+     * @return The current linear velocity of the character
+     */
+    public Vector3f getVelocity() {
+        return velocity;
+    }
+
+
+    /**
+     * This checks if the character is on the ground by doing a ray test.
+     */
+    protected void checkOnGround() {
+        TempVars vars = TempVars.get();
+        Vector3f location = vars.vect1;
+        Vector3f rayVector = vars.vect2;
+        float height = getFinalHeight();
+        location.set(Vector3f.UNIT_Y).multLocal(height).addLocal(this.location);
+        rayVector.set(Vector3f.UNIT_Y).multLocal(-height - FastMath.ZERO_TOLERANCE).addLocal(location);
+        List<PhysicsRayTestResult> results = space.rayTest(location, rayVector);
+        vars.release();
+        for (PhysicsRayTestResult physicsRayTestResult : results) {
+            if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
+                onGround = true;
+                return;
+            }
+        }
+        onGround = false;
+    }
+    
+        /** 
+     * Responds to the action "jump" by making the player jump. Currently have 
+     * the same jump behaviour as <code>CharacterControl</code>.
+     */
+    public void onAction(String name, boolean isPressed, float tpf) {
+        if(name.equals("jump") && isPressed){ 
+            // Button down
+            jump();
+        }else{ 
+            // Button up
+        }
+    }
+
+    /**
+     * Gets a new collision shape based on the current scale parameter. The
+     * created collisionshape is a capsule collision shape that is attached to a
+     * compound collision shape with an offset to set the object center at the
+     * bottom of the capsule.
+     *
+     * @return
+     */
+    protected CollisionShape getShape() {
+        //TODO: cleanup size mess..
+        CapsuleCollisionShape capsuleCollisionShape = new CapsuleCollisionShape(getFinalRadius(), (getFinalHeight() - (2 * getFinalRadius())));
+        CompoundCollisionShape compoundCollisionShape = new CompoundCollisionShape();
+        Vector3f addLocation = new Vector3f(0, (getFinalHeight() / 2.0f), 0);
+        compoundCollisionShape.addChildShape(capsuleCollisionShape, addLocation);
+        return compoundCollisionShape;
+    }
+
+    /**
+     * Gets the scaled height.
+     *
+     * @return
+     */
+    protected float getFinalHeight() {
+        return height * scale.getY();
+    }
+
+    /**
+     * Gets the scaled radius.
+     *
+     * @return
+     */
+    protected float getFinalRadius() {
+        return radius * scale.getZ();
+    }
+
+
+
+    /**
+     * This is implemented from AbstractPhysicsControl and called when the
+     * spatial is attached for example.
+     *
+     * @param vec
+     */
+    @Override
+    protected void setPhysicsLocation(Vector3f vec) {
+        rigidBody.setPhysicsLocation(vec);
+        location.set(vec);
+    }
+
+    /**
+     * We set the current spatial as UserObject so the user can find his
+     * spatial.
+     *
+     * @param spatial
+     */
+    @Override
+    public void setSpatial(Spatial spatial) {
+        super.setSpatial(spatial);
+        rigidBody.setUserObject(spatial);
+    }
+
+    /**
+     * This is implemented from AbstractPhysicsControl and called when the
+     * spatial is attached for example. We don't set the actual physics rotation
+     * but the view rotation here. It might actually be altered by the
+     * calculateNewForward method.
+     *
+     * @param quat
+     */
+    @Override
+    protected void setPhysicsRotation(Quaternion quat) {
+        rotation.set(quat);
+        rotation.multLocal(rotatedViewDirection.set(viewDirection));
+    }
+
+    /**
+     * This is implemented from AbstractPhysicsControl and called when the
+     * control is supposed to add all objects to the physics space.
+     *
+     * @param space
+     */
+    @Override
+    protected void addPhysics(PhysicsSpace space) {
+        space.addCollisionObject(rigidBody);
+        space.addTickListener(this);
+    }
+
+    /**
+     * This is implemented from AbstractPhysicsControl and called when the
+     * control is supposed to remove all objects from the physics space.
+     *
+     * @param space
+     */
+    @Override
+    protected void removePhysics(PhysicsSpace space) {
+        space.removeCollisionObject(rigidBody);
+        space.removeTickListener(this);
+    }
+
+    public Control cloneForSpatial(Spatial spatial) {
+        PlayerControl control = new PlayerControl(radius, height, mass);
+        control.setJumpForce(jumpForce);
+        control.setSpatial(spatial);
+        return control;
+    }
+
+    @Override
+    public void write(JmeExporter ex) throws IOException {
+        super.write(ex);
+        OutputCapsule oc = ex.getCapsule(this);
+        oc.write(radius, "radius", 1);
+        oc.write(height, "height", 1);
+        oc.write(mass, "mass", 1);
+        oc.write(jumpForce, "jumpForce", new Vector3f(0, mass * 5, 0));
+    }
+
+    @Override
+    public void read(JmeImporter im) throws IOException {
+        super.read(im);
+        InputCapsule in = im.getCapsule(this);
+        this.radius = in.readFloat("radius", 1);
+        this.height = in.readFloat("height", 2);
+        this.mass = in.readFloat("mass", 80);
+        this.jumpForce.set((Vector3f) in.readSavable("jumpForce", new Vector3f(0, mass * 5, 0)));
+        rigidBody = new PhysicsRigidBody(getShape(), mass);
+        jumpForce.set(new Vector3f(0, mass * 5, 0));
+        rigidBody.setAngularFactor(0);
+    }
+}
