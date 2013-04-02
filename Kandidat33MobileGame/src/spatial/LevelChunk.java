@@ -22,12 +22,10 @@ import java.util.ArrayList;
 public class LevelChunk extends Node {
     
     private Node levelRootNode;
-    private PhysicsSpace physicsSpace;
     private ArrayList<Light> lights = new ArrayList<Light>();
     
-    public LevelChunk(PhysicsSpace physicsSpace, Node levelRootNode) {
+    public LevelChunk(Node levelRootNode) {
         super();
-        this.physicsSpace = physicsSpace;
         this.levelRootNode = levelRootNode;
     }
     
@@ -66,29 +64,11 @@ public class LevelChunk extends Node {
      * Removes this chunk from the level.
      */
     public void remove() {
-        removeFromPhysicsSpace();
         for (Light light : lights) {
             levelRootNode.removeLight(light);
         }
         this.getParent().detachChild(this);
-    }
-
-    /**
-     * Adds all objects with a PhysicsControl in this chunk to the PhysicsSpace.
-     *
-     */
-    public void addToPhysicsSpace() {
-        physicsSpace.addAll(this);
-    }
-
-    /**
-     * Removes all objects with a PhysicsControl in this chunk from the
-     * PhysicsSpace.
-     *
-     */
-    private void removeFromPhysicsSpace() {
-        physicsSpace.removeAll(this);
-    }   
+    } 
 
     /**
      * Disables the physics of all objects in this chunk.

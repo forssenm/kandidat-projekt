@@ -61,7 +61,7 @@ public class ChunkFactory {
          */
 
         // attach everything physical to the node
-        chunk.addToPhysicsSpace();
+        this.physicsSpace.addAll(chunk);
         
         
         // Generate the background:

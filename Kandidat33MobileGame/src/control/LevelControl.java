@@ -91,6 +91,7 @@ public class LevelControl implements Control {
     }
     
     private void deleteChunk(LevelChunk chunk) {
+        physicsSpace.removeAll(chunk);
         chunk.remove();
     }
     
@@ -112,7 +113,7 @@ public class LevelControl implements Control {
     private Node generateNextChunk() {
 
         // generate the node to attach everything to
-        LevelChunk chunk = new LevelChunk(this.physicsSpace,gameNode);
+        LevelChunk chunk = new LevelChunk(gameNode);
         
         // find the x position to place the new chunk in
         float xPos;
