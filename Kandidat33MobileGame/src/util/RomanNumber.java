@@ -1,4 +1,4 @@
-package counter;
+package util;
 
 /**
  * This class has a static utility method used for converting an 
