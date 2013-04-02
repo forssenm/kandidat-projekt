@@ -92,17 +92,17 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     protected final Quaternion rotation = new Quaternion(Quaternion.DIRECTION_Z);
     protected final Vector3f rotatedViewDirection = new Vector3f(0, 0, 1);
     protected final Vector3f walkDirection = new Vector3f();
-    protected final Vector3f jumpForce;
-    protected final Vector3f scale = new Vector3f(1, 1, 1);
     protected final Vector3f velocity = new Vector3f();
-    protected boolean jump = false;
+    protected float jumpForce;
+    protected boolean jumpInNextTick = false;
     protected boolean onGround = false;
+    protected boolean jumping = false;
 
     /**
      * Only used for serialization, do not use this constructor.
      */
     public PlayerControl() {
-        jumpForce = new Vector3f();
+        jumpForce = 0f;
     }
 
     /**
@@ -118,7 +118,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         this.height = height;
         this.mass = mass;
         rigidBody = new PhysicsRigidBody(getShape(), mass);
-        jumpForce = new Vector3f(0, mass * 5, 0);
+        jumpForce = mass * 5;
         rigidBody.setAngularFactor(0);
     }
 
@@ -165,13 +165,17 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
             }
             rigidBody.setLinearVelocity(velocity);
         }
-        if (jump) {
-            //TODO: precalculate jump force
+        
+        //float designatedUpwardsVelocity;
+
+        if (jumpInNextTick) {
+            //designatedUpwardsVelocity = jumpForce;
+            //TODO: precalculate initiateJump force
             TempVars vars = TempVars.get();
             Vector3f rotatedJumpForce = vars.vect1;
-            rotatedJumpForce.set(jumpForce);
+            rotatedJumpForce.set(Vector3f.UNIT_Y.mult(jumpForce));
             rigidBody.applyImpulse(localForwardRotation.multLocal(rotatedJumpForce), Vector3f.ZERO);
-            jump = false;
+            jumpInNextTick = false;
             vars.release();
         }
     }
@@ -199,31 +203,30 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     /**
      * Makes the character jump with the set jump force.
      */
-    public void jump() {
+    public void initiateJump() {
         if (!onGround) {
             return;
         }
-        jump = true;
+        jumpInNextTick = true;
+    }
+    
+    private void abortJump() {
+        jumping = false;
     }
 
     /**
-     * Set the jump force as a Vector3f. The jump force is local to the
-     * characters coordinate system, which normally is always z-forward (in
-     * world coordinates, parent coordinates when set to applyLocalPhysics)
-     *
-     * @param jumpForce The new jump force
+     * Set the jump force.
+     * @param jumpForce The new initiateJump force
      */
-    public void setJumpForce(Vector3f jumpForce) {
-        this.jumpForce.set(jumpForce);
+    public void setJumpForce(float jumpForce) {
+        this.jumpForce = jumpForce;
     }
 
     /**
-     * Gets the current jump force. The default is 5 * character mass in y
-     * direction.
-     *
-     * @return
+     * Gets the current initiateJump force. The default is 5 * character mass.
+     * @return The current jumpforce.
      */
-    public Vector3f getJumpForce() {
+    public float getJumpForce() {
         return jumpForce;
     }
 
@@ -279,7 +282,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         TempVars vars = TempVars.get();
         Vector3f location = vars.vect1;
         Vector3f rayVector = vars.vect2;
-        float height = getFinalHeight();
         location.set(Vector3f.UNIT_Y).multLocal(height).addLocal(this.location);
         rayVector.set(Vector3f.UNIT_Y).multLocal(-height - FastMath.ZERO_TOLERANCE).addLocal(location);
         List<PhysicsRayTestResult> results = space.rayTest(location, rayVector);
@@ -294,15 +296,16 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
     
         /** 
-     * Responds to the action "jump" by making the player jump. Currently have 
-     * the same jump behaviour as <code>CharacterControl</code>.
+     * Responds to the action "initiateJump" by making the player initiateJump. Currently have 
+     * the same initiateJump behaviour as <code>CharacterControl</code>.
      */
     public void onAction(String name, boolean isPressed, float tpf) {
         if(name.equals("jump") && isPressed){ 
             // Button down
-            jump();
-        }else{ 
+            initiateJump();
+        }else{
             // Button up
+            abortJump();
         }
     }
 
@@ -316,32 +319,12 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      */
     protected CollisionShape getShape() {
         //TODO: cleanup size mess..
-        CapsuleCollisionShape capsuleCollisionShape = new CapsuleCollisionShape(getFinalRadius(), (getFinalHeight() - (2 * getFinalRadius())));
+        CapsuleCollisionShape capsuleCollisionShape = new CapsuleCollisionShape(radius, (height - (2 * radius)));
         CompoundCollisionShape compoundCollisionShape = new CompoundCollisionShape();
-        Vector3f addLocation = new Vector3f(0, (getFinalHeight() / 2.0f), 0);
+        Vector3f addLocation = new Vector3f(0, (height / 2.0f), 0);
         compoundCollisionShape.addChildShape(capsuleCollisionShape, addLocation);
         return compoundCollisionShape;
     }
-
-    /**
-     * Gets the scaled height.
-     *
-     * @return
-     */
-    protected float getFinalHeight() {
-        return height * scale.getY();
-    }
-
-    /**
-     * Gets the scaled radius.
-     *
-     * @return
-     */
-    protected float getFinalRadius() {
-        return radius * scale.getZ();
-    }
-
-
 
     /**
      * This is implemented from AbstractPhysicsControl and called when the
@@ -419,7 +402,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         oc.write(radius, "radius", 1);
         oc.write(height, "height", 1);
         oc.write(mass, "mass", 1);
-        oc.write(jumpForce, "jumpForce", new Vector3f(0, mass * 5, 0));
+        oc.write(jumpForce, "jumpForce", 5);
     }
 
     @Override
@@ -429,9 +412,9 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         this.radius = in.readFloat("radius", 1);
         this.height = in.readFloat("height", 2);
         this.mass = in.readFloat("mass", 80);
-        this.jumpForce.set((Vector3f) in.readSavable("jumpForce", new Vector3f(0, mass * 5, 0)));
+        this.jumpForce = in.readFloat("jumpForce", mass * 5);
+        
         rigidBody = new PhysicsRigidBody(getShape(), mass);
-        jumpForce.set(new Vector3f(0, mass * 5, 0));
         rigidBody.setAngularFactor(0);
     }
 }

@@ -7,7 +7,9 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
+import control.PlayerControl;
 import variables.P;
 
 /**
@@ -23,13 +25,13 @@ public class Player extends Node {
     private float playerJumpSpeed;
     
     private CapsuleCollisionShape playerShape;
-    private CharacterControl playerControl;
+    private PlayerControl playerControl;
     
     private Node playerModel;
     
     
     /**
-     * COnstructs a <code>Player</code> object which is a <Code>Node</code> 
+     * Constructs a <code>Player</code> object which is a <Code>Node</code> 
      * with the players 3D-model attached to it. The <code>Player</code> also 
      * has a <code>CharacterControl</code> with a <code>CapsuleControl</code> 
      * attached. 
@@ -37,36 +39,28 @@ public class Player extends Node {
      * and textures. 
      */
     public Player(AssetManager assetManager) {
+        super("player");
         playerRunSpeed = P.run_speed;
         playerJumpSpeed = P.jump_speed;
+
+        // the player casts shadows
+        this.setShadowMode(RenderQueue.ShadowMode.Cast);
+
+        // starting position
+        this.setLocalTranslation(0.0f, 3.0f, 0.0f);
         
-        playerShape = new CapsuleCollisionShape(1f,0.5f);
-        playerControl = new CharacterControl(playerShape, 0.05f);
+        // set up the physics control
+        PlayerControl playerControl = new PlayerControl(1f, 12f, 20f);
         playerControl.setWalkDirection(Vector3f.UNIT_X.mult(playerRunSpeed));
-        playerControl.setJumpSpeed(playerJumpSpeed);
+        playerControl.setJumpForce(playerJumpSpeed);
         this.addControl(playerControl);
-        
-        this.setLocalTranslation(new Vector3f(0, 15f, 0));
         
         //Sets the model of the player
         playerModel = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
+
         this.attachChild(playerModel);
-    }
-    
-    /**
-     * Makes the player jump in a manner predefined by 
-     * <code>CharacterControl</code>.
-     */
-    public void jump() {
-        playerControl.jump();
-    }
-    
-    /**
-     * Returns the players <code>CharacterControl</code>
-     * @return the players CharacterControl.
-     */
-    public CharacterControl getPlayerControl() {
-        return this.playerControl;
+        playerModel.setLocalTranslation(0f, 1f, 0f);
+
     }
     
     /**

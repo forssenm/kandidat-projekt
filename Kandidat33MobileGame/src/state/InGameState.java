@@ -27,6 +27,7 @@ import variables.P;
 import com.jme3.scene.Spatial;
 import control.HazardControl;
 import control.PlayerControl;
+import spatial.Player;
 
 /**
  * This state is activated to start the game. The class sets up  
@@ -36,7 +37,7 @@ import control.PlayerControl;
  * generate scene-chunks whene the player moves. 
  * <br/><br/>
  * The player is setup with a
- * <code>RunningControl</code> which keeps the player moving to the right and 
+ * <code>PlayerControl</code> which keeps the player moving to the right and 
  * handles jump-events.
  * <br/><br/>
  * Background music is set to play.
@@ -136,15 +137,9 @@ public class InGameState extends AbstractAppState{
      * @see RunningState
      */
     private void initPlayer() {
-        player = (Node)assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
-        player.setShadowMode(RenderQueue.ShadowMode.Cast);
-        player.setName("player");
+        player = new Player(assetManager);
         gameNode.attachChild(player);
-        player.setLocalTranslation(0.0f, 3.0f, 0.0f);
-        PlayerControl playerControl = new PlayerControl(1f,6f,50f);
-        playerControl.setWalkDirection(Vector3f.UNIT_X.mult(4));
-        playerControl.setJumpForce(Vector3f.UNIT_Y.mult(250));
-        player.addControl(playerControl);
+
         this.physics.getPhysicsSpace().addAll(player);
     }
 
