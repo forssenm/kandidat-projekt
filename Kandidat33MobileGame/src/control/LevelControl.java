@@ -106,7 +106,6 @@ public class LevelControl implements Control {
     /**
      * Generate a new chunk of the level, placing it directly after the
      * last chunk.
-     * In the current implementation, a chunk is simply one platform.
      * @pre generateStartingChunks has been run once.
      * @return 
      */
