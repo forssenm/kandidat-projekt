@@ -19,7 +19,13 @@ import spatial.WindowFrame;
 import variables.P;
 
 /**
- *
+ * A class for generating content for LevelChunks. An instance of this class
+ * can take an emoty chunk and fill it with background, platforms, windows,
+ * light sources etc. In the future it would probably handle e.g. particle
+ * effects as well.
+ * 
+ * This is the de facto level generator – the code for where each platform
+ * etc is placed can be found here.
  * @author jonatankilhamn
  */
 public class ChunkFactory {
@@ -31,8 +37,10 @@ public class ChunkFactory {
     }
 
     /**
-     * Fills a chunk with content
-     * @param chunk 
+     * Fills a chunk with content. After this call, there will be a number of
+     * platforms and background objects attached to the chunk that were not
+     * there before. Anything already on the chunk will be left untouched.
+     * @param chunk The chunk to fill.
      */
     public void fillChunk(LevelChunk chunk) {
         
