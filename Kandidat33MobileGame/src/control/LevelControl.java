@@ -26,6 +26,7 @@ import spatial.Platform;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
+import leveldata.ChunkFactory;
 import spatial.Hazard;
 import spatial.LevelChunk;
 import spatial.Wall;
@@ -46,6 +47,7 @@ public class LevelControl implements Control {
     private AssetManager assetManager;
     private PhysicsSpace physicsSpace;
     private Spatial player;
+    private ChunkFactory chunkFactory;
     
     /**
      * Creates a new LevelControl.
@@ -56,6 +58,7 @@ public class LevelControl implements Control {
         this.assetManager = assetManager;
         this.physicsSpace = physicsSpace;
         this.player = player;
+        this.chunkFactory = new ChunkFactory(assetManager, physicsSpace);
     }
 
     /**
@@ -122,50 +125,7 @@ public class LevelControl implements Control {
         Vector3f newChunkPosition =
                 new Vector3f(xPos, 0f, 0f);
         
-        // generate platform positions
-        Random random = new Random();
-        int rand1 = random.nextInt(6) - 3;
-        int rand2 = rand1 + random.nextInt(6) - 3;
-        
-        // generate two platforms
-        Platform platform1 = new Platform(this.assetManager, new Vector3f(0f, rand1, 0f), P.platformLength, P.platformHeight, P.platformWidth);
-        Platform platform2 = new Platform(this.assetManager, new Vector3f(P.platformLength+P.platformDistance, rand2, 0), P.platformLength, P.platformHeight, P.platformWidth);
-        
-        
-        // generate the background wall
-        Wall wall = new Wall(this.assetManager);
-        
-        // generate a windowframe
-        Vector3f windowPos = new Vector3f(5f, 5f, 0f);
-        WindowFrame window = new WindowFrame(this.assetManager, windowPos);
-
-        /*
-         * This code creates a spotlight for each window. Slow on the phone.
-         // generate a light shining out the window
-         chunk.addLight(createWindowLight(windowPos));
-         */
-        
-        /*
-         * This code creates a light of random colour. Slow on the phone.
-         // generate a point light source of a random colour
-         chunk.addLight(createColouredLight());
-         */
-        
-        /*
-         * This code creates a FireballControl-type hazard floating in mid-air,
-         * triggering the first time the player bumps into it. Doesn't work on
-         * the phone.
-        // generate a hazard.
-        chunk.attachChild(createHazard());
-         */
-        
-        // attach everything physical to the node
-        chunk.attachChild(platform1);
-        chunk.attachChild(platform2);
-        chunk.addToPhysicsSpace();
-        // attach everything else to the node
-        chunk.attachChild(wall);
-        chunk.attachChild(window);
+        chunkFactory.fillChunk(chunk);
         
         chunk.setLocalTranslation(newChunkPosition);
         
@@ -173,46 +133,6 @@ public class LevelControl implements Control {
         chunks.addLast(chunk);
         return chunk;
     }
-
-    /* Creates a spotlight shining through a window at a given position */
-    private Light createWindowLight(Vector3f windowPosition) {
-        SpotLight windowLight = new SpotLight();
-        windowLight.setSpotOuterAngle(15f * FastMath.DEG_TO_RAD);
-        windowLight.setSpotInnerAngle(13f * FastMath.DEG_TO_RAD);
-        windowLight.setPosition(windowPosition.subtract(P.windowLightDirection));
-        windowLight.setDirection(P.windowLightDirection);
-        windowLight.setSpotRange(100f);
-        return windowLight;
-    }
-    
-    /* Creates a light of a random colour, a bit above and in front of the player */
-    private Light createColouredLight() {
-        Random random = new Random();
-        int rand = random.nextInt(6);
-            PointLight light = new PointLight();
-        light.setRadius(40);
-        light.setPosition(new Vector3f(15f, 10f, 0f));
-        if (rand < 3) {
-            light.setColor(ColorRGBA.Blue);
-        } else if (rand < 5) {
-            light.setColor(ColorRGBA.Red);
-        } else {
-            light.setColor(ColorRGBA.Green);
-        }
-        return light;
-    }
-    
-    /* Creates a fireball hazard floating in the air.*/
-    private Hazard createHazard(){
-        Hazard hazard = new Hazard(assetManager);
-        hazard.setLocalTranslation(10f,3f,0f);
-        GhostControl hazardGhostControl = new GhostControl(new BoxCollisionShape(new Vector3f(1,1,1)));
-        hazard.addControl(hazardGhostControl);
-        FireballControl fireballControl = new FireballControl();
-        hazard.addControl(fireballControl);
-        return hazard;
-    }
-
     
     public void render(RenderManager rm, ViewPort vp) {
     }
