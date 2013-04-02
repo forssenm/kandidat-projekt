@@ -58,7 +58,7 @@ public class LevelControl implements Control {
         this.assetManager = assetManager;
         this.physicsSpace = physicsSpace;
         this.player = player;
-        this.chunkFactory = new ChunkFactory(assetManager, physicsSpace);
+        this.chunkFactory = new ChunkFactory(assetManager);
     }
 
     /**
@@ -112,8 +112,14 @@ public class LevelControl implements Control {
      */
     private Node generateNextChunk() {
 
-        // generate the node to attach everything to
+        // generate an empty chunk
         LevelChunk chunk = new LevelChunk(gameNode);
+        
+        // fill the chunk with content
+        chunkFactory.fillChunk(chunk);
+        
+        // make sure everything is connected to the physics space
+        this.physicsSpace.addAll(chunk);
         
         // find the x position to place the new chunk in
         float xPos;
@@ -122,14 +128,12 @@ public class LevelControl implements Control {
         } else {
             xPos = this.chunks.getLast().getLocalTranslation().getX() + P.chunkLength;
         }
-        // generate a new chunk position
         Vector3f newChunkPosition =
                 new Vector3f(xPos, 0f, 0f);
         
-        chunkFactory.fillChunk(chunk);
-        
+        // place the new chunk in the right place
         chunk.setLocalTranslation(newChunkPosition);
-        
+
         gameNode.attachChild(chunk);
         chunks.addLast(chunk);
         return chunk;

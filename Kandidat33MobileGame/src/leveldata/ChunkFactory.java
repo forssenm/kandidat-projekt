@@ -1,7 +1,6 @@
 package leveldata;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.light.Light;
@@ -26,11 +25,9 @@ import variables.P;
 public class ChunkFactory {
 
     private AssetManager assetManager;
-    private PhysicsSpace physicsSpace;
 
-    public ChunkFactory(AssetManager assetManager, PhysicsSpace physicsSpace) {
+    public ChunkFactory(AssetManager assetManager) {
         this.assetManager = assetManager;
-        this.physicsSpace = physicsSpace;
     }
 
     /**
@@ -59,9 +56,6 @@ public class ChunkFactory {
          * the phone.
          chunk.attachChild(createHazard());
          */
-
-        // attach everything physical to the node
-        this.physicsSpace.addAll(chunk);
         
         
         // Generate the background:
