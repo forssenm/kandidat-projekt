@@ -6,6 +6,8 @@ package spatial;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
@@ -45,19 +47,20 @@ public class Player extends Node {
         this.setShadowMode(RenderQueue.ShadowMode.Cast);
 
         // starting position
-        this.setLocalTranslation(0.0f, 3.0f, 0.0f);
+        this.setLocalTranslation(0.0f, 5.0f, 0.0f);
 
         // set up the physics control
-        playerControl = new PlayerControl(1f, 4f, 20f);
-        playerControl.setWalkDirection(Vector3f.UNIT_X.mult(playerRunSpeed));
-        playerControl.setJumpForce(playerJumpSpeed);
+        playerControl = new PlayerControl(1f, 7f, 20f);
+        playerControl.setWalkVelocity(Vector3f.UNIT_X.mult(playerRunSpeed));
+        playerControl.setJumpSpeed(playerJumpSpeed);
         this.addControl(playerControl);
 
         //Sets the model of the player
         playerModel = (Node) assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
 
+        playerModel.setLocalRotation((new Quaternion()).fromAngles(0f,180*FastMath.DEG_TO_RAD,0f));
+        playerModel.setLocalTranslation(0f,1.8f,0f);
         this.attachChild(playerModel);
-        playerModel.setLocalTranslation(0f, 1f, 0f);
 
     }
 

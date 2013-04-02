@@ -19,8 +19,8 @@ public class P {
     public static final float platformWidth = 4f;
     public static final float platformHeight = 1f;
     public static final float platformDistance = 3.0f;
-    public static final float run_speed = 8f;
-    public static final float jump_speed = 30f;
+    public static final float run_speed = 10f;
+    public static final float jump_speed = 25f;
     
     public static final float chunkLength = 30.0f;
     

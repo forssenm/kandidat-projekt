@@ -74,10 +74,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     protected float height;
     protected float mass;
     /**
-     * Local z-forward quaternion for the "local absolute" z-forward direction.
-     */
-    protected final Quaternion localForwardRotation = new Quaternion(Quaternion.DIRECTION_Z);
-    /**
      * Stores final spatial location, corresponds to RigidBody location.
      */
     protected final Vector3f location = new Vector3f();
@@ -85,11 +81,10 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * Stores final spatial rotation, is a z-forward rotation based on the view
      * direction and the current local x/z plane. See also rotatedViewDirection.
      */
-    protected final Quaternion rotation = new Quaternion(Quaternion.DIRECTION_Z);
-    protected final Vector3f rotatedViewDirection = new Vector3f(0, 0, 1);
+    //protected final Quaternion rotation = new Quaternion(Quaternion.DIRECTION_Z);
     protected final Vector3f walkVelocity = new Vector3f();
     protected final Vector3f velocity = new Vector3f();
-    protected float jumpForce;
+    protected float jumpSpeed;
     protected boolean initiateJumpInNextTick = false;
     protected boolean onGround = false;
     protected boolean abortJumpInNextTick = false;
@@ -99,11 +94,11 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * Only used for serialization, do not use this constructor.
      */
     public PlayerControl() {
-        jumpForce = 0f;
+        jumpSpeed = 0f;
     }
 
     /**
-     * Creates a new character with the given properties. The jumpForce will be
+     * Creates a new character with the given properties. The jumpSpeed will be
      * set to an upwards force of 5x mass.
      *
      * @param radius
@@ -115,7 +110,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         this.height = height;
         this.mass = mass;
         rigidBody = new PhysicsRigidBody(getShape(), mass);
-        jumpForce = mass * 5;
+        jumpSpeed = mass * 1.25f; 
         rigidBody.setAngularFactor(0);
     }
 
@@ -123,8 +118,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     public void update(float tpf) {
         super.update(tpf);
         rigidBody.getPhysicsLocation(location);
-        //rotation has been set through viewDirection
-        applyPhysicsTransform(location, rotation);
+        // rotation is never checked since the character can't rotate
+        applyPhysicsTransform(location, Quaternion.DIRECTION_Z);
 
     }
 
@@ -134,7 +129,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     /**
-     * Used internally, don't call manually
+     * Used internally, don't call manually. Updates all movement that is not
+     * involuntary, i.e. running and jumping.
      *
      * @param space
      * @param tpf
@@ -169,13 +165,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         
         if (initiateJumpInNextTick) {
             initiateJumpInNextTick = false;
-            designatedUpwardsVelocity = jumpForce;
+            designatedUpwardsVelocity = jumpSpeed;
         }
         
         if (abortJumpInNextTick) {
             abortJumpInNextTick = false;
-            if (velocity.getY() > jumpForce * 0.61f) {
-                designatedUpwardsVelocity = jumpForce * 0.61f;
+            if (velocity.getY() > jumpSpeed * 0.61f) {
+                designatedUpwardsVelocity = jumpSpeed * 0.61f;
             }
         }
         
@@ -209,9 +205,10 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     /**
-     * Makes the character jump with the set jump force.
+     * Makes the character jump with the set jump force. The jump will
+     * be a maximum height jump unless abortJump is called shortly hereafter.
      */
-    private void initiateJump() {
+    public void initiateJump() {
         if (!onGround) {
             return;
         }
@@ -222,25 +219,25 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * Makes the character abort the ascent in a jump. Calling this partway
      * through a jump makes the jump shorter.
      */
-    private void abortJump() {
+    public void abortJump() {
         abortJumpInNextTick = true;
     }
 
     /**
      * Set the jump force.
      *
-     * @param jumpForce The new jump force
+     * @param jumpSpeed The new jump force
      */
-    public void setJumpForce(float jumpForce) {
-        this.jumpForce = jumpForce;
+    public void setJumpSpeed(float jumpForce) {
+        this.jumpSpeed = jumpForce;
     }
 
     /**
-     * Gets the current jump force. The default is 5 * character mass.
+     * Gets the current jump force. The default is 1.25 * character mass.
      * @return The current jumpforce.
      */
-    public float getJumpForce() {
-        return jumpForce;
+    public float getJumpSpeed() {
+        return jumpSpeed;
     }
 
     /**
@@ -261,7 +258,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      *
      * @param vec The movement direction and speed in m/s
      */
-    public void setWalkDirection(Vector3f vec) {
+    public void setWalkVelocity(Vector3f vec) {
         walkVelocity.set(vec);
     }
 
@@ -271,7 +268,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      *
      * @return
      */
-    public Vector3f getWalkDirection() {
+    public Vector3f getWalkVelocity() {
         return walkVelocity;
     }
 
@@ -300,7 +297,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         for (PhysicsRayTestResult physicsRayTestResult : results) {
             if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
                 onGround = true;
-                abortJumpInNextTick = false;
                 return;
             }
         }
@@ -334,9 +330,9 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      */
     protected CollisionShape getShape() {
         //TODO: cleanup size mess..
-        CapsuleCollisionShape capsuleCollisionShape = new CapsuleCollisionShape(radius, (height - (2 * radius)));
+        CapsuleCollisionShape capsuleCollisionShape = new CapsuleCollisionShape(radius, height-(2*radius));
         CompoundCollisionShape compoundCollisionShape = new CompoundCollisionShape();
-        Vector3f addLocation = new Vector3f(0, (height / 2.0f), 0);
+        Vector3f addLocation = new Vector3f(0, (height/2), 0);
         compoundCollisionShape.addChildShape(capsuleCollisionShape, addLocation);
         return compoundCollisionShape;
     }
@@ -366,23 +362,18 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     /**
-     * This is implemented from AbstractPhysicsControl and called when the
-     * spatial is attached for example. We don't set the actual physics rotation
-     * but the view rotation here. It might actually be altered by the
-     * calculateNewForward method.
-     *
+     * This is required by AbstractPhysicsControl. It does nothing, since the
+     * player cannot rotate.
      * @param quat
      */
     @Override
     protected void setPhysicsRotation(Quaternion quat) {
-        rotation.set(quat);
-        rotation.multLocal(rotatedViewDirection.set(Vector3f.UNIT_Z));
+        // does nothing
     }
 
     /**
      * This is implemented from AbstractPhysicsControl and called when the
      * control is supposed to add all objects to the physics space.
-     *
      * @param space
      */
     @Override
@@ -406,7 +397,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
 
     public Control cloneForSpatial(Spatial spatial) {
         PlayerControl control = new PlayerControl(radius, height, mass);
-        control.setJumpForce(jumpForce);
+        control.setJumpSpeed(jumpSpeed);
         control.setSpatial(spatial);
         return control;
     }
@@ -418,8 +409,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         oc.write(radius, "radius", 1);
         oc.write(height, "height", 1);
         oc.write(mass, "mass", 1);
-        oc.write(jumpForce, "jumpForce", 5);
-        
+        oc.write(jumpSpeed, "jumpForce", 5);
     }
 
     @Override
@@ -429,7 +419,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         this.radius = in.readFloat("radius", 1);
         this.height = in.readFloat("height", 2);
         this.mass = in.readFloat("mass", 80);
-        this.jumpForce = in.readFloat("jumpForce", mass * 5);
+        this.jumpSpeed = in.readFloat("jumpForce", mass * 5);
 
         rigidBody = new PhysicsRigidBody(getShape(), mass);
         rigidBody.setAngularFactor(0);
