@@ -80,11 +80,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * Local z-forward quaternion for the "local absolute" z-forward direction.
      */
     protected final Quaternion localForwardRotation = new Quaternion(Quaternion.DIRECTION_Z);
-    /**
-     * Is a z-forward vector based on the view direction and the current local
-     * x/z plane.
-     */
-    protected final Vector3f viewDirection = new Vector3f(0, 0, 1);
+
     /**
      * Stores final spatial location, corresponds to RigidBody location.
      */
@@ -97,7 +93,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     protected final Vector3f rotatedViewDirection = new Vector3f(0, 0, 1);
     protected final Vector3f walkDirection = new Vector3f();
     protected final Vector3f jumpForce;
-    protected final Vector3f physicsDampening = new Vector3f(0.3f, 0, 0.3f);
     protected final Vector3f scale = new Vector3f(1, 1, 1);
     protected final Vector3f velocity = new Vector3f();
     protected boolean jump = false;
@@ -149,13 +144,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      */
     public void prePhysicsTick(PhysicsSpace space, float tpf) {
         checkOnGround();
-
-        //TODO: this damping (physicsInfluence) is not framerate decoupled
-//        Vector3f physicsPlane = localForwardRotation.mult(physicsDampening);
-//        Vector3f counter = velocity.mult(physicsPlane).negateLocal().multLocal(tpf * 100.0f);
-//        velocity.addLocal(counter);
-//        debugTools.setGreenArrow(location, counter);
-
 
         if (onGround) {
             float designatedVelocity = walkDirection.length();
@@ -271,15 +259,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         return walkDirection;
     }
 
-    /**
-     * Gets the current view direction, note this doesn't need to correspond
-     * with the spatials forward direction.
-     *
-     * @return
-     */
-    public Vector3f getViewDirection() {
-        return viewDirection;
-    }
 
     /**
      * Get the current linear velocity along the three axes of the character.
@@ -399,7 +378,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     @Override
     protected void setPhysicsRotation(Quaternion quat) {
         rotation.set(quat);
-        rotation.multLocal(rotatedViewDirection.set(viewDirection));
+        rotation.multLocal(rotatedViewDirection.set(Vector3f.UNIT_Z));
     }
 
     /**

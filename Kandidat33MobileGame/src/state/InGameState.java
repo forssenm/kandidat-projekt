@@ -130,7 +130,7 @@ public class InGameState extends AbstractAppState{
      * control the physics of the player. 
      * <br/>
      * <br/>
-     * The pleyers startposition is set to <code>( 0.0f, 3.0f, 0.0f )</code>.
+     * The players startposition is set to <code>( 0.0f, 3.0f, 0.0f )</code>.
      * 
      * @see RunningControl
      * @see RunningState
@@ -141,9 +141,9 @@ public class InGameState extends AbstractAppState{
         player.setName("player");
         gameNode.attachChild(player);
         player.setLocalTranslation(0.0f, 3.0f, 0.0f);
-        PlayerControl playerControl = new PlayerControl(1f,6f,5f);
+        PlayerControl playerControl = new PlayerControl(1f,6f,50f);
         playerControl.setWalkDirection(Vector3f.UNIT_X.mult(4));
-        playerControl.setJumpForce(Vector3f.UNIT_Y.mult(50));
+        playerControl.setJumpForce(Vector3f.UNIT_Y.mult(250));
         player.addControl(playerControl);
         this.physics.getPhysicsSpace().addAll(player);
     }
