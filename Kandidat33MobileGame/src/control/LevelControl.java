@@ -134,7 +134,7 @@ public class LevelControl implements Control {
         // place the new chunk in the right place
         chunk.setLocalTranslation(newChunkPosition);
 
-        gameNode.attachChild(chunk);
+        chunk.activate();
         chunks.addLast(chunk);
         return chunk;
     }

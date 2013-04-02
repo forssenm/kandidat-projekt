@@ -56,12 +56,22 @@ public class LevelChunk extends Node {
      */
     public void addLight(Light light) {
         lights.add(light);
-        levelRootNode.addLight(light);
     }
     
+    /**
+     * Adds this chunk to the level. Use this instead of directly attaching to
+     * parent node in order to get lights right.
+     */
+    public void activate() {
+        for (Light light : lights) {
+            levelRootNode.addLight(light);
+        }
+        levelRootNode.attachChild(this);
+    }
     
     /**
-     * Removes this chunk from the level.
+     * Removes this chunk from the level. Use this instead of directly
+     * detaching from parent node in order to get lights right.
      */
     public void remove() {
         for (Light light : lights) {
