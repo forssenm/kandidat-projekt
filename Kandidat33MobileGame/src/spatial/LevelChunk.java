@@ -62,7 +62,7 @@ public class LevelChunk extends Node {
      * Adds this chunk to the level. Use this instead of directly attaching to
      * parent node in order to get lights right.
      */
-    public void activate() {
+    public void addToLevel() {
         for (Light light : lights) {
             levelRootNode.addLight(light);
         }

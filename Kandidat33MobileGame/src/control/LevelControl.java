@@ -6,31 +6,18 @@ package control;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
-import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.bullet.control.GhostControl;
-import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
-import com.jme3.light.Light;
-import com.jme3.light.PointLight;
-import com.jme3.light.SpotLight;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
-import spatial.Platform;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.Random;
 import leveldata.ChunkFactory;
-import spatial.Hazard;
 import spatial.LevelChunk;
-import spatial.Wall;
-import spatial.WindowFrame;
 import variables.P;
 
 /**
@@ -133,7 +120,8 @@ public class LevelControl implements Control {
         // place the new chunk in the right place
         chunk.setLocalTranslation(newChunkPosition);
 
-        chunk.activate();
+        // addToLevel the chunk (attaches it and its lights to the level node)
+        chunk.addToLevel();
         chunks.addLast(chunk);
         return chunk;
     }

@@ -1,14 +1,11 @@
 package state;
 
 import audio.MusicNode;
-import control.LevelControl;
-import state.RunningState;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
-import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
@@ -19,12 +16,10 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
-import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.shadow.PssmShadowRenderer;
-import variables.P;
-import com.jme3.scene.Spatial;
 import control.HazardControl;
+import control.LevelControl;
 import control.PlayerControl;
 import spatial.Player;
 
@@ -128,10 +123,6 @@ public class InGameState extends AbstractAppState{
      * This method creates a node for the player. Also the default player model 
      * is loaded and attached. A <code>PlayerControl</code> is attached to 
      * control the physics of the player. 
-     * <br/>
-     * <br/>
-     * The players startposition is set to <code>( 0.0f, 3.0f, 0.0f )</code>.
-     * 
      */
     private void initPlayer() {
         player = new Player(assetManager);
@@ -152,9 +143,7 @@ public class InGameState extends AbstractAppState{
     
     /**
      * This method is for cleaning up everything created by this 
-     * <code>GameState</code>. <br/><br/>
-     * 
-     * 
+     * <code>GameState</code>.
      */
     @Override
     public void cleanup() {
@@ -180,7 +169,6 @@ public class InGameState extends AbstractAppState{
       * the right angle.
       */
      private void initCamera() {
-        //this.app.getFlyByCamera().setEnabled(false);
         this.chaseCam = new ChaseCamera(this.app.getCamera(), this.player, this.inputManager);
         //this.chaseCam.setSmoothMotion(true);
         this.chaseCam.setTrailingEnabled(false);
@@ -193,7 +181,8 @@ public class InGameState extends AbstractAppState{
      }
 
     /**
-     * Sets up the user inputs. Jump is triggered by
+     * Sets up the user inputs. Jump is triggered by spacebar and mouseclick;
+     * on the phone all touch events are translated to clicks.
      */
     private void initInputs() {
         inputManager.addListener(player.getControl(PlayerControl.class), "jump");
