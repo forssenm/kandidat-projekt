@@ -89,7 +89,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     protected boolean onGround = false;
     protected boolean abortJumpInNextTick = false;
     protected float gravity = -40f;
-    private boolean initiatingJump;
 
     /**
      * Only used for serialization, do not use this constructor.
@@ -164,7 +163,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         
         if (initiateJumpInNextTick) {
             initiateJumpInNextTick = false;
-            //initiatingJump = true;
             designatedUpwardsVelocity = jumpSpeed;
         }
         
