@@ -89,6 +89,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     protected boolean onGround = false;
     protected boolean abortJumpInNextTick = false;
     protected float gravity = -40f;
+    private boolean initiatingJump;
 
     /**
      * Only used for serialization, do not use this constructor.
@@ -120,6 +121,10 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         rigidBody.getPhysicsLocation(location);
         // rotation is never checked since the character can't rotate
         applyPhysicsTransform(location, Quaternion.DIRECTION_Z);
+        if (initiatingJump) {
+            initiatingJump = false;
+            initiateJumpInNextTick = false;
+        }
 
     }
 
@@ -164,7 +169,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         float designatedUpwardsVelocity = 0;
         
         if (initiateJumpInNextTick) {
-            initiateJumpInNextTick = false;
+            //initiateJumpInNextTick = false;
+            initiatingJump = true;
             designatedUpwardsVelocity = jumpSpeed;
         }
         
