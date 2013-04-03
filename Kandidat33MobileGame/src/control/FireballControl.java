@@ -22,13 +22,10 @@ public class FireballControl implements HazardControl {
     Spatial spatial;
     boolean hasHit = false;
 
-    public void collideWithPlayer(Spatial player) {
+    public void collideWithPlayer(Player player) {
         if (!hasHit) {
-            RunningControl rC = player.getControl(RunningControl.class);
-            if (rC != null) {
-                rC.setJumpSpeed(rC.getJumpSpeed() - 2f);
-                hasHit = true;
-            }
+            // code to damage player or something
+            hasHit = true;
         }
     }
 

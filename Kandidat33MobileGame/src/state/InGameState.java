@@ -3,7 +3,6 @@ package state;
 import audio.MusicNode;
 import control.LevelControl;
 import state.RunningState;
-import control.RunningControl;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
@@ -127,14 +126,12 @@ public class InGameState extends AbstractAppState{
     
     /**
      * This method creates a node for the player. Also the default player model 
-     * is loaded and attached. A <code>RunningControl</code> is attached to 
+     * is loaded and attached. A <code>PlayerControl</code> is attached to 
      * control the physics of the player. 
      * <br/>
      * <br/>
      * The players startposition is set to <code>( 0.0f, 3.0f, 0.0f )</code>.
      * 
-     * @see RunningControl
-     * @see RunningState
      */
     private void initPlayer() {
         player = new Player(assetManager);
@@ -207,10 +204,10 @@ public class InGameState extends AbstractAppState{
             public void collision(PhysicsCollisionEvent event) {
                 if (event.getNodeA().getName().equals("player")
                         && event.getNodeB().getName().equals("hazard")) {
-                    event.getNodeB().getControl(HazardControl.class).collideWithPlayer(event.getNodeA());
+                    event.getNodeB().getControl(HazardControl.class).collideWithPlayer((Player)event.getNodeA());
                 } else if (event.getNodeB().getName().equals("player")
                         && event.getNodeA().getName().equals("hazard")) {
-                    event.getNodeA().getControl(HazardControl.class).collideWithPlayer(event.getNodeB());
+                    event.getNodeA().getControl(HazardControl.class).collideWithPlayer((Player)event.getNodeB());
                 }
                 /*
                  if (event.getNodeA().getName().equals("player")
