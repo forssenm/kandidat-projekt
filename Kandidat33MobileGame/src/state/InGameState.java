@@ -204,10 +204,10 @@ public class InGameState extends AbstractAppState{
             public void collision(PhysicsCollisionEvent event) {
                 if (event.getNodeA().getName().equals("player")
                         && event.getNodeB().getName().equals("hazard")) {
-                    event.getNodeB().getControl(HazardControl.class).collideWithPlayer(event.getNodeA());
+                    event.getNodeB().getControl(HazardControl.class).collideWithPlayer((Player)event.getNodeA());
                 } else if (event.getNodeB().getName().equals("player")
                         && event.getNodeA().getName().equals("hazard")) {
-                    event.getNodeA().getControl(HazardControl.class).collideWithPlayer(event.getNodeB());
+                    event.getNodeA().getControl(HazardControl.class).collideWithPlayer((Player)event.getNodeB());
                 }
                 /*
                  if (event.getNodeA().getName().equals("player")

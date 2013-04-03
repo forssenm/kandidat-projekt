@@ -1,7 +1,5 @@
 package control;
 
-import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import spatial.Player;
 
@@ -23,5 +21,5 @@ public interface HazardControl extends Control {
      *
      * @param player
      */
-    public void collideWithPlayer(Spatial player);
+    public void collideWithPlayer(Player player);
 }
