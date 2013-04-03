@@ -62,8 +62,9 @@ public class ChunkFactory {
          * This code creates a FireballControl-type hazard floating in mid-air,
          * triggering the first time the player bumps into it. Doesn't work on
          * the phone.
-         chunk.attachChild(createHazard());
          */
+         chunk.attachChild(createHazard());
+         
         
         
         // Generate the background:
