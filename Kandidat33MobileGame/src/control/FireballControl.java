@@ -11,7 +11,6 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
-import spatial.Player;
 
 /**
  *
@@ -24,11 +23,8 @@ public class FireballControl implements HazardControl {
 
     public void collideWithPlayer(Spatial player) {
         if (!hasHit) {
-            RunningControl rC = player.getControl(RunningControl.class);
-            if (rC != null) {
-                rC.setJumpSpeed(rC.getJumpSpeed() - 2f);
-                hasHit = true;
-            }
+            // code to damage player or something
+            hasHit = true;
         }
     }
 
