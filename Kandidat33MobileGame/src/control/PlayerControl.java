@@ -121,11 +121,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         rigidBody.getPhysicsLocation(location);
         // rotation is never checked since the character can't rotate
         applyPhysicsTransform(location, Quaternion.DIRECTION_Z);
-        if (initiatingJump) {
-            initiatingJump = false;
-            initiateJumpInNextTick = false;
-        }
-
     }
 
     @Override
@@ -144,7 +139,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
 
         // running
         checkOnGround();
-
+        
         if (onGround) {
             float designatedVelocity = walkVelocity.length();
 
@@ -163,14 +158,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
                 vars.release();
             }
         }
-
         
         // jumping
         float designatedUpwardsVelocity = 0;
         
         if (initiateJumpInNextTick) {
-            //initiateJumpInNextTick = false;
-            initiatingJump = true;
+            initiateJumpInNextTick = false;
+            //initiatingJump = true;
             designatedUpwardsVelocity = jumpSpeed;
         }
         
@@ -292,12 +286,14 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     /**
      * This checks if the character is on the ground by doing a ray test.
      */
+    
+    private static final float ON_GROUND_TRESHOLD = 0.1f;
     protected void checkOnGround() {
         TempVars vars = TempVars.get();
         Vector3f location = vars.vect1;
         Vector3f rayVector = vars.vect2;
         location.set(Vector3f.UNIT_Y).multLocal(height).addLocal(this.location);
-        rayVector.set(Vector3f.UNIT_Y).multLocal(-height - FastMath.ZERO_TOLERANCE).addLocal(location);
+        rayVector.set(Vector3f.UNIT_Y).multLocal(-height - ON_GROUND_TRESHOLD).addLocal(location);
         List<PhysicsRayTestResult> results = space.rayTest(location, rayVector);
         vars.release();
         for (PhysicsRayTestResult physicsRayTestResult : results) {
