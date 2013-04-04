@@ -6,33 +6,34 @@ package control;
 
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.GhostControl;
-import com.jme3.math.Vector3f;
 import spatial.Player;
 
 /**
  *
  * @author jonatankilhamn
  */
-public class FireballControl extends GhostControl implements HazardControl {
-    boolean hasHit = false;
-    
-    Vector3f velocity = new Vector3f( 10.0f, -1.0f, 0.0f );
-    
+public abstract class FireballControl extends GhostControl implements HazardControl {
+    protected boolean hasHit = false;
+        
     public FireballControl(){
-        super(new SphereCollisionShape(1.0f));
+        super(new SphereCollisionShape(1f));
     }
     
     public void collideWithPlayer(Player player) {
         if (!hasHit) {
             // code to damage player or something
+            System.out.println("You got hit!");
             hasHit = true;
         }
     }
+    
     @Override
     public void update(float tpf){
         super.setEnabled(false);
-        Vector3f oldTranslation = this.spatial.getLocalTranslation();
-        this.spatial.setLocalTranslation( oldTranslation.add( velocity.mult(tpf) ) );
+        positionUpdate(tpf);
         super.setEnabled(true);
     }
+
+    protected abstract void positionUpdate(float tpf);
+    
 }

@@ -12,6 +12,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import control.FireballControl;
+import control.HoveringFireballControl;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -157,9 +158,7 @@ public class ChunkFactory {
     private Hazard createHazard() {
         Hazard hazard = new Hazard(assetManager);
         hazard.setLocalTranslation(10f, 3f, 0f);
-        GhostControl hazardGhostControl = new GhostControl(new BoxCollisionShape(new Vector3f(1, 1, 1)));
-        hazard.addControl(hazardGhostControl);
-        FireballControl fireballControl = new FireballControl();
+        FireballControl fireballControl = new HoveringFireballControl();
         hazard.addControl(fireballControl);
         return hazard;
     }
