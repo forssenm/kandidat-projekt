@@ -9,7 +9,12 @@ import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import control.FireballControl;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import spatial.Hazard;
 import spatial.LevelChunk;
@@ -19,13 +24,14 @@ import spatial.WindowFrame;
 import variables.P;
 
 /**
- * A class for generating content for LevelChunks. An instance of this class
- * can take an emoty chunk and fill it with background, platforms, windows,
- * light sources etc. In the future it would probably handle e.g. particle
- * effects as well.
- * 
- * This is the de facto level generator – the code for where each platform
- * etc is placed can be found here.
+ * A class for generating content for LevelChunks. An instance of this class can
+ * take an emoty chunk and fill it with background, platforms, windows, light
+ * sources etc. In the future it would probably handle e.g. particle effects as
+ * well.
+ *
+ * This is the de facto level generator – the code for where each platform etc
+ * is placed can be found here.
+ *
  * @author jonatankilhamn
  */
 public class ChunkFactory {
@@ -37,15 +43,26 @@ public class ChunkFactory {
     }
 
     /**
-     * Fills a chunk with content. After this call, there will be a number of
-     * platforms and background objects attached to the chunk that were not
-     * there before. Anything already on the chunk will be left untouched.
-     * @param chunk The chunk to fill.
+     * Generates a new chunk of the level. The generated content is sorted into
+     * static and moving objects, which are delivered in a list. The first
+     * element in the list is a
+     * <code>LevelChunk</code> with all static objects. The other elements are
+     * all moving objects.
+     * 
+     * @return A list of two LevelChunks.
+     *
      */
-    public void fillChunk(LevelChunk chunk) {
+    public List<Spatial> generateChunk() {
+
+        // generate an empty chunk for all static objects
+        LevelChunk staticObjects = new LevelChunk();
         
+        LinkedList<Spatial> list = new LinkedList<Spatial>();
+        list.add(staticObjects);
+
+
         // Generate everything with a physical / game mechanical connection:
-        
+
         // generate platform positions
         Random random = new Random();
         int rand1 = random.nextInt(6) - 3;
@@ -54,28 +71,18 @@ public class ChunkFactory {
         // generate two platforms
         Platform platform1 = createPlatform(0f, rand1);
         Platform platform2 = createPlatform(P.platformLength + P.platformDistance, rand2);
-        chunk.attachChild(platform1);
-        chunk.attachChild(platform2);
-        
-        // create a fireball hazard:
-        /*
-         * This code creates a FireballControl-type hazard floating in mid-air,
-         * triggering the first time the player bumps into it. Doesn't work on
-         * the phone.
-         */
-         chunk.attachChild(createHazard());
-         
-        
-        
+        staticObjects.attachChild(platform1);
+        staticObjects.attachChild(platform2);
+
         // Generate the background:
 
         // the wall:
         Wall wall = new Wall(this.assetManager);
-        chunk.attachChild(wall);
+        staticObjects.attachChild(wall);
 
         // the decorations:
         WindowFrame window = createWindowFrame(5f, 5f);
-        chunk.attachChild(window);
+        staticObjects.attachChild(window);
 
         // the lights:
         /*
@@ -89,6 +96,17 @@ public class ChunkFactory {
          // generate a point light source of a random colour
          chunk.addLight(createColouredLight());
          */
+
+
+
+        // create a fireball hazard:
+        /*
+         * This code creates a FireballControl-type hazard floating in mid-air,
+         * triggering the first time the player bumps into it.
+         */
+        list.addLast(createHazard());
+
+        return list;
 
     }
 
