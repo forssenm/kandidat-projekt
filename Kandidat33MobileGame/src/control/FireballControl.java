@@ -6,6 +6,7 @@ package control;
 
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.GhostControl;
+import com.jme3.math.Vector3f;
 import spatial.Player;
 
 /**
@@ -32,6 +33,12 @@ public abstract class FireballControl extends GhostControl implements HazardCont
     public void update(float tpf){
         super.setEnabled(false);
         positionUpdate(tpf);
+        super.setEnabled(true);
+    }
+    
+    public void move(Vector3f translation) {
+        super.setEnabled(false);
+        spatial.setLocalTranslation(spatial.getLocalTranslation().add(translation));
         super.setEnabled(true);
     }
 
