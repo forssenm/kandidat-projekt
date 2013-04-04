@@ -14,6 +14,7 @@ import com.jme3.scene.Spatial;
 import control.FireballControl;
 import control.HoveringFireballControl;
 import control.fireball.SpinningFireballControl;
+import control.LinearFireballControl;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -106,8 +107,8 @@ public class ChunkFactory {
          * This code creates a FireballControl-type hazard floating in mid-air,
          * triggering the first time the player bumps into it.
          */
-        list.addLast(createHazard());
-        
+        list.addLast(createHoveringFireball());            
+
         return list;
 
     }
@@ -156,10 +157,18 @@ public class ChunkFactory {
     }
 
     /* Creates a fireball hazard floating in the air.*/
-    private Hazard createHazard() {
+    private Hazard createHoveringFireball() {
         Hazard hazard = new Hazard(assetManager);
         hazard.setLocalTranslation(10f, 3f, 0f);
         FireballControl fireballControl = new SpinningFireballControl();
+        hazard.addControl(fireballControl);
+        return hazard;
+    }
+    
+    private Hazard createLinearFireball() {
+        Hazard hazard = new Hazard(assetManager);
+        hazard.setLocalTranslation(5f,6f,0f);
+        FireballControl fireballControl = new LinearFireballControl(new Vector3f(-20,0,0));
         hazard.addControl(fireballControl);
         return hazard;
     }

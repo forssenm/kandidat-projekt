@@ -13,6 +13,10 @@ import com.jme3.math.Vector3f;
 public class LinearFireballControl extends FireballControl {
 
     private Vector3f velocity;
+
+    public LinearFireballControl(Vector3f velocity) {
+        this.velocity = velocity;
+    }
     
     @Override
     protected void positionUpdate(float tpf) {
