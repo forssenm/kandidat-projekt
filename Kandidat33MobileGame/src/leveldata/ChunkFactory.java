@@ -13,6 +13,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import control.FireballControl;
 import control.HoveringFireballControl;
+import control.fireball.SpinningFireballControl;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -106,7 +107,7 @@ public class ChunkFactory {
          * triggering the first time the player bumps into it.
          */
         list.addLast(createHazard());
-
+        
         return list;
 
     }
@@ -158,7 +159,7 @@ public class ChunkFactory {
     private Hazard createHazard() {
         Hazard hazard = new Hazard(assetManager);
         hazard.setLocalTranslation(10f, 3f, 0f);
-        FireballControl fireballControl = new HoveringFireballControl();
+        FireballControl fireballControl = new SpinningFireballControl();
         hazard.addControl(fireballControl);
         return hazard;
     }
