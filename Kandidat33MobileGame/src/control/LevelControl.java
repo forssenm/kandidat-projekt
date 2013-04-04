@@ -79,7 +79,7 @@ public class LevelControl implements Control {
     
     private void deleteChunk(LevelChunk chunk) {
         physicsSpace.removeAll(chunk);
-        chunk.remove();
+        chunk.detachFromLevelNode();
     }
     
     private void generateStartingChunks() {
@@ -98,11 +98,8 @@ public class LevelControl implements Control {
      */
     private Node generateNextChunk() {
 
-        // generate an empty chunk
-        LevelChunk chunk = new LevelChunk(gameNode);
-        
-        // fill the chunk with content
-        chunkFactory.fillChunk(chunk);
+        // generate a chunk filled the chunk with content
+        LevelChunk chunk = chunkFactory.generateChunk();
         
         // make sure everything is connected to the physics space
         this.physicsSpace.addAll(chunk);
@@ -120,8 +117,8 @@ public class LevelControl implements Control {
         // place the new chunk in the right place
         chunk.setLocalTranslation(newChunkPosition);
 
-        // addToLevel the chunk (attaches it and its lights to the level node)
-        chunk.addToLevel();
+        // attachToLevelNode the chunk (attaches it and its lights to the level node)
+        chunk.attachToLevelNode(gameNode);
         chunks.addLast(chunk);
         return chunk;
     }

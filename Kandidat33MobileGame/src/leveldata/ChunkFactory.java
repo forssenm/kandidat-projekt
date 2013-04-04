@@ -2,6 +2,7 @@ package leveldata;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.light.Light;
 import com.jme3.light.PointLight;
@@ -42,7 +43,10 @@ public class ChunkFactory {
      * there before. Anything already on the chunk will be left untouched.
      * @param chunk The chunk to fill.
      */
-    public void fillChunk(LevelChunk chunk) {
+    public LevelChunk generateChunk() {
+        
+        // generate an empty chunk
+        LevelChunk chunk = new LevelChunk();
         
         // Generate everything with a physical / game mechanical connection:
         
@@ -89,6 +93,8 @@ public class ChunkFactory {
          // generate a point light source of a random colour
          chunk.addLight(createColouredLight());
          */
+        
+        return chunk;
 
     }
 
@@ -141,6 +147,7 @@ public class ChunkFactory {
         hazard.setLocalTranslation(10f, 3f, 0f);
         GhostControl hazardGhostControl = new GhostControl(new BoxCollisionShape(new Vector3f(1, 1, 1)));
         hazard.addControl(hazardGhostControl);
+        SphereCollisionShape s;
         FireballControl fireballControl = new FireballControl();
         hazard.addControl(fireballControl);
         return hazard;
