@@ -6,16 +6,20 @@ package control;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
+import com.jme3.scene.SceneGraphVisitor;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import leveldata.ChunkFactory;
 import spatial.LevelChunk;
 import variables.P;
@@ -30,6 +34,7 @@ public class LevelControl implements Control {
 
     
     private Node gameNode;
+    private Node movingObjectsNode;
     private LinkedList<LevelChunk> chunks;
     private AssetManager assetManager;
     private PhysicsSpace physicsSpace;
@@ -61,6 +66,8 @@ public class LevelControl implements Control {
             gameNode.detachAllChildren();
         }
         this.gameNode = (Node) spatial;
+        this.movingObjectsNode = new Node();
+        gameNode.attachChild(this.movingObjectsNode);
         generateStartingChunks();
     }
 
@@ -70,10 +77,16 @@ public class LevelControl implements Control {
      * @param tpf 
      */
     public void update(float tpf) {
-        if (this.player.getLocalTranslation().getX() >
-                chunks.getFirst().getLocalTranslation().getX() + P.chunkLength + 60) {
+        final float destructionPoint = this.player.getLocalTranslation().getX() - 60;
+        if (destructionPoint >
+                chunks.getFirst().getLocalTranslation().getX() + P.chunkLength) {
             deleteChunk(chunks.removeFirst());
             generateNextChunk();
+        }
+        for (Spatial spatial : movingObjectsNode.getChildren()) {
+            if (destructionPoint > spatial.getLocalTranslation().getX()) {
+                    movingObjectsNode.detachChild(spatial);
+                }
         }
     }
     
@@ -93,16 +106,12 @@ public class LevelControl implements Control {
     /**
      * Generate a new chunk of the level, placing it directly after the
      * last chunk.
-     * @pre generateStartingChunks has been run once.
      * @return 
      */
-    private Node generateNextChunk() {
+    private void generateNextChunk() {
 
         // generate a chunk filled the chunk with content
-        LevelChunk chunk = chunkFactory.generateChunk();
-        
-        // make sure everything is connected to the physics space
-        this.physicsSpace.addAll(chunk);
+        List<Spatial> list = chunkFactory.generateChunk();
         
         // find the x position to place the new chunk in
         float xPos;
@@ -114,13 +123,32 @@ public class LevelControl implements Control {
         Vector3f newChunkPosition =
                 new Vector3f(xPos, 0f, 0f);
         
-        // place the new chunk in the right place
-        chunk.setLocalTranslation(newChunkPosition);
+        // static objects:
+        LevelChunk staticObjects = (LevelChunk)list.remove(0);
+        // connect to the physics space
+        this.physicsSpace.addAll(staticObjects);
+        // place static objects in the right place
+        staticObjects.setLocalTranslation(newChunkPosition);
+        // attach to scenegraph
+        staticObjects.attachToLevelNode(gameNode);
+        
+        // the list now only contains moving objects:
+        for (Spatial spatial : list) {
+            // for the static objects, this is done in LevelChunk.setLocalTranslation
+            // for these objects, we must do it ourselves:
+            PhysicsControl physicsControl = spatial.getControl(PhysicsControl.class);
+            if (physicsControl != null) {
+                physicsControl.setEnabled(false);
+                spatial.setLocalTranslation(newChunkPosition);
+                physicsControl.setEnabled(true);
+            } else {
+                spatial.setLocalTranslation(newChunkPosition);
+            }
+            physicsSpace.addAll(spatial);
+            movingObjectsNode.attachChild(spatial);
+        }
 
-        // attachToLevelNode the chunk (attaches it and its lights to the level node)
-        chunk.attachToLevelNode(gameNode);
-        chunks.addLast(chunk);
-        return chunk;
+        chunks.addLast(staticObjects);
     }
     
     public void render(RenderManager rm, ViewPort vp) {
