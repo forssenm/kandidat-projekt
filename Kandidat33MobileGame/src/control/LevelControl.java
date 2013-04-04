@@ -84,8 +84,8 @@ public class LevelControl implements Control {
     
     private void generateStartingChunks() {
         chunks = new LinkedList<LevelChunk>();
-        // generate 5 chunks
-        for (int i = 0; i<10; i++){
+        // generate chunks
+        for (int i = 0; i<5; i++){
             generateNextChunk();
         }
     }
