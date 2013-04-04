@@ -23,6 +23,7 @@ import java.util.List;
 import leveldata.ChunkFactory;
 import spatial.LevelChunk;
 import leveldata.LevelContentGenerator;
+import spatial.Player;
 import variables.P;
 
 /**
@@ -39,7 +40,7 @@ public class LevelControl implements Control {
     private LinkedList<LevelChunk> chunks;
     private AssetManager assetManager;
     private PhysicsSpace physicsSpace;
-    private Spatial player;
+    private Player player;
     private ChunkFactory chunkFactory;
 
     /**
@@ -47,11 +48,11 @@ public class LevelControl implements Control {
      *
      */
     public LevelControl(AssetManager assetManager, PhysicsSpace physicsSpace,
-            Spatial player) {
+            Player player) {
         this.assetManager = assetManager;
         this.physicsSpace = physicsSpace;
         this.player = player;
-        this.chunkFactory = new ChunkFactory(assetManager);
+        this.chunkFactory = new ChunkFactory(assetManager, player);
     }
 
     /**
@@ -150,7 +151,7 @@ public class LevelControl implements Control {
         for (Spatial spatial : list) {
             // for the static objects, this is done in LevelChunk.setLocalTranslation
             // for these objects, we must do it ourselves:
-            PhysicsControl physicsControl = spatial.getControl(PhysicsControl.class);
+            /*PhysicsControl physicsControl = spatial.getControl(PhysicsControl.class);
             if (physicsControl != null) {
                 physicsControl.setEnabled(false);
                 spatial.setLocalTranslation(newChunkPosition);
@@ -159,7 +160,8 @@ public class LevelControl implements Control {
                 spatial.setLocalTranslation(newChunkPosition);
             }
             physicsSpace.addAll(spatial);
-            movingObjectsNode.attachChild(spatial);
+            movingObjectsNode.attachChild(spatial);*/
+            addToLevel(spatial,newChunkPosition);
         }
 
         chunks.addLast(staticObjects);
@@ -171,10 +173,10 @@ public class LevelControl implements Control {
         PhysicsControl physicsControl = spatial.getControl(PhysicsControl.class);
         if (physicsControl != null) {
             physicsControl.setEnabled(false);
-            spatial.setLocalTranslation(position);
+            spatial.setLocalTranslation(spatial.getLocalTranslation().add(position));
             physicsControl.setEnabled(true);
         } else {
-            spatial.setLocalTranslation(position);
+            spatial.setLocalTranslation(spatial.getLocalTranslation().add(position));
         }
 
         /*
@@ -193,6 +195,10 @@ public class LevelControl implements Control {
 
         physicsSpace.addAll(spatial);
         movingObjectsNode.attachChild(spatial);
+    }
+    
+    public Player getPlayer() {
+        return player;
     }
 
     public void render(RenderManager rm, ViewPort vp) {

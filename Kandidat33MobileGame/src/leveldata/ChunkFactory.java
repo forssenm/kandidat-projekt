@@ -26,9 +26,11 @@ import spatial.hazard.HoveringFireballHazard;
 import spatial.LevelChunk;
 import spatial.hazard.LinearFireballHazard;
 import spatial.Platform;
+import spatial.Player;
 import spatial.hazard.SpinningFireballHazard;
 import spatial.Wall;
 import spatial.WindowFrame;
+import spatial.Wizard;
 import variables.P;
 
 /**
@@ -46,9 +48,11 @@ public class ChunkFactory {
 
     private AssetManager assetManager;
     int counter;
+    private Player player;
 
-    public ChunkFactory(AssetManager assetManager) {
+    public ChunkFactory(AssetManager assetManager, Player player) {
         this.assetManager = assetManager;
+        this.player = player;
     }
 
     /**
@@ -113,11 +117,10 @@ public class ChunkFactory {
          * This code creates a FireballControl-type hazard floating in mid-air,
          * triggering the first time the player bumps into it.
          */
-        list.addLast(createHoveringFireball());
+        //list.addLast(createHoveringFireball());
 
         if (counter > 1) {
-            WizardControl wizardControl = new WizardControl(assetManager);
-            window.addControl(wizardControl);
+            list.addLast(createWizard());
         }
         counter++;
 
@@ -171,7 +174,7 @@ public class ChunkFactory {
     /* Creates a fireball hazard floating in the air.*/
     private Hazard createHoveringFireball() {
         Hazard hazard = new HoveringFireballHazard(assetManager);
-        hazard.setLocalTranslation(10f, 3f, 0f);
+        hazard.setLocalTranslation(10f, 15f, 0f);
         return hazard;
     }
 
@@ -185,5 +188,11 @@ public class ChunkFactory {
         Hazard hazard = new SpinningFireballHazard(assetManager);
         hazard.setLocalTranslation(5f, 6f, 0f);
         return hazard;
+    }
+    
+    private Wizard createWizard() {
+        Wizard wizard = new Wizard(assetManager);
+        wizard.setLocalTranslation(20,15,0);
+        return wizard;
     }
 }

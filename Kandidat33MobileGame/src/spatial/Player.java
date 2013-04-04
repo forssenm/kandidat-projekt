@@ -49,7 +49,7 @@ public class Player extends Node {
         this.setLocalTranslation(0.0f, 5.0f, 0.0f);
 
         // set up the physics control
-        playerControl = new PlayerControl(1f, 7f, 20f);
+        playerControl = new PlayerControl(1f, 4f, 20f);
         playerControl.setWalkVelocity(Vector3f.UNIT_X.mult(playerRunSpeed));
         playerControl.setJumpSpeed(playerJumpSpeed);
         this.addControl(playerControl);
