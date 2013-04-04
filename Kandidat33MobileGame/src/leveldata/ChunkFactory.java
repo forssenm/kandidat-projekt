@@ -19,9 +19,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import spatial.Hazard;
+import spatial.hazard.FireballHazard;
+import spatial.hazard.Hazard;
+import spatial.hazard.HoveringFireballHazard;
 import spatial.LevelChunk;
+import spatial.hazard.LinearFireballHazard;
 import spatial.Platform;
+import spatial.hazard.SpinningFireballHazard;
 import spatial.Wall;
 import spatial.WindowFrame;
 import variables.P;
@@ -158,18 +162,20 @@ public class ChunkFactory {
 
     /* Creates a fireball hazard floating in the air.*/
     private Hazard createHoveringFireball() {
-        Hazard hazard = new Hazard(assetManager);
+        Hazard hazard = new HoveringFireballHazard(assetManager);
         hazard.setLocalTranslation(10f, 3f, 0f);
-        FireballControl fireballControl = new SpinningFireballControl();
-        hazard.addControl(fireballControl);
         return hazard;
     }
     
     private Hazard createLinearFireball() {
-        Hazard hazard = new Hazard(assetManager);
+        Hazard hazard = new LinearFireballHazard(assetManager,new Vector3f(-20,0,0));
         hazard.setLocalTranslation(5f,6f,0f);
-        FireballControl fireballControl = new LinearFireballControl(new Vector3f(-20,0,0));
-        hazard.addControl(fireballControl);
+        return hazard;
+    }
+    
+    private Hazard createSpinningFireball() {
+        Hazard hazard = new SpinningFireballHazard(assetManager);
+        hazard.setLocalTranslation(5f,6f,0f);
         return hazard;
     }
 }
