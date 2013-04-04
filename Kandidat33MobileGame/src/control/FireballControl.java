@@ -4,53 +4,35 @@
  */
 package control;
 
-import com.jme3.export.JmeExporter;
-import com.jme3.export.JmeImporter;
-import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.ViewPort;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.control.Control;
-import java.io.IOException;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.bullet.control.GhostControl;
+import com.jme3.math.Vector3f;
 import spatial.Player;
 
 /**
  *
  * @author jonatankilhamn
  */
-public class FireballControl implements HazardControl {
-    
-    Spatial spatial;
+public class FireballControl extends GhostControl implements HazardControl {
     boolean hasHit = false;
-
+    
+    Vector3f velocity = new Vector3f( 10.0f, -1.0f, 0.0f );
+    
+    public FireballControl(){
+        super(new SphereCollisionShape(1.0f));
+    }
+    
     public void collideWithPlayer(Player player) {
         if (!hasHit) {
             // code to damage player or something
             hasHit = true;
         }
     }
-
-    public Control cloneForSpatial(Spatial spatial) {
-        FireballControl newControl = new FireballControl();
-        spatial.addControl(newControl);
-        return newControl;
+    @Override
+    public void update(float tpf){
+        super.setEnabled(false);
+        Vector3f oldTranslation = this.spatial.getLocalTranslation();
+        this.spatial.setLocalTranslation( oldTranslation.add( velocity.mult(tpf) ) );
+        super.setEnabled(true);
     }
-
-    public void setSpatial(Spatial spatial) {
-        this.spatial = spatial;
-    }
-
-    public void update(float tpf) {
-    }
-
-    public void render(RenderManager rm, ViewPort vp) {
-    }
-
-    public void write(JmeExporter ex) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void read(JmeImporter im) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
 }
