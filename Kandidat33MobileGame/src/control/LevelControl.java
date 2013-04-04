@@ -85,6 +85,7 @@ public class LevelControl implements Control {
         }
         for (Spatial spatial : movingObjectsNode.getChildren()) {
             if (destructionPoint > spatial.getLocalTranslation().getX()) {
+                    physicsSpace.removeAll(spatial);
                     movingObjectsNode.detachChild(spatial);
                 }
         }
