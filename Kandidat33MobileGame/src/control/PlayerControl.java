@@ -89,6 +89,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     protected boolean onGround = false;
     protected boolean abortJumpInNextTick = false;
     protected float gravity = -40f;
+    private boolean pushBackInNextTick;
+    private Vector3f pushBackVelocityAdjustment = new Vector3f(-10f,10f,0f);
 
     /**
      * Only used for serialization, do not use this constructor.
@@ -177,6 +179,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
             velocity.setY(designatedUpwardsVelocity);
         }
         
+        //pushback
+        if (pushBackInNextTick) {
+            pushBackInNextTick = false;
+            velocity.setX(-walkVelocity.length());
+            velocity.setY(jumpSpeed);
+        }
+        
         // updating the velocity including both running and jumping
         rigidBody.setLinearVelocity(velocity);
 
@@ -219,6 +228,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      */
     public void abortJump() {
         abortJumpInNextTick = true;
+    }
+    
+    /**
+     * Makes the character fly backwards.
+     */
+    void pushBack() {
+        pushBackInNextTick = true;
     }
 
     /**
@@ -424,4 +440,5 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         rigidBody = new PhysicsRigidBody(getShape(), mass);
         rigidBody.setAngularFactor(0);
     }
+
 }

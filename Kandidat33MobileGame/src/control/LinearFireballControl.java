@@ -5,7 +5,6 @@
 package control;
 
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
 
 /**
  *
@@ -14,7 +13,6 @@ import com.jme3.scene.Spatial;
 public class LinearFireballControl extends FireballControl {
 
     private Vector3f velocity;
-   
     
     @Override
     protected void positionUpdate(float tpf) {

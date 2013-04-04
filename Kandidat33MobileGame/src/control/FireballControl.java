@@ -20,11 +20,12 @@ public abstract class FireballControl extends GhostControl implements HazardCont
     }
     
     public void collideWithPlayer(Player player) {
-        if (!hasHit) {
+        //if (!hasHit) { //if we only want each fireball to hit once
             // code to damage player or something
-            System.out.println("You got hit!");
+            player.getControl(PlayerControl.class).pushBack();
             hasHit = true;
-        }
+            //this.space.removeAll(spatial);
+        //}
     }
     
     @Override
