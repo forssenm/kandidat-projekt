@@ -1,5 +1,7 @@
 
-package control;
+package control.fireball;
+
+import control.FireballControl;
 
 /**
  *
