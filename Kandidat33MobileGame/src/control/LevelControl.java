@@ -81,16 +81,25 @@ public class LevelControl implements Control {
      */
     public void update(float tpf) {
         final float destructionPoint = this.player.getLocalTranslation().getX() - 60;
-        if (destructionPoint
-                > chunks.getFirst().getLocalTranslation().getX() + P.chunkLength) {
+        if (isOutsideLevelBounds(chunks.getFirst().getLocalTranslation())) {
             deleteChunk(chunks.removeFirst());
             generateNextChunk();
         }
         for (Spatial spatial : movingObjectsNode.getChildren()) {
-            if (destructionPoint > spatial.getLocalTranslation().getX()) {
+            if (isOutsideLevelBounds(spatial.getLocalTranslation())) {
                 movingObjectsNode.detachChild(spatial);
             }
         }
+    }
+    
+    private boolean isOutsideLevelBounds(Vector3f position) {
+        Vector3f playerPosition = this.player.getLocalTranslation();
+        final float leftBound = playerPosition.getX() - 60 - P.chunkLength;
+        final float rightBound = playerPosition.getX() + 200;
+        final float lowerBound = playerPosition.getY() - 50;
+        
+        return (position.getX() < leftBound || position.getX() > rightBound ||
+                position.getY() < lowerBound);
     }
 
     private void deleteChunk(LevelChunk chunk) {
