@@ -161,22 +161,30 @@ public class LevelControl implements Control {
             }
             physicsSpace.addAll(spatial);
             movingObjectsNode.attachChild(spatial);*/
-            addToLevel(spatial,newChunkPosition);
+            addToLevel(spatial,spatial.getLocalTranslation().add(newChunkPosition));
         }
 
         chunks.addLast(staticObjects);
     }
 
+    /**
+     * Take level content and add it to the level. LevelChunks with several
+     * static objects are not added this way, but everything else is.
+     * TODO: process all level content through this method
+     * @param spatial The spatial to add. Should be a single object, not a
+     * sub-tree of several game objects.
+     * @param position The position to place the object in.
+     */
     public void addToLevel(Spatial spatial, final Vector3f position) {
 
         // physics-secure movement to the position where it's added
         PhysicsControl physicsControl = spatial.getControl(PhysicsControl.class);
         if (physicsControl != null) {
             physicsControl.setEnabled(false);
-            spatial.setLocalTranslation(spatial.getLocalTranslation().add(position));
+            spatial.setLocalTranslation(/*spatial.getLocalTranslation().add(*/position/*)*/);
             physicsControl.setEnabled(true);
         } else {
-            spatial.setLocalTranslation(spatial.getLocalTranslation().add(position));
+            spatial.setLocalTranslation(/*spatial.getLocalTranslation().add(*/position/*)*/);
         }
 
         /*
