@@ -158,10 +158,13 @@ public class InGameState extends AbstractAppState{
         this.app.getRootNode().detachChild(this.gameNode);
     }
     
+    static final float deathTreshold = -20.0f;       
     /**{inheritDoc}*/
     @Override
     public void update(float tpf) {
-        /* Does nothing */
+        if( player.getWorldTranslation().getY() < InGameState.deathTreshold){
+            gameOver();
+        }
     }
 
      
@@ -216,5 +219,10 @@ public class InGameState extends AbstractAppState{
             }
         };
         this.physics.getPhysicsSpace().addCollisionListener(physicsCollisionListener);     
+    }
+    
+    private void gameOver(){
+        // Re-spawns player a bit behind and above.
+        player.getControl(PlayerControl.class).warp(player.getLocalTranslation().add(new Vector3f(-10.0f,30.0f,0.0f)));
     }
 }
