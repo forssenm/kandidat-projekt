@@ -19,7 +19,7 @@ import variables.P;
 public class Main extends SimpleApplication {
     
     public static void main(String[] args) {
-        AppSettings appSettings = new AppSettings(false);
+        AppSettings appSettings = new AppSettings(true);
         appSettings.setSamples(2);
         appSettings.setVSync(true);
         Main app = new Main();
