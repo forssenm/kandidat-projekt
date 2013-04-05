@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import spatial.Platform;
-import spatial.Player;
 import spatial.Wall;
 import spatial.WindowFrame;
 import spatial.Wizard;
@@ -37,18 +36,19 @@ import variables.P;
 public class ChunkFactory {
 
     private AssetManager assetManager;
-    int counter;
-    private Player player;
+    private int counter;
+    private float height;
+    private float distanceOverFlow;
 
-    public ChunkFactory(AssetManager assetManager, Player player) {
+    public ChunkFactory(AssetManager assetManager) {
         this.assetManager = assetManager;
-        this.player = player;
     }
 
     /**
-     * Generates a new chunk of the level. The generated content is delivered
-     * in a list of <code>Spatial</code>s. One of the spatials must have the
-     * name "background".
+     * Generates a new chunk of the level. The generated content is delivered in
+     * a list of
+     * <code>Spatial</code>s. One of the spatials must have the name
+     * "background".
      *
      * @return A list of <code>Spatial</code>s.
      *
@@ -57,7 +57,7 @@ public class ChunkFactory {
 
 
         LinkedList<Spatial> list = new LinkedList<Spatial>();
-        
+
         // Generate the background:
         Node staticObjects = new Node("background");
 
@@ -66,23 +66,82 @@ public class ChunkFactory {
         staticObjects.attachChild(wall);
 
         // the decorations:
-        WindowFrame window = createWindowFrame(5f, 5f);
+        float wHeight = Math.max(0, 5 * Math.round(height / 5));
+
+        WindowFrame window = createWindowFrame(5f, wHeight + 5f);
         staticObjects.attachChild(window);
         list.add(staticObjects);
-        
-        
+
+
         // Generate everything with a physical / game mechanical connection:
 
-        // generate platform positions
-        Random random = new Random();
-        int rand1 = random.nextInt(6) - 3;
-        int rand2 = rand1 + random.nextInt(6) - 3;
+        // standard length and distance
+        float total = P.chunkLength;
+        float dist = P.platformDistance;
+        float length = P.platformLength;
+        float d = distanceOverFlow;
+        distanceOverFlow = 0;
 
-        // generate two platforms
-        Platform platform1 = createPlatform(0f, rand1);
-        Platform platform2 = createPlatform(P.platformLength + P.platformDistance, rand2);
-        list.add(platform1);
-        list.add(platform2);
+        Random random = new Random();
+
+        int key;
+        if (counter < 4) { //nothing special on the first chunk
+            key = 1;
+        } else if (height < -2) {
+            key = 3;
+        } else if (height > 20) {
+            key = 4;
+        } else {
+            key = random.nextInt(5);
+        }
+
+        switch (key) {
+            case (0): // chilling platforms with wizard
+                list.add(createWizard());
+            case (1): // chilling platforms
+                while (d < total) {
+
+                    list.add(createPlatform(d, height + random.nextFloat() * 3, length));
+                    d += length + dist;
+                }
+                break;
+            case (2): // chilling differentlength platforms
+                while (d < total) {
+                    float nLength = length * (0.5f + random.nextFloat() / 2);
+                    float nDist = dist * (1f + random.nextFloat());
+
+                    list.add(createPlatform(d + nDist, height + random.nextFloat() * 3, nLength));
+                    d += nLength + nDist;
+                }
+                break;
+            case (3): // climbing platforms
+                while (d < total) {
+                    float nLength = length * (0.5f + random.nextFloat() / 2);
+                    float nDist = dist * (1f + random.nextFloat());
+
+                    list.add(createPlatform(d + nDist, height + random.nextFloat() * 2, nLength));
+                    height += 1 + 5*random.nextFloat();
+                    d += nLength + nDist;
+                }
+                break;
+            case (4): // descending platforms
+                while (d < total) {
+                    float nLength = length * (0.5f + random.nextFloat() / 2);
+                    float nDist = dist * (1f + random.nextFloat());
+                    height -= (2+8*random.nextFloat());
+                    list.add(createPlatform(d + nDist, height + random.nextFloat() * 4, nLength));
+                    d += nLength + nDist;
+                }
+                break;
+            default:
+                break;
+                
+        }
+        distanceOverFlow = d - total;
+
+
+
+
 
         // the lights:
         /*
@@ -108,7 +167,7 @@ public class ChunkFactory {
 
         // create a wizard (but not for the first two chunks, that's too hard)
         if (counter > 1) {
-            list.addLast(createWizard());
+            //list.addLast(createWizard());
         }
         counter++;
 
@@ -117,9 +176,9 @@ public class ChunkFactory {
     }
 
     /* Creates a platform at a given 2d position */
-    private Platform createPlatform(float positionX, float positionY) {
+    private Platform createPlatform(float positionX, float positionY, float length) {
         Vector3f platformPos = new Vector3f(positionX, positionY, 0f);
-        Platform platform = new Platform(this.assetManager, platformPos, P.platformLength, P.platformHeight, P.platformWidth);
+        Platform platform = new Platform(this.assetManager, platformPos, length, P.platformHeight, P.platformWidth);
         return platform;
     }
 
@@ -165,7 +224,7 @@ public class ChunkFactory {
         hazard.setLocalTranslation(10f, 15f, 0f);
         return hazard;
     }
-    
+
     /* Creates a fireball hazard flying in a straight line.*/
     private Hazard createLinearFireball() {
         Hazard hazard = new LinearFireballHazard(assetManager, new Vector3f(-20, 0, 0));
@@ -183,7 +242,7 @@ public class ChunkFactory {
     /* Creates a wizard shooting fireballs at the player.*/
     private Wizard createWizard() {
         Wizard wizard = new Wizard(assetManager);
-        wizard.setLocalTranslation(20, 15, 0);
+        wizard.setLocalTranslation(10, 20, 0);
         return wizard;
     }
 }

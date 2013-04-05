@@ -16,7 +16,7 @@ import spatial.hazard.LinearFireballHazard;
  */
 public class WizardControl extends AbstractControl implements LevelContentGenerator {
 
-    private static final float fireballCoolDown = 10.0f;
+    private static final float fireballCoolDown = 6.0f;
     private static final float fireballSpeed = 15.0f;
     private LevelControl levelControl;
     private float time;
@@ -33,7 +33,7 @@ public class WizardControl extends AbstractControl implements LevelContentGenera
     @Override
     protected void controlUpdate(float tpf) {
         time += tpf;
-        if (time > 1) {
+        if (time > 5) {
             time -= fireballCoolDown;
             Vector3f direction = levelControl.getPlayer().getLocalTranslation().
                     subtract(this.spatial.getWorldTranslation());

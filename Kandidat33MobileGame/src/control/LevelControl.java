@@ -45,8 +45,8 @@ public class LevelControl implements Control {
         this.assetManager = assetManager;
         this.physicsSpace = physicsSpace;
         this.player = player;
-        this.chunkFactory = new ChunkFactory(assetManager, player);
-        this.nextChunkX = -3f;
+        this.chunkFactory = new ChunkFactory(assetManager);
+        this.nextChunkX = -P.minLeftDistance;
     }
 
     /**
@@ -86,9 +86,9 @@ public class LevelControl implements Control {
 
     private boolean isOutsideLevelBounds(Vector3f position) {
         Vector3f playerPosition = this.player.getLocalTranslation();
-        final float leftBound = playerPosition.getX() - 80;
-        final float rightBound = playerPosition.getX() + 200;
-        final float lowerBound = playerPosition.getY() - 50;
+        final float leftBound = playerPosition.getX() - P.minLeftDistance;
+        final float rightBound = playerPosition.getX() + P.minRightDistance;
+        final float lowerBound = playerPosition.getY() - P.minDownDistance;
 
         return (position.getX() < leftBound || position.getX() > rightBound
                 || position.getY() < lowerBound);
@@ -96,7 +96,8 @@ public class LevelControl implements Control {
 
     private void generateStartingChunks() {
         // generate starting
-        for (int i = 0; i < 5; i++) {
+        int nbrOfChunks = (int) Math.round((P.minRightDistance+P.minLeftDistance)/P.chunkLength) -2;
+        for (int i = 0; i < nbrOfChunks; i++) {
             generateNextChunk();
         }
     }
