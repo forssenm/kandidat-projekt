@@ -12,6 +12,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import control.FireballControl;
+import control.WizardControl;
 import control.fireball.HoveringFireballControl;
 import control.fireball.SpinningFireballControl;
 import control.fireball.LinearFireballControl;
@@ -25,9 +26,11 @@ import spatial.hazard.HoveringFireballHazard;
 import spatial.LevelChunk;
 import spatial.hazard.LinearFireballHazard;
 import spatial.Platform;
+import spatial.Player;
 import spatial.hazard.SpinningFireballHazard;
 import spatial.Wall;
 import spatial.WindowFrame;
+import spatial.Wizard;
 import variables.P;
 
 /**
@@ -44,9 +47,12 @@ import variables.P;
 public class ChunkFactory {
 
     private AssetManager assetManager;
+    int counter;
+    private Player player;
 
-    public ChunkFactory(AssetManager assetManager) {
+    public ChunkFactory(AssetManager assetManager, Player player) {
         this.assetManager = assetManager;
+        this.player = player;
     }
 
     /**
@@ -55,7 +61,7 @@ public class ChunkFactory {
      * element in the list is a
      * <code>LevelChunk</code> with all static objects. The other elements are
      * all moving objects.
-     * 
+     *
      * @return A list of two LevelChunks.
      *
      */
@@ -63,7 +69,7 @@ public class ChunkFactory {
 
         // generate an empty chunk for all static objects
         LevelChunk staticObjects = new LevelChunk();
-        
+
         LinkedList<Spatial> list = new LinkedList<Spatial>();
         list.add(staticObjects);
 
@@ -111,7 +117,12 @@ public class ChunkFactory {
          * This code creates a FireballControl-type hazard floating in mid-air,
          * triggering the first time the player bumps into it.
          */
-        list.addLast(createHoveringFireball());            
+        //list.addLast(createHoveringFireball());
+
+        if (counter > 1) {
+            list.addLast(createWizard());
+        }
+        counter++;
 
         return list;
 
@@ -163,19 +174,25 @@ public class ChunkFactory {
     /* Creates a fireball hazard floating in the air.*/
     private Hazard createHoveringFireball() {
         Hazard hazard = new HoveringFireballHazard(assetManager);
-        hazard.setLocalTranslation(10f, 3f, 0f);
+        hazard.setLocalTranslation(10f, 15f, 0f);
         return hazard;
     }
-    
+
     private Hazard createLinearFireball() {
-        Hazard hazard = new LinearFireballHazard(assetManager,new Vector3f(-20,0,0));
-        hazard.setLocalTranslation(5f,6f,0f);
+        Hazard hazard = new LinearFireballHazard(assetManager, new Vector3f(-20, 0, 0));
+        hazard.setLocalTranslation(5f, 6f, 0f);
         return hazard;
     }
-    
+
     private Hazard createSpinningFireball() {
         Hazard hazard = new SpinningFireballHazard(assetManager);
-        hazard.setLocalTranslation(5f,6f,0f);
+        hazard.setLocalTranslation(5f, 6f, 0f);
         return hazard;
+    }
+    
+    private Wizard createWizard() {
+        Wizard wizard = new Wizard(assetManager);
+        wizard.setLocalTranslation(20,15,0);
+        return wizard;
     }
 }

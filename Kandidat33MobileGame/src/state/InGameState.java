@@ -53,7 +53,7 @@ public class InGameState extends AbstractAppState{
     private ViewPort viewPort;
     private BulletAppState physics;
     
-    private Node player;
+    private Player player;
     
     private ChaseCamera chaseCam;
      
