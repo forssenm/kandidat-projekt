@@ -95,13 +95,13 @@ public class ChunkFactory {
         /*
          * This code creates a spotlight for each window. Slow on the phone.
          // a light shining out the window:
-         chunk.addLight(createWindowLight(5f,5f));
+         staticObjects.addLight(createWindowLight(5f,5f));
          */
 
         /*
          * This code creates a light of random colour. Slow on the phone.
          // generate a point light source of a random colour
-         chunk.addLight(createColouredLight());
+         staticObjects.addLight(createColouredLight());
          */
 
 
