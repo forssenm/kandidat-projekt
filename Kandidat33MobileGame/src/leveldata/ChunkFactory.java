@@ -7,6 +7,7 @@ import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,25 +46,31 @@ public class ChunkFactory {
     }
 
     /**
-     * Generates a new chunk of the level. The generated content is sorted into
-     * static and moving objects, which are delivered in a list. The first
-     * element in the list is a
-     * <code>LevelChunk</code> with all static objects. The other elements are
-     * all moving objects.
+     * Generates a new chunk of the level. The generated content is delivered
+     * in a list of <code>Spatial</code>s. One of the spatials must have the
+     * name "background".
      *
-     * @return A list of <code>Spatial</code>s; a LevelChunk followed by other
-     * loose objects.
+     * @return A list of <code>Spatial</code>s.
      *
      */
     public List<Spatial> generateChunk() {
 
-        // generate an empty chunk for all static objects
-        LevelChunk staticObjects = new LevelChunk();
 
         LinkedList<Spatial> list = new LinkedList<Spatial>();
+        
+        // Generate the background:
+        Node staticObjects = new Node("background");
+
+        // the wall:
+        Wall wall = new Wall(this.assetManager);
+        staticObjects.attachChild(wall);
+
+        // the decorations:
+        WindowFrame window = createWindowFrame(5f, 5f);
+        staticObjects.attachChild(window);
         list.add(staticObjects);
-
-
+        
+        
         // Generate everything with a physical / game mechanical connection:
 
         // generate platform positions
@@ -74,18 +81,8 @@ public class ChunkFactory {
         // generate two platforms
         Platform platform1 = createPlatform(0f, rand1);
         Platform platform2 = createPlatform(P.platformLength + P.platformDistance, rand2);
-        staticObjects.attachChild(platform1);
-        staticObjects.attachChild(platform2);
-
-        // Generate the background:
-
-        // the wall:
-        Wall wall = new Wall(this.assetManager);
-        staticObjects.attachChild(wall);
-
-        // the decorations:
-        WindowFrame window = createWindowFrame(5f, 5f);
-        staticObjects.attachChild(window);
+        list.add(platform1);
+        list.add(platform2);
 
         // the lights:
         /*
@@ -109,6 +106,7 @@ public class ChunkFactory {
          */
         //list.addLast(createHoveringFireball());
 
+        // create a wizard (but not for the first two chunks, that's too hard)
         if (counter > 1) {
             list.addLast(createWizard());
         }

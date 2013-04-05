@@ -106,7 +106,9 @@ public class InGameState extends AbstractAppState{
     private void initLevel() {
         LevelControl levelControl = new LevelControl(
                 assetManager, physics.getPhysicsSpace(), player);
-        gameNode.addControl(levelControl);
+        Node levelNode = new Node();
+        gameNode.attachChild(levelNode);
+        levelNode.addControl(levelControl);
         /*
         PssmShadowRenderer shadowRenderer = new PssmShadowRenderer(assetManager, 512,1);
         shadowRenderer.setDirection(P.windowLightDirection.normalize());

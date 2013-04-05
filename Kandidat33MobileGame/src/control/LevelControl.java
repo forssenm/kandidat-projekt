@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import leveldata.ChunkFactory;
 import leveldata.LevelContentGenerator;
-import leveldata.LevelChunk;
 import spatial.Player;
 import variables.P;
 
@@ -30,9 +29,8 @@ import variables.P;
  */
 public class LevelControl implements Control {
 
-    private Node gameNode;
-    private Node movingObjectsNode;
-    private LinkedList<LevelChunk> chunks;
+    private Node levelNode;
+    private float nextChunkX;
     private AssetManager assetManager;
     private PhysicsSpace physicsSpace;
     private Player player;
@@ -48,6 +46,7 @@ public class LevelControl implements Control {
         this.physicsSpace = physicsSpace;
         this.player = player;
         this.chunkFactory = new ChunkFactory(assetManager, player);
+        this.nextChunkX = -3f;
     }
 
     /**
@@ -59,12 +58,11 @@ public class LevelControl implements Control {
      */
     public void setSpatial(Spatial spatial) {
         assert (spatial instanceof Node);
-        if (gameNode != null) {
-            gameNode.detachAllChildren();
+        if (levelNode != null) {
+            levelNode.detachAllChildren();
         }
-        this.gameNode = (Node) spatial;
-        this.movingObjectsNode = new Node();
-        gameNode.attachChild(this.movingObjectsNode);
+        this.levelNode = (Node) spatial;
+        levelNode.attachChild(this.levelNode);
         generateStartingChunks();
     }
 
@@ -75,21 +73,20 @@ public class LevelControl implements Control {
      * @param tpf
      */
     public void update(float tpf) {
-        if (isOutsideLevelBounds(chunks.getFirst().getLocalTranslation())) {
-            deleteChunk(chunks.removeFirst());
-            generateNextChunk();
-        }
-        for (Spatial spatial : movingObjectsNode.getChildren()) {
+        /*if (isOutsideLevelBounds(chunks.getFirst().getLocalTranslation())) {
+         deleteChunk(chunks.removeFirst());
+         generateNextChunk();
+         }*/
+        for (Spatial spatial : levelNode.getChildren()) {
             if (isOutsideLevelBounds(spatial.getLocalTranslation())) {
-                physicsSpace.removeAll(spatial);
-                movingObjectsNode.detachChild(spatial);
+                removeFromLevel(spatial);
             }
         }
     }
 
     private boolean isOutsideLevelBounds(Vector3f position) {
         Vector3f playerPosition = this.player.getLocalTranslation();
-        final float leftBound = playerPosition.getX() - 60 - P.chunkLength;
+        final float leftBound = playerPosition.getX() - 80;
         final float rightBound = playerPosition.getX() + 200;
         final float lowerBound = playerPosition.getY() - 50;
 
@@ -97,14 +94,8 @@ public class LevelControl implements Control {
                 || position.getY() < lowerBound);
     }
 
-    private void deleteChunk(LevelChunk chunk) {
-        physicsSpace.removeAll(chunk);
-        chunk.detachFromLevelNode();
-    }
-
     private void generateStartingChunks() {
-        chunks = new LinkedList<LevelChunk>();
-        // generate chunks
+        // generate starting
         for (int i = 0; i < 5; i++) {
             generateNextChunk();
         }
@@ -120,61 +111,21 @@ public class LevelControl implements Control {
 
         // generate a chunk filled the chunk with content
         List<Spatial> list = chunkFactory.generateChunk();
-
-        // find the x position to place the new chunk in
-        float xPos;
-        if (chunks.isEmpty()) {
-            xPos = -3;
-        } else {
-            xPos = this.chunks.getLast().getLocalTranslation().getX() + P.chunkLength;
-        }
+        
         Vector3f newChunkPosition =
-                new Vector3f(xPos, 0f, 0f);
-
-        // static objects:
-        LevelChunk staticObjects = (LevelChunk) list.remove(0);
-        // connect to the physics space
-        this.physicsSpace.addAll(staticObjects);
-        // place static objects in the right place
-        staticObjects.setLocalTranslation(newChunkPosition);
-        // attach to scenegraph
-        staticObjects.attachToLevelNode(gameNode);
-
-        staticObjects.depthFirstTraversal(new SceneGraphVisitor() {
-            public void visit(Spatial spatial) {
-                int nbrOfCtrls = spatial.getNumControls();
-                for (int i = 0; i < nbrOfCtrls; i++) {
-                    if (spatial.getControl(i) instanceof LevelContentGenerator) {
-                        ((LevelContentGenerator) spatial.getControl(i)).setLevelControl(LevelControl.this);
-                    }
-                }
-            }
-        });
-
-        // the list now only contains moving objects:
+                new Vector3f(nextChunkX, 0f, 0f);
+        nextChunkX += P.chunkLength;
+        
         for (Spatial spatial : list) {
-            // for the static objects, this is done in LevelChunk.setLocalTranslation
-            // for these objects, we must do it ourselves:
-            /*PhysicsControl physicsControl = spatial.getControl(PhysicsControl.class);
-             if (physicsControl != null) {
-             physicsControl.setEnabled(false);
-             spatial.setLocalTranslation(newChunkPosition);
-             physicsControl.setEnabled(true);
-             } else {
-             spatial.setLocalTranslation(newChunkPosition);
-             }
-             physicsSpace.addAll(spatial);
-             movingObjectsNode.attachChild(spatial);*/
             addToLevel(spatial, spatial.getLocalTranslation().add(newChunkPosition));
         }
 
-        chunks.addLast(staticObjects);
     }
 
     /**
      * Take level content and add it to the level. LevelChunks with several
-     * static objects are not added this way, but everything else is.
-     * TODO: process all level content through this method
+     * static objects are not added this way, but everything else is. TODO:
+     * process all level content through this method
      *
      * @param spatial The spatial to add. Should be a single object, not a
      * sub-tree of several game objects.
@@ -182,32 +133,51 @@ public class LevelControl implements Control {
      */
     public void addToLevel(Spatial spatial, final Vector3f position) {
 
+        physicsSpace.addAll(spatial);
+
         // physics-secure movement to the position where it's added
         PhysicsControl physicsControl = spatial.getControl(PhysicsControl.class);
         if (physicsControl != null) {
             physicsControl.setEnabled(false);
-            spatial.setLocalTranslation(/*spatial.getLocalTranslation().add(*/position/*)*/);
+            spatial.setLocalTranslation(position);
             physicsControl.setEnabled(true);
         } else {
-            spatial.setLocalTranslation(/*spatial.getLocalTranslation().add(*/position/*)*/);
+            spatial.setLocalTranslation(position);
         }
+
 
         /*
          * Give references to the LevelControl to anyone who wants to
          * bring friends (other spatials) to the level
          */
-        int nbrOfCtrls = spatial.getNumControls();
-        for (int i = 0; i < nbrOfCtrls; i++) {
-            Control control = spatial.getControl(i);
-            if (control instanceof LevelContentGenerator) {
-                ((LevelContentGenerator) control).setLevelControl(LevelControl.this);
-            }
+        spatial.depthFirstTraversal(
+                new SceneGraphVisitor() {
+                    public void visit(Spatial spatial) {
+                        int nbrOfCtrls = spatial.getNumControls();
+                        for (int i = 0; i < nbrOfCtrls; i++) {
+                            Control control = spatial.getControl(i);
+                            if (control instanceof LevelContentGenerator) {
+                                ((LevelContentGenerator) control).setLevelControl(LevelControl.this);
+                            }
+                        }
+                    }
+                });
+
+
+        levelNode.attachChild(spatial);
+    }
+
+    public void removeFromLevel(Spatial spatial) {
+
+        physicsSpace.removeAll(spatial);
+
+        levelNode.detachChild(spatial);
+        /* the background node (wall and window) acts as a checkpoint –
+         * when it is removed, we know that we need more level
+         */
+        if (spatial.getName().equals("background")) {
+            generateNextChunk();
         }
-
-
-
-        physicsSpace.addAll(spatial);
-        movingObjectsNode.attachChild(spatial);
     }
 
     public Player getPlayer() {
