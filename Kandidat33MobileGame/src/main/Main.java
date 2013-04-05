@@ -12,7 +12,8 @@ import state.InMainMenuState;
 import variables.P;
 
 /**
- * test
+ * The main application class. This sets up the relevant AppStates, starting
+ * the game.
  * @author normenhansen
  */
 public class Main extends SimpleApplication {

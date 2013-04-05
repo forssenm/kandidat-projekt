@@ -1,6 +1,3 @@
-/*
- *
- */
 package spatial;
 
 import com.jme3.asset.AssetManager;

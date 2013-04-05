@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package spatial;
 
 import com.jme3.asset.AssetManager;
@@ -15,6 +11,8 @@ import com.jme3.scene.shape.Box;
 import control.WizardControl;
 
 /**
+ * A class for a Wizard, using a
+ * <code>WizardControl</code> to control its behaviour.
  *
  * @author jonatankilhamn
  */
@@ -23,7 +21,7 @@ public class Wizard extends Node {
     public Wizard(AssetManager assetManager) {
         super("Wizard");
         Box model =
-                new Box(Vector3f.ZERO, 0.2f,2f,0.2f);
+                new Box(Vector3f.ZERO, 0.2f, 2f, 0.2f);
         Geometry geometry = new Geometry("", model);
 
         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");

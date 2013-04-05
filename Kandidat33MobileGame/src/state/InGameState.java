@@ -198,6 +198,8 @@ public class InGameState extends AbstractAppState{
                         && event.getNodeA().getName().equals("hazard")) {
                     event.getNodeA().getControl(HazardControl.class).collideWithPlayer((Player)event.getNodeB());
                 }
+                // should we ever want to detect collisions between other
+                // combinations than player and hazard, use this:
                 /*
                  if (event.getNodeA().getName().equals("player")
                  && event.getNodeB().getName().equals("nothazard")) {

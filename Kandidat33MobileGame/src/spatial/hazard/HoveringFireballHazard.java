@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
@@ -9,7 +5,9 @@ import control.HazardControl;
 import control.fireball.HoveringFireballControl;
 
 /**
- *
+ * * A fireball using
+ * <code>HoveringFireballControl</code> to control its behaviour.
+ * 
  * @author jonatankilhamn
  */
 public class HoveringFireballHazard extends FireballHazard {

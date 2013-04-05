@@ -1,4 +1,3 @@
-
 package control.fireball;
 
 import control.FireballControl;

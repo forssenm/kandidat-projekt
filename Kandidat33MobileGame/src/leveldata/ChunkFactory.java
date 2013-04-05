@@ -1,36 +1,26 @@
 package leveldata;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.bullet.control.GhostControl;
 import com.jme3.light.Light;
 import com.jme3.light.PointLight;
 import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import control.FireballControl;
-import control.WizardControl;
-import control.fireball.HoveringFireballControl;
-import control.fireball.SpinningFireballControl;
-import control.fireball.LinearFireballControl;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import spatial.hazard.FireballHazard;
-import spatial.hazard.Hazard;
-import spatial.hazard.HoveringFireballHazard;
 import spatial.LevelChunk;
-import spatial.hazard.LinearFireballHazard;
 import spatial.Platform;
 import spatial.Player;
-import spatial.hazard.SpinningFireballHazard;
 import spatial.Wall;
 import spatial.WindowFrame;
 import spatial.Wizard;
+import spatial.hazard.Hazard;
+import spatial.hazard.HoveringFireballHazard;
+import spatial.hazard.LinearFireballHazard;
+import spatial.hazard.SpinningFireballHazard;
 import variables.P;
 
 /**
@@ -62,7 +52,8 @@ public class ChunkFactory {
      * <code>LevelChunk</code> with all static objects. The other elements are
      * all moving objects.
      *
-     * @return A list of two LevelChunks.
+     * @return A list of <code>Spatial</code>s; a LevelChunk followed by other
+     * loose objects.
      *
      */
     public List<Spatial> generateChunk() {
@@ -177,22 +168,25 @@ public class ChunkFactory {
         hazard.setLocalTranslation(10f, 15f, 0f);
         return hazard;
     }
-
+    
+    /* Creates a fireball hazard flying in a straight line.*/
     private Hazard createLinearFireball() {
         Hazard hazard = new LinearFireballHazard(assetManager, new Vector3f(-20, 0, 0));
         hazard.setLocalTranslation(5f, 6f, 0f);
         return hazard;
     }
 
+    /* Creates a fireball hazard flying in a counter-clockwise circle.*/
     private Hazard createSpinningFireball() {
         Hazard hazard = new SpinningFireballHazard(assetManager);
         hazard.setLocalTranslation(5f, 6f, 0f);
         return hazard;
     }
-    
+
+    /* Creates a wizard shooting fireballs at the player.*/
     private Wizard createWizard() {
         Wizard wizard = new Wizard(assetManager);
-        wizard.setLocalTranslation(20,15,0);
+        wizard.setLocalTranslation(20, 15, 0);
         return wizard;
     }
 }

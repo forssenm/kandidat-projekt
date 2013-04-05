@@ -11,7 +11,7 @@ import com.jme3.texture.Texture;
 import variables.P;
 
 /**
- * 
+ * A class for a chunk of background wall.
  * @author jonatankilhamn
  */
 public class Wall extends Geometry {

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package control;
 
 import com.jme3.asset.AssetManager;
@@ -17,12 +13,11 @@ import com.jme3.scene.SceneGraphVisitor;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import leveldata.ChunkFactory;
-import spatial.LevelChunk;
 import leveldata.LevelContentGenerator;
+import spatial.LevelChunk;
 import spatial.Player;
 import variables.P;
 
@@ -80,7 +75,6 @@ public class LevelControl implements Control {
      * @param tpf
      */
     public void update(float tpf) {
-        final float destructionPoint = this.player.getLocalTranslation().getX() - 60;
         if (isOutsideLevelBounds(chunks.getFirst().getLocalTranslation())) {
             deleteChunk(chunks.removeFirst());
             generateNextChunk();
@@ -179,8 +173,8 @@ public class LevelControl implements Control {
 
     /**
      * Take level content and add it to the level. LevelChunks with several
-     * static objects are not added this way, but everything else is. TODO:
-     * process all level content through this method
+     * static objects are not added this way, but everything else is.
+     * TODO: process all level content through this method
      *
      * @param spatial The spatial to add. Should be a single object, not a
      * sub-tree of several game objects.

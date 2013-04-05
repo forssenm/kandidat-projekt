@@ -101,7 +101,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
 
     /**
      * Creates a new character with the given properties. The jumpSpeed will be
-     * set to an upwards force of 5x mass.
+     * set to a default value of 1.25 * mass.
      *
      * @param radius
      * @param height
@@ -131,7 +131,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
 
     /**
      * Used internally, don't call manually. Updates all movement that is not
-     * involuntary, i.e. running and jumping.
+     * involuntary, i.e. running, jumping and being pushed back.
      *
      * @param space
      * @param tpf

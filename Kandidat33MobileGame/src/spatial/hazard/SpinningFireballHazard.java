@@ -5,6 +5,8 @@ import control.HazardControl;
 import control.fireball.SpinningFireballControl;
 
 /**
+ * A fireball using
+ * <code>SpinningFireballControl</code> to control its behaviour.
  *
  * @author jonatankilhamn
  */

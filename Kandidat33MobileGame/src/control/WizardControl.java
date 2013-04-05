@@ -7,9 +7,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
-import java.util.Random;
 import leveldata.LevelContentGenerator;
-import spatial.Player;
 import spatial.hazard.LinearFireballHazard;
 
 /**
@@ -17,7 +15,6 @@ import spatial.hazard.LinearFireballHazard;
  * @author jonatankilhamn
  */
 public class WizardControl extends AbstractControl implements LevelContentGenerator {
-    //private Player player;
 
     private static final float fireballCoolDown = 10.0f;
     private static final float fireballSpeed = 15.0f;
@@ -28,11 +25,6 @@ public class WizardControl extends AbstractControl implements LevelContentGenera
     public WizardControl(AssetManager assetManager) {
         this.assetManager = assetManager;
     }
-    
-    /*
-     public void setPlayer(Player player) {
-     this.player = player;
-     }*/
     
     public void setLevelControl(LevelControl levelControl) {
         this.levelControl = levelControl;

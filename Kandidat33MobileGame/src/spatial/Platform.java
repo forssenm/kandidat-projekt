@@ -7,10 +7,9 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
-import variables.P;
 
 /**
- * 
+ * A class for a physical platform of variable position and size.
  * @author dagen
  */
 public class Platform extends Geometry {

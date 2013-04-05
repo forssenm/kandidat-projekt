@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package control.fireball;
 
 import com.jme3.math.FastMath;
@@ -9,15 +5,12 @@ import com.jme3.math.Vector3f;
 import control.FireballControl;
 
 /**
- *
+ * A control moving a fireball in a counter-clockwise circle in the x-y-plane.
  * @author dagen
  */
 public class SpinningFireballControl extends FireballControl{
     private float time = 0;
     private final float radius = 5.0f;
-    public SpinningFireballControl(){
-        
-    }
     
     @Override
     protected void positionUpdate(float tpf) {

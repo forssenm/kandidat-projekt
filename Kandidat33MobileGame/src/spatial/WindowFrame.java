@@ -2,17 +2,14 @@ package spatial;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
-import com.jme3.texture.Texture;
 import variables.P;
 
 /**
- *
+ * A class for a non-physical window frame, purely for decoration.
  * @author jonatankilhamn
  */
 public class WindowFrame extends Geometry {
@@ -36,12 +33,8 @@ public class WindowFrame extends Geometry {
                 new Box(new Vector3f(1, 2, -P.platformWidth / 2 + 0.1f), 1, 2, 0.1f);
         this.mesh = model;
         this.setLocalTranslation(position.x, position.y, position.z);
-
-
-
+        
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-
-
         this.setMaterial(material);
 
         this.setShadowMode(ShadowMode.Off);

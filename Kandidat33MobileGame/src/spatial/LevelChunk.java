@@ -1,10 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package spatial;
 
-import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.light.Light;
 import com.jme3.light.PointLight;
@@ -16,7 +11,11 @@ import com.jme3.scene.Spatial;
 import java.util.ArrayList;
 
 /**
- *
+ * A class for keeping a collection of physical, non-moving objects and light
+ * sources together. Functionality includes adding itself to and removing
+ * itself from the scenegraph, adding and removing itself from a
+ * physicsspace, and moving itself without disrupting the physics (by shadowing
+ * setLocalTranslation() ).
  * @author jonatankilhamn
  */
 public class LevelChunk extends Node {

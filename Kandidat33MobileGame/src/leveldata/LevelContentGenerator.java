@@ -1,6 +1,5 @@
 package leveldata;
 
-import com.jme3.scene.control.Control;
 import control.LevelControl;
 
 /**
