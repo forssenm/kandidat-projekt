@@ -1,4 +1,4 @@
-package spatial;
+package leveldata;
 
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.light.Light;

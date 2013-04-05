@@ -1,7 +1,6 @@
 package control.fireball;
 
 import com.jme3.math.Vector3f;
-import control.FireballControl;
 
 /**
  * A fireball moving in a straight line.

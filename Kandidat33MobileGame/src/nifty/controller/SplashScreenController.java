@@ -1,4 +1,4 @@
-package control;
+package nifty.controller;
 
 import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;

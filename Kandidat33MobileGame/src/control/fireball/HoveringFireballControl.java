@@ -1,7 +1,5 @@
 package control.fireball;
 
-import control.FireballControl;
-
 /**
  *
  * @author jonatankilhamn

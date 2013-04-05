@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import leveldata.ChunkFactory;
 import leveldata.LevelContentGenerator;
-import spatial.LevelChunk;
+import leveldata.LevelChunk;
 import spatial.Player;
 import variables.P;
 

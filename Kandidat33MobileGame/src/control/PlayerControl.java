@@ -233,7 +233,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     /**
      * Makes the character fly backwards.
      */
-    void pushBack() {
+    public void pushBack() {
         pushBackInNextTick = true;
     }
 

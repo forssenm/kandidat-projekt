@@ -11,7 +11,6 @@ import com.jme3.scene.Spatial;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import spatial.LevelChunk;
 import spatial.Platform;
 import spatial.Player;
 import spatial.Wall;

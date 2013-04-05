@@ -2,7 +2,6 @@ package control.fireball;
 
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import control.FireballControl;
 
 /**
  * A control moving a fireball in a counter-clockwise circle in the x-y-plane.
