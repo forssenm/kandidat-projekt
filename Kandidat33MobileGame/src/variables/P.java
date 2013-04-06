@@ -18,10 +18,14 @@ public class P {
     public static final float run_speed = 10f;
     public static final float jump_speed = 25f;
     
-    public static final float chunkLength = 30.0f;
+    public static final float chunkLength = 50.0f;
     
     //lighting variables
     public static final Vector3f windowLightDirection = new Vector3f(0f,-10f,20f);
+    
+    public static final float minLeftDistance = 80;
+    public static final float minRightDistance = 150;
+    public static final float minDownDistance = 50;
     
     
     public static int screenWidth;
