@@ -89,7 +89,7 @@ public class ChunkFactory {
             key = 1;
         } else if (height < -2) {
             key = 3;
-        } else if (height > 20) {
+        } else if (height > 10) {
             key = 4;
         } else {
             key = random.nextInt(5);
@@ -120,22 +120,26 @@ public class ChunkFactory {
                     float nDist = dist * (1f + random.nextFloat());
 
                     list.add(createPlatform(d + nDist, height + random.nextFloat() * 2, nLength));
-                    height += 1 + 5*random.nextFloat();
+                    height += 1 + 5 * random.nextFloat();
                     d += nLength + nDist;
                 }
                 break;
             case (4): // descending platforms
+                float lastDescent;
                 while (d < total) {
                     float nLength = length * (0.5f + random.nextFloat() / 2);
                     float nDist = dist * (1f + random.nextFloat());
-                    height -= (2+8*random.nextFloat());
+                    lastDescent = 2 + 8 * random.nextFloat();
+                    if (height - lastDescent > P.deathTreshold + 2) {
+                        height -= (2 + 8 * random.nextFloat());
+                    }
                     list.add(createPlatform(d + nDist, height + random.nextFloat() * 4, nLength));
                     d += nLength + nDist;
                 }
                 break;
             default:
                 break;
-                
+
         }
         distanceOverFlow = d - total;
 

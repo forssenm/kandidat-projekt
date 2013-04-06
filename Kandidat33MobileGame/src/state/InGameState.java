@@ -22,6 +22,7 @@ import control.HazardControl;
 import control.LevelControl;
 import control.PlayerControl;
 import spatial.Player;
+import variables.P;
 
 /**
  * This state is activated to start the game. The class sets up  
@@ -158,11 +159,11 @@ public class InGameState extends AbstractAppState{
         this.app.getRootNode().detachChild(this.gameNode);
     }
     
-    static final float deathTreshold = -20.0f;       
+         
     /**{inheritDoc}*/
     @Override
     public void update(float tpf) {
-        if( player.getWorldTranslation().getY() < InGameState.deathTreshold){
+        if( player.getWorldTranslation().getY() < P.deathTreshold){
             gameOver();
         }
     }

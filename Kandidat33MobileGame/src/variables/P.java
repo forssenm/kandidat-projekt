@@ -20,6 +20,8 @@ public class P {
     
     public static final float chunkLength = 50.0f;
     
+    public static final float deathTreshold = -20.0f;  
+    
     //lighting variables
     public static final Vector3f windowLightDirection = new Vector3f(0f,-10f,20f);
     
