@@ -77,11 +77,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * Stores final spatial location, corresponds to RigidBody location.
      */
     protected final Vector3f location = new Vector3f();
-    /**
-     * Stores final spatial rotation, is a z-forward rotation based on the view
-     * direction and the current local x/z plane. See also rotatedViewDirection.
-     */
-    //protected final Quaternion rotation = new Quaternion(Quaternion.DIRECTION_Z);
     protected final Vector3f walkVelocity = new Vector3f();
     protected final Vector3f velocity = new Vector3f();
     protected float jumpSpeed;
@@ -90,7 +85,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     protected boolean abortJumpInNextTick = false;
     protected float gravity = -40f;
     private boolean pushBackInNextTick;
-    private Vector3f pushBackVelocityAdjustment = new Vector3f(-10f,10f,0f);
+    private Vector3f pushBackVelocityAdjustment = new Vector3f(-10f, 10f, 0f);
 
     /**
      * Only used for serialization, do not use this constructor.
@@ -112,7 +107,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         this.height = height;
         this.mass = mass;
         rigidBody = new PhysicsRigidBody(getShape(), mass);
-        jumpSpeed = mass * 1.25f; 
+        jumpSpeed = mass * 1.25f;
         rigidBody.setAngularFactor(0);
     }
 
@@ -140,7 +135,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
 
         // running
         checkOnGround();
-        
+
         if (onGround) {
             float designatedVelocity = walkVelocity.length();
 
@@ -159,33 +154,33 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
                 vars.release();
             }
         }
-        
+
         // jumping
         float designatedUpwardsVelocity = 0;
-        
+
         if (initiateJumpInNextTick) {
             initiateJumpInNextTick = false;
             designatedUpwardsVelocity = jumpSpeed;
         }
-        
+
         if (abortJumpInNextTick) {
             abortJumpInNextTick = false;
             if (velocity.getY() > jumpSpeed * 0.61f) {
                 designatedUpwardsVelocity = jumpSpeed * 0.61f;
             }
         }
-        
+
         if (designatedUpwardsVelocity > 0) {
             velocity.setY(designatedUpwardsVelocity);
         }
-        
+
         //pushback
         if (pushBackInNextTick) {
             pushBackInNextTick = false;
             velocity.setX(-walkVelocity.length());
             velocity.setY(jumpSpeed);
         }
-        
+
         // updating the velocity including both running and jumping
         rigidBody.setLinearVelocity(velocity);
 
@@ -212,8 +207,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     /**
-     * Makes the character jump with the set jump force. The jump will
-     * be a maximum height jump unless abortJump is called shortly hereafter.
+     * Makes the character jump with the set jump force. The jump will be a
+     * maximum height jump unless abortJump is called shortly hereafter.
      */
     public void initiateJump() {
         if (!onGround) {
@@ -229,7 +224,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     public void abortJump() {
         abortJumpInNextTick = true;
     }
-    
+
     /**
      * Makes the character fly backwards.
      */
@@ -248,6 +243,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
 
     /**
      * Gets the current jump force. The default is 1.25 * character mass.
+     *
      * @return The current jumpforce.
      */
     public float getJumpSpeed() {
@@ -296,21 +292,34 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     public Vector3f getVelocity() {
         return velocity;
     }
-
+    
+    private static final float EPSILON = 0.1f;
+        
     /**
      * This checks if the character is on the ground by doing a ray test.
      */
-    
-    private static final float ON_GROUND_TRESHOLD = 0.1f;
     protected void checkOnGround() {
         TempVars vars = TempVars.get();
-        Vector3f location = vars.vect1;
-        Vector3f rayVector = vars.vect2;
-        location.set(Vector3f.UNIT_Y).multLocal(height).addLocal(this.location);
-        rayVector.set(Vector3f.UNIT_Y).multLocal(-height - ON_GROUND_TRESHOLD).addLocal(location);
-        List<PhysicsRayTestResult> results = space.rayTest(location, rayVector);
+        Vector3f rayStart = vars.vect1;
+        Vector3f rayEnd = vars.vect2;
+        Vector3f radiusOffset = vars.vect3;
+        radiusOffset.set(this.walkVelocity).normalizeLocal().multLocal(this.radius - EPSILON);
+        //test "back foot"
+        rayStart.set(Vector3f.UNIT_Y).multLocal(height).addLocal(this.location).subtractLocal(radiusOffset);
+        rayEnd.set(Vector3f.UNIT_Y).multLocal(-height - EPSILON).addLocal(rayStart);
+        List<PhysicsRayTestResult> backFootResults = space.rayTest(rayStart, rayEnd);
+        // test "front foot"
+        rayStart.addLocal(radiusOffset.mult(2));
+        rayEnd.addLocal(radiusOffset.mult(2));
+        List<PhysicsRayTestResult> frontFootResults = space.rayTest(rayStart, rayEnd);
         vars.release();
-        for (PhysicsRayTestResult physicsRayTestResult : results) {
+        for (PhysicsRayTestResult physicsRayTestResult : backFootResults) {
+            if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
+                onGround = true;
+                return;
+            }
+        }
+        for (PhysicsRayTestResult physicsRayTestResult : frontFootResults) {
             if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
                 onGround = true;
                 return;
@@ -346,9 +355,9 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      */
     protected CollisionShape getShape() {
         //TODO: cleanup size mess..
-        CapsuleCollisionShape capsuleCollisionShape = new CapsuleCollisionShape(radius, height-(2*radius));
+        CapsuleCollisionShape capsuleCollisionShape = new CapsuleCollisionShape(radius, height - (2 * radius));
         CompoundCollisionShape compoundCollisionShape = new CompoundCollisionShape();
-        Vector3f addLocation = new Vector3f(0, (height/2), 0);
+        Vector3f addLocation = new Vector3f(0, (height / 2), 0);
         compoundCollisionShape.addChildShape(capsuleCollisionShape, addLocation);
         return compoundCollisionShape;
     }
@@ -380,6 +389,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     /**
      * This is required by AbstractPhysicsControl. It does nothing, since the
      * player cannot rotate.
+     *
      * @param quat
      */
     @Override
@@ -390,12 +400,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     /**
      * This is implemented from AbstractPhysicsControl and called when the
      * control is supposed to add all objects to the physics space.
+     *
      * @param space
      */
     @Override
     protected void addPhysics(PhysicsSpace space) {
         space.addCollisionObject(rigidBody);
-        rigidBody.setGravity(new Vector3f(0f,gravity,0f));
+        rigidBody.setGravity(new Vector3f(0f, gravity, 0f));
         space.addTickListener(this);
     }
 
@@ -440,5 +451,4 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         rigidBody = new PhysicsRigidBody(getShape(), mass);
         rigidBody.setAngularFactor(0);
     }
-
 }
