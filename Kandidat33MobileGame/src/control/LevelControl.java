@@ -59,11 +59,10 @@ public class LevelControl implements Control {
     public void setSpatial(Spatial spatial) {
         assert (spatial instanceof Node);
         if (levelNode != null) {
-            levelNode.detachAllChildren();
+            cleanup();
         }
         this.levelNode = (Node) spatial;
-        levelNode.attachChild(this.levelNode);
-        generateStartingChunks();
+        initiateLevel();
     }
 
     /**
@@ -73,13 +72,15 @@ public class LevelControl implements Control {
      * @param tpf
      */
     public void update(float tpf) {
-        /*if (isOutsideLevelBounds(chunks.getFirst().getLocalTranslation())) {
-         deleteChunk(chunks.removeFirst());
-         generateNextChunk();
-         }*/
         for (Spatial spatial : levelNode.getChildren()) {
             if (isOutsideLevelBounds(spatial.getLocalTranslation())) {
                 removeFromLevel(spatial);
+                /* the background node (wall and window) acts as a checkpoint –
+                 * when it is removed, we know that we need more level
+                 */
+                if (spatial.getName().equals("background")) {
+                    generateNextChunk();
+                }
             }
         }
     }
@@ -94,9 +95,9 @@ public class LevelControl implements Control {
                 || position.getY() < lowerBound);
     }
 
-    private void generateStartingChunks() {
-        // generate starting
-        int nbrOfChunks = (int) Math.round((P.minRightDistance+P.minLeftDistance)/P.chunkLength) -2;
+    public void initiateLevel() {
+        // generate starting chunks
+        int nbrOfChunks = (int) Math.round((P.minRightDistance + P.minLeftDistance) / P.chunkLength) - 2;
         for (int i = 0; i < nbrOfChunks; i++) {
             generateNextChunk();
         }
@@ -112,11 +113,11 @@ public class LevelControl implements Control {
 
         // generate a chunk filled the chunk with content
         List<Spatial> list = chunkFactory.generateChunk();
-        
+
         Vector3f newChunkPosition =
                 new Vector3f(nextChunkX, 0f, 0f);
         nextChunkX += P.chunkLength;
-        
+
         for (Spatial spatial : list) {
             addToLevel(spatial, spatial.getLocalTranslation().add(newChunkPosition));
         }
@@ -163,26 +164,25 @@ public class LevelControl implements Control {
                         }
                     }
                 });
-
-
+        
         levelNode.attachChild(spatial);
     }
 
     public void removeFromLevel(Spatial spatial) {
-
         physicsSpace.removeAll(spatial);
-
         levelNode.detachChild(spatial);
-        /* the background node (wall and window) acts as a checkpoint –
-         * when it is removed, we know that we need more level
-         */
-        if (spatial.getName().equals("background")) {
-            generateNextChunk();
-        }
     }
 
     public Player getPlayer() {
         return player;
+    }
+
+    public void cleanup() {
+        for (Spatial spatial : levelNode.getChildren()) {
+            removeFromLevel(spatial);
+        }
+        this.nextChunkX = -P.minLeftDistance;
+
     }
 
     public void render(RenderManager rm, ViewPort vp) {
