@@ -16,6 +16,7 @@ import spatial.Platform;
 import spatial.Wall;
 import spatial.WindowFrame;
 import spatial.Wizard;
+import spatial.WizardHazard;
 import spatial.hazard.Hazard;
 import spatial.hazard.StationaryFireball;
 import spatial.hazard.LinearFireball;
@@ -244,9 +245,9 @@ public class ChunkFactory {
     }
 
     /* Creates a wizard shooting fireballs at the player.*/
-    private Wizard createWizard() {
-        Wizard wizard = new Wizard(assetManager);
-        wizard.setLocalTranslation(10, 20, 0);
+    private Hazard createWizard() {
+        Hazard wizard = new WizardHazard(assetManager);
+        wizard.move(10, 20, 0);
         return wizard;
     }
 }

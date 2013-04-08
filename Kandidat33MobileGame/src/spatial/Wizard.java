@@ -16,6 +16,7 @@ import control.WizardControl;
  *
  * @author jonatankilhamn
  */
+@Deprecated
 public class Wizard extends Node {
 
     public Wizard(AssetManager assetManager) {

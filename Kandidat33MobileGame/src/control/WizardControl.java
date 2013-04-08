@@ -18,6 +18,7 @@ import spatial.hazard.LinearFireball;
  *
  * @author jonatankilhamn
  */
+@Deprecated
 public class WizardControl extends AbstractControl implements LevelContentGenerator {
 
     private static final float fireballCoolDown = 6.0f;
