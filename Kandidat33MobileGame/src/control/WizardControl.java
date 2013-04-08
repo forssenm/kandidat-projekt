@@ -12,7 +12,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 import leveldata.LevelContentGenerator;
-import spatial.hazard.LinearFireballHazard;
+import spatial.hazard.LinearFireball;
 
 /**
  *
@@ -42,7 +42,7 @@ public class WizardControl extends AbstractControl implements LevelContentGenera
             Vector3f direction = levelControl.getPlayer().getLocalTranslation().
                     subtract(this.spatial.getWorldTranslation());
             direction.normalizeLocal();
-            LinearFireballHazard fireball = new LinearFireballHazard(assetManager, direction.mult(fireballSpeed));
+            LinearFireball fireball = new LinearFireball(assetManager, direction.mult(fireballSpeed));
             ParticleEmitter fire = getFireballParticleEmitter();
             fireball.attachChild(fire);
              

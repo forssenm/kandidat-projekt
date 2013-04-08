@@ -11,11 +11,11 @@ import control.fireball.LinearFireballControl;
  * 
  * @author jonatankilhamn
  */
-public class LinearFireballHazard extends FireballHazard {
+public class LinearFireball extends AbstractFireball {
 
     private Vector3f velocity;
     
-    public LinearFireballHazard(AssetManager assetManager,Vector3f velocity) {
+    public LinearFireball(AssetManager assetManager,Vector3f velocity) {
         this.velocity = velocity;
         this.attachChild(this.createModel(assetManager));
         this.addControl(this.createControl());

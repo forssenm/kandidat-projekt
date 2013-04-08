@@ -16,7 +16,7 @@ public interface HazardControl extends Control {
      * Called when this hazard collides with the player.
      * When e.g. a
      * <code>PhysicsCollisionListener</code> finds that a hazard-player-collision
-     * has happened, this method is called and containts the right reaction –
+     * has happened, this method is called and decides on the right reaction –
      * deal damage to or move the player etc.
      *
      * @param player

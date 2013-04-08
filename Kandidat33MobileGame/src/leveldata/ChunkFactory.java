@@ -17,9 +17,9 @@ import spatial.Wall;
 import spatial.WindowFrame;
 import spatial.Wizard;
 import spatial.hazard.Hazard;
-import spatial.hazard.HoveringFireballHazard;
-import spatial.hazard.LinearFireballHazard;
-import spatial.hazard.SpinningFireballHazard;
+import spatial.hazard.StationaryFireball;
+import spatial.hazard.LinearFireball;
+import spatial.hazard.SpinningFireball;
 import variables.P;
 
 /**
@@ -224,22 +224,22 @@ public class ChunkFactory {
 
     /* Creates a fireball hazard floating in the air.*/
     private Hazard createHoveringFireball() {
-        Hazard hazard = new HoveringFireballHazard(assetManager);
-        hazard.setLocalTranslation(10f, 15f, 0f);
+        Hazard hazard = new StationaryFireball(assetManager);
+        hazard.move(10f, 15f, 0f);
         return hazard;
     }
 
     /* Creates a fireball hazard flying in a straight line.*/
     private Hazard createLinearFireball() {
-        Hazard hazard = new LinearFireballHazard(assetManager, new Vector3f(-20, 0, 0));
-        hazard.setLocalTranslation(5f, 6f, 0f);
+        Hazard hazard = new LinearFireball(assetManager, new Vector3f(-20, 0, 0));
+        hazard.move(5f, 6f, 0f);
         return hazard;
     }
 
     /* Creates a fireball hazard flying in a counter-clockwise circle.*/
     private Hazard createSpinningFireball() {
-        Hazard hazard = new SpinningFireballHazard(assetManager);
-        hazard.setLocalTranslation(5f, 6f, 0f);
+        Hazard hazard = new SpinningFireball(assetManager);
+        hazard.move(5f, 6f, 0f);
         return hazard;
     }
 

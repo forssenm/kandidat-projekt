@@ -10,9 +10,9 @@ import control.fireball.SpinningFireballControl;
  *
  * @author jonatankilhamn
  */
-public class SpinningFireballHazard extends FireballHazard {
+public class SpinningFireball extends AbstractFireball {
 
-    public SpinningFireballHazard(AssetManager assetManager) {
+    public SpinningFireball(AssetManager assetManager) {
         this.attachChild(this.createModel(assetManager));
         this.addControl(this.createControl());
     }

@@ -2,24 +2,24 @@ package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
 import control.HazardControl;
-import control.fireball.HoveringFireballControl;
+import control.fireball.FireballControl;
 
 /**
  * * A fireball using
- * <code>HoveringFireballControl</code> to control its behaviour.
+ * <code>FireballControl</code> to control its behaviour.
  * 
  * @author jonatankilhamn
  */
-public class HoveringFireballHazard extends FireballHazard {
+public class StationaryFireball extends AbstractFireball {
 
-    public HoveringFireballHazard(AssetManager assetManager) {
+    public StationaryFireball(AssetManager assetManager) {
         this.attachChild(this.createModel(assetManager));
         this.addControl(this.createControl());
     }
     
     @Override
     protected HazardControl createControl() {
-        return new HoveringFireballControl();
+        return new FireballControl();
     }
     
 }

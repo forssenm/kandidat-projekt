@@ -1,5 +1,6 @@
 package control.fireball;
 
+import control.AbstractHazardControl;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 

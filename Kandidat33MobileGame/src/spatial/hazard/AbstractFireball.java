@@ -8,11 +8,11 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 
 /**
- * An abstract FireballHazard. Any class extending this one will make a Hazard
+ * An abstract AbstractFireball. Any class extending this one will make a Hazard
  * that looks like a fireball.
  * @author jonatankilhamn
  */
-public abstract class FireballHazard extends Hazard {
+public abstract class AbstractFireball extends Hazard {
 
     @Override
     protected Spatial createModel(AssetManager assetManager) {
