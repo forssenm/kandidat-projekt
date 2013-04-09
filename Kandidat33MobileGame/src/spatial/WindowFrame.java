@@ -2,6 +2,7 @@ package spatial;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
@@ -21,25 +22,19 @@ public class WindowFrame extends Node {
      * <code>Geometry</code> loaded internaly.
      *
      * @param assetManager is used to load the geometry and texture of
-     * the <code>Wall</code>.
+     * the <code>Window</code>.
      */
-    public WindowFrame(AssetManager assetManager, Vector3f position // in current implementation all windows are the same size
-            /*, float length, float height, float width*/) {
+    public WindowFrame(AssetManager assetManager, Vector3f position) {
         super("WindowFrame");
-
-        /* use a simple box for the model – we probably want to
-         * change this to a custom model
-         */
-        Box model =
-                new Box(new Vector3f(1, 2, -P.platformWidth / 2 + 0.1f), 1, 2, 0.1f);
-        Geometry geometry = new Geometry("",model);
-
-        Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        geometry.setMaterial(material);
-        this.setShadowMode(ShadowMode.Off);
-
-        this.attachChild(geometry);
-        this.setLocalTranslation(position.x, position.y, position.z);        
+        
+        Node window = (Node)assetManager.loadModel("Models/window/window.j3o");
+        window.scale(4);
+        window.rotate(90*FastMath.DEG_TO_RAD, 0f, 0f);
+        
+        this.attachChild(window);
+        
+        this.setLocalTranslation(position.x, position.y, -P.platformWidth*2+0.5f);
+        this.setShadowMode(ShadowMode.Off);   
 
     }
 }
