@@ -2,6 +2,10 @@ package spatial;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -57,6 +61,8 @@ public class Player extends Node {
 
         playerModel.setLocalRotation((new Quaternion()).fromAngles(0f,180*FastMath.DEG_TO_RAD,0f));
         playerModel.setLocalTranslation(0f,1.8f,0f);
+        ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
+        playerModel.attachChild(dust);
         this.attachChild(playerModel);
 
     }
@@ -67,5 +73,27 @@ public class Player extends Node {
      */
     public Node getPlayerModel() {
         return this.playerModel;
+    }
+    
+    private ParticleEmitter getDustParticleEmitter (AssetManager assetManager) {
+             ParticleEmitter fire = 
+            new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 8);
+    Material mat_red = new Material(assetManager, 
+            "Common/MatDefs/Misc/Particle.j3md");
+    mat_red.setTexture("Texture", assetManager.loadTexture(
+            "Effects/Explosion/flame.png"));
+    fire.setMaterial(mat_red);
+    fire.setImagesX(2); 
+    fire.setImagesY(2); // 2x2 texture animation
+    fire.setStartColor(  new ColorRGBA(.40f, 0.40f, 0.40f, 1f));   // bluish grey
+    fire.setEndColor(new ColorRGBA(0.20f, 0.20f, 0.20f, 0.5f)); // grey
+    fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 2, 0));
+    fire.setStartSize(3.0f);
+    fire.setEndSize(0.1f);
+    fire.setGravity(0, -3.0f, 0);
+    fire.setLowLife(0.3f);
+    fire.setHighLife(0.8f);
+    fire.getParticleInfluencer().setVelocityVariation(0.3f);
+    return fire;
     }
 }
