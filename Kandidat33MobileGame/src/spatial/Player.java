@@ -63,6 +63,7 @@ public class Player extends Node {
         playerModel.setLocalTranslation(0f,1.8f,0f);
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
+        dust.move(1.0f, 0f, 0f);
         this.attachChild(playerModel);
 
     }
@@ -77,7 +78,7 @@ public class Player extends Node {
     
     private ParticleEmitter getDustParticleEmitter (AssetManager assetManager) {
              ParticleEmitter fire = 
-            new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 8);
+            new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
     Material mat_red = new Material(assetManager, 
             "Common/MatDefs/Misc/Particle.j3md");
     mat_red.setTexture("Texture", assetManager.loadTexture(
@@ -86,7 +87,7 @@ public class Player extends Node {
     fire.setImagesX(2); 
     fire.setImagesY(2); // 2x2 texture animation
     fire.setStartColor(  new ColorRGBA(.40f, 0.40f, 0.40f, 1f));   // bluish grey
-    fire.setEndColor(new ColorRGBA(0.20f, 0.20f, 0.20f, 0.5f)); // grey
+    fire.setEndColor(new ColorRGBA(0.05f, 0.05f, 0.05f, 0.5f)); // grey
     fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 2, 0));
     fire.setStartSize(3.0f);
     fire.setEndSize(0.1f);
