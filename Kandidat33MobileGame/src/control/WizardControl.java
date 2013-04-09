@@ -1,60 +1,70 @@
 package control;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.effect.ParticleEmitter;
-import com.jme3.effect.ParticleMesh;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.ViewPort;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.control.AbstractControl;
-import com.jme3.scene.control.Control;
 import leveldata.LevelContentGenerator;
+import spatial.Player;
 import spatial.hazard.LinearFireball;
 
 /**
+ * A class for a wizard who shoots fireballs when the player is within a certain
+ * range.
  *
  * @author jonatankilhamn
  */
-@Deprecated
-public class WizardControl extends AbstractControl implements LevelContentGenerator {
+public class WizardControl extends AbstractHazardControl implements LevelContentGenerator {
 
-    private static final float fireballCoolDown = 6.0f;
-    private static final float fireballSpeed = 15.0f;
-    private LevelControl levelControl;
-    private float time;
-    private AssetManager assetManager;
+    protected boolean readyToShoot = true;
+    protected static final float fireballCoolDown = 6.0f;
+    protected static final float fireballSpeed = 15.0f;
+    protected LevelControl levelControl;
+    protected float time;
+    protected AssetManager assetManager;
 
+    /**
+     * Creates a new wizard with an aggro radius of 10. The assetManager is
+     * needed to create fireballs.
+     *
+     * @param assetManager
+     */
     public WizardControl(AssetManager assetManager) {
+        super(new SphereCollisionShape(50f));
         this.assetManager = assetManager;
-    }
-    
-    public void setLevelControl(LevelControl levelControl) {
-        this.levelControl = levelControl;
     }
 
     @Override
-    protected void controlUpdate(float tpf) {
-        time += tpf;
-        if (time > 5) {
-            time -= fireballCoolDown;
-            Vector3f direction = levelControl.getPlayer().getLocalTranslation().
-                    subtract(this.spatial.getWorldTranslation());
-            direction.normalizeLocal();
-            LinearFireball fireball = new LinearFireball(assetManager, direction.mult(fireballSpeed));
-             
-            this.levelControl.addToLevel(fireball,this.spatial.getWorldTranslation());
+    public void update(float tpf) {
+        super.update(tpf);
+        if (!readyToShoot) {
+            time += tpf;
+            if (time > 0) {
+                time -= fireballCoolDown;
+                readyToShoot = true;
+            }
         }
     }
 
     @Override
-    protected void controlRender(RenderManager rm, ViewPort vp) {
+    /**
+     * Wizards do not move.
+     */
+    protected void positionUpdate(float tpf) {
     }
 
-    public Control cloneForSpatial(Spatial spatial) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public void collideWithPlayer(Player player) {
+        if (readyToShoot) {
+            Vector3f direction = player.getLocalTranslation().
+                    subtract(this.spatial.getWorldTranslation());
+            direction.normalizeLocal();
+            LinearFireball fireball = new LinearFireball(assetManager, direction.mult(fireballSpeed));
+            this.levelControl.addToLevel(fireball, this.spatial.getWorldTranslation());
+            readyToShoot = false;
+        }
     }
-    
+
+    public void setLevelControl(LevelControl levelControl) {
+        this.levelControl = levelControl;
+    }
 }

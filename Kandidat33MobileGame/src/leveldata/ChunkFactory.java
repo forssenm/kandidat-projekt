@@ -15,12 +15,11 @@ import java.util.Random;
 import spatial.Platform;
 import spatial.Wall;
 import spatial.WindowFrame;
-import spatial.Wizard;
-import spatial.WizardHazard;
 import spatial.hazard.Hazard;
-import spatial.hazard.StationaryFireball;
 import spatial.hazard.LinearFireball;
 import spatial.hazard.SpinningFireball;
+import spatial.hazard.StationaryFireball;
+import spatial.hazard.Wizard;
 import variables.P;
 
 /**
@@ -246,7 +245,7 @@ public class ChunkFactory {
 
     /* Creates a wizard shooting fireballs at the player.*/
     private Hazard createWizard() {
-        Hazard wizard = new WizardHazard(assetManager);
+        Hazard wizard = new Wizard(assetManager);
         wizard.move(10, 20, 0);
         return wizard;
     }

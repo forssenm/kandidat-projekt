@@ -61,9 +61,11 @@ public class Player extends Node {
 
         playerModel.setLocalRotation((new Quaternion()).fromAngles(0f,180*FastMath.DEG_TO_RAD,0f));
         playerModel.setLocalTranslation(0f,1.8f,0f);
+        
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
         dust.move(1.0f, 0f, 0f);
+        
         this.attachChild(playerModel);
 
     }
