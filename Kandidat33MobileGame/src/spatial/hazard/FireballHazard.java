@@ -17,8 +17,9 @@ public abstract class FireballHazard extends Hazard {
     @Override
     protected Spatial createModel(AssetManager assetManager) {
         Sphere model =
-                new Sphere(5,5,1f);
-        Geometry geometry = new Geometry("", model);
+                new Sphere(5,5,0.1f);
+        
+                Geometry geometry = new Geometry("", model);
         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         material.setColor("Color", ColorRGBA.Red);
         geometry.setMaterial(material);
