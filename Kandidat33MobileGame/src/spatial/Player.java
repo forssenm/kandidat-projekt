@@ -52,7 +52,8 @@ public class Player extends Node {
         this.addControl(playerControl);
 
         //Sets the model of the player
-        playerModel = (Node) assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
+        //playerModel = (Node) assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
+        playerModel = (Node) assetManager.loadModel("Models/ghost6anim/ghost8.j3o");
 
         playerModel.setLocalRotation((new Quaternion()).fromAngles(0f,180*FastMath.DEG_TO_RAD,0f));
         playerModel.setLocalTranslation(0f,1.8f,0f);
