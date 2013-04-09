@@ -10,7 +10,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
-
+import java.util.Random;
 /**
  * An abstract AbstractFireball. Any class extending this one will make a Hazard
  * that looks like a fireball.
@@ -46,8 +46,29 @@ public abstract class AbstractFireball extends Hazard {
     fire.setMaterial(mat_red);
     fire.setImagesX(2); 
     fire.setImagesY(2); // 2x2 texture animation
-    fire.setStartColor(  new ColorRGBA(1f, 0f, 0f, 1f));   // red
-    fire.setEndColor(new ColorRGBA(1f, 1f, 0f, 0.5f)); // yellow
+    //COLOR ARRAY FOR BETTER fIREBALLS
+    ColorRGBA [] colorArray = new ColorRGBA[10];
+    colorArray[0] = ColorRGBA.Black;
+    colorArray[1] = ColorRGBA.Red;
+    colorArray[2] = ColorRGBA.Yellow;
+    colorArray[3] = ColorRGBA.Blue;
+    colorArray[4] = ColorRGBA.Cyan;
+    colorArray[5] = ColorRGBA.Green;
+    colorArray[6] = ColorRGBA.Magenta;
+    colorArray[7] = ColorRGBA.Orange;
+    colorArray[8] = ColorRGBA.Pink;
+    colorArray[9] = ColorRGBA.White;
+    Random r = new Random();
+    int i = r.nextInt(10);
+    int j = i;
+    while (j == i) {
+        j = r.nextInt(10);
+    }
+    //STOP COLOR ARRAY
+   // fire.setStartColor(  new ColorRGBA(1f, 0f, 0f, 1f));   // red
+    fire.setStartColor (colorArray[i]);
+    fire.setEndColor (colorArray[j]);
+   // fire.setEndColor(new ColorRGBA(1f, 1f, 0f, 0.5f)); // yellow
     fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 2, 0));
     fire.setStartSize(3.5f);
     fire.setEndSize(0.1f);

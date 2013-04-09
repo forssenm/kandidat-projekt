@@ -16,7 +16,7 @@ import spatial.hazard.LinearFireball;
 public class WizardControl extends AbstractHazardControl implements LevelContentGenerator {
 
     protected boolean readyToShoot = true;
-    protected static final float fireballCoolDown = 6.0f;
+    protected static final float fireballCoolDown = 2.0f;
     protected static final float fireballSpeed = 15.0f;
     protected LevelControl levelControl;
     protected float time;
