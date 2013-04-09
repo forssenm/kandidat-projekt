@@ -1,9 +1,13 @@
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 
@@ -16,14 +20,42 @@ public abstract class AbstractFireball extends Hazard {
 
     @Override
     protected Spatial createModel(AssetManager assetManager) {
-        Sphere model =
+        Node fireball = new Node();
+        /*Sphere model =
                 new Sphere(5,5,0.1f);
         
                 Geometry geometry = new Geometry("", model);
         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         material.setColor("Color", ColorRGBA.Red);
         geometry.setMaterial(material);
-        return geometry;
+        
+        fireball.attachChild(geometry);*/
+        ParticleEmitter fire = getFireballParticleEmitter(assetManager);
+        fireball.attachChild(fire);
+        
+        return fireball;
+    }
+    
+        public ParticleEmitter getFireballParticleEmitter (AssetManager assetManager) {
+             ParticleEmitter fire = 
+            new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
+    Material mat_red = new Material(assetManager, 
+            "Common/MatDefs/Misc/Particle.j3md");
+    mat_red.setTexture("Texture", assetManager.loadTexture(
+            "Effects/Explosion/flame.png"));
+    fire.setMaterial(mat_red);
+    fire.setImagesX(2); 
+    fire.setImagesY(2); // 2x2 texture animation
+    fire.setStartColor(  new ColorRGBA(1f, 0f, 0f, 1f));   // red
+    fire.setEndColor(new ColorRGBA(1f, 1f, 0f, 0.5f)); // yellow
+    fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 2, 0));
+    fire.setStartSize(3.5f);
+    fire.setEndSize(0.1f);
+    fire.setGravity(0, 0, 0);
+    fire.setLowLife(0.4f);
+    fire.setHighLife(1f);
+    fire.getParticleInfluencer().setVelocityVariation(0.3f);
+    return fire;
     }
     
 }
