@@ -47,22 +47,21 @@ public abstract class AbstractFireball extends Hazard {
     fire.setImagesX(2); 
     fire.setImagesY(2); // 2x2 texture animation
     //COLOR ARRAY FOR BETTER fIREBALLS
-    ColorRGBA [] colorArray = new ColorRGBA[10];
-    colorArray[0] = ColorRGBA.Black;
-    colorArray[1] = ColorRGBA.Red;
-    colorArray[2] = ColorRGBA.Yellow;
-    colorArray[3] = ColorRGBA.Blue;
+    ColorRGBA [] colorArray = new ColorRGBA[9];
+    colorArray[0] = ColorRGBA.White;
+    colorArray[1] = ColorRGBA.Blue;
+    colorArray[2] = ColorRGBA.Red;
+    colorArray[3] = ColorRGBA.Yellow;
     colorArray[4] = ColorRGBA.Cyan;
     colorArray[5] = ColorRGBA.Green;
     colorArray[6] = ColorRGBA.Magenta;
     colorArray[7] = ColorRGBA.Orange;
     colorArray[8] = ColorRGBA.Pink;
-    colorArray[9] = ColorRGBA.White;
     Random r = new Random();
-    int i = r.nextInt(10);
+    int i = r.nextInt(9);
     int j = i;
     while (j == i) {
-        j = r.nextInt(10);
+        j = r.nextInt(9);
     }
     //STOP COLOR ARRAY
    // fire.setStartColor(  new ColorRGBA(1f, 0f, 0f, 1f));   // red
