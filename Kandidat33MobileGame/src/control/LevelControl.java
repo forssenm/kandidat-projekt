@@ -97,7 +97,7 @@ public class LevelControl implements Control {
 
     public void initiateLevel() {
         // generate starting chunks
-        int nbrOfChunks = (int) Math.round((P.minRightDistance + P.minLeftDistance) / P.chunkLength) - 2;
+        int nbrOfChunks = (int) Math.round((P.minRightDistance + P.minLeftDistance) / P.chunkLength) - 3;
         for (int i = 0; i < nbrOfChunks; i++) {
             generateNextChunk();
         }

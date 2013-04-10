@@ -14,19 +14,22 @@ public class P {
     public static final float platformLength = 12.0f;
     public static final float platformWidth = 4f;
     public static final float platformHeight = 1f;
-    public static final float platformDistance = 3.0f;
-    public static final float run_speed = 10f;
+    public static final float platformDistance = 5.0f;
+    public static final float run_speed = 14f;
+    public static final float knockback_speed = -10f;
     public static final float jump_speed = 25f;
     
     public static final float chunkLength = 50.0f;
     
     public static final float deathTreshold = -20.0f;  
     
+    public static final float level_up_time = 5;
+    
     //lighting variables
     public static final Vector3f windowLightDirection = new Vector3f(0f,-10f,20f);
     
-    public static final float minLeftDistance = 80;
-    public static final float minRightDistance = 150;
+    public static final float minLeftDistance = 150;
+    public static final float minRightDistance = 200;
     public static final float minDownDistance = 50;
     
     
