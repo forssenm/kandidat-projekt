@@ -23,10 +23,10 @@ import spatial.hazard.Wizard;
 import variables.P;
 
 /**
- * A class for generating content for LevelChunks. An instance of this class can
- * take an emoty chunk and fill it with background, platforms, windows, light
- * sources etc. In the future it would probably handle e.g. particle effects as
- * well.
+ * A class for generating chunks of the level. An instance of this class can
+ * take create a chunk with platforms, windows, enemies etc. Keeps some internal
+ * track of height and distance so that it doesn't place the enxt chunk out of
+ * reach from the previous one.
  *
  * This is the de facto level generator – the code for where each platform etc
  * is placed can be found here.
@@ -84,38 +84,42 @@ public class ChunkFactory {
 
         Random random = new Random();
 
-        int key;
+        int platformLayoutType;
+        int enemyType;
         if (counter < 4) { //nothing special on the first few chunks
-            key = -1;
-            list.add(createPlatform(0,height,P.chunkLength));
-            d += P.chunkLength;
-        } else if (height < -2) {
-            key = 3;
-        } else if (height > 10) {
-            key = 4;
+            platformLayoutType = -1;
+            enemyType = -1;
         } else {
-            key = random.nextInt(6);
+            // results 0-2 are actual enemies, a 'roll' of 3 or higher will
+            // give nothing
+            enemyType = random.nextInt(5);
+
+            // get back to normal height if we're too low or too high
+            if (height < -2) {
+                platformLayoutType = 2;
+            } else if (height > 10) {
+                platformLayoutType = 3;
+            } else {
+                platformLayoutType = random.nextInt(4);
+            }
         }
 
-                
+
         float nLength;
         float nDist;
-        
-        switch (key) {
-            case (0): // long platform with fireball
-                nLength = length * 2;
-                list.add(createPlatform(d, height, nLength));
-                list.add(createLinearFireball(d, height + 1 + random.nextFloat() * 2));
-                d += nLength + dist;
-                break;
-            case (1): // chilling platforms
-                while (d < totalLength) {
 
+        switch (platformLayoutType) {
+            case (-1): // one long platform (boring)
+                list.add(createPlatform(0, height, P.chunkLength));
+                d += P.chunkLength;
+                break;
+            case (0): // chilling platforms
+                while (d < totalLength) {
                     list.add(createPlatform(d, height + random.nextFloat() * 3, length));
                     d += length + dist;
                 }
                 break;
-            case (2): // chilling differentlength platforms
+            case (1): // chilling differentlength platforms
                 while (d < totalLength) {
                     nLength = length * (0.8f + random.nextFloat());
                     nDist = dist * (1f + random.nextFloat());
@@ -124,7 +128,7 @@ public class ChunkFactory {
                     d += nLength + nDist;
                 }
                 break;
-            case (3): // climbing platforms
+            case (2): // climbing platforms
                 while (d < totalLength) {
                     nLength = length * (0.5f + random.nextFloat() / 2);
                     nDist = dist * (1f + random.nextFloat());
@@ -133,7 +137,7 @@ public class ChunkFactory {
                     d += nLength + nDist;
                 }
                 break;
-            case (4): // descending platforms
+            case (3): // descending platforms
                 float descent;
                 while (d < totalLength) {
                     nLength = length * (0.5f + random.nextFloat() / 2);
@@ -146,35 +150,46 @@ public class ChunkFactory {
                     d += nLength + nDist;
                 }
                 break;
-            case (5): // long platform with fireball wall
-                nLength = length * 1.5f;
-                list.add(createPlatform(d, height, nLength));
-                list.add(createLinearFireball(d + random.nextInt(4)*10, height + 2));
-                list.add(createLinearFireball(d + random.nextInt(5)*10, height + 7));
-                list.add(createLinearFireball(d + random.nextInt(5)*10, height + 12));
-                
-                d += nLength + dist;
-                break;
             default:
                 break;
         }
-        
+
+        // fill up with platforms if whatever was in the switch statement didn't already
         while (d < totalLength) {
-            
             list.add(createPlatform(d, height, length));
             height += random.nextInt(9) - 4;
             d += length + dist;
-
         }
-
-        if (random.nextFloat() < 0.2) {
-            list.add(createWizard(totalLength * 0.8f, height + 8));
-        }
-        
+        // record this number so that the next chunk doesn't overlap
         distanceOverFlow = d - totalLength;
 
-
-
+        // generate enemies:
+        switch (enemyType) {
+            case (-1):
+                // no enemies;
+                break;
+            case (0):
+                // wizard
+                float wizardPosX = list.getLast().getLocalTranslation().getX()
+                        + random.nextFloat() * length;
+                float wizardPosY = list.getLast().getLocalTranslation().getY()
+                        + 18;
+                list.add(createWizard(wizardPosX, wizardPosY));
+                break;
+            case (1):
+                // single fireball
+                list.add(createLinearFireball(d, height + 1 + random.nextFloat() * 2));
+                break;
+            case (2):
+                // three fireballs
+                list.add(createLinearFireball(d + random.nextInt(4) * 10, height + 2));
+                list.add(createLinearFireball(d + random.nextInt(5) * 10, height + 7));
+                list.add(createLinearFireball(d + random.nextInt(5) * 10, height + 12));
+                break;
+            default:
+                // no enemies
+                break;  
+        }
 
 
         // the lights:
@@ -189,15 +204,6 @@ public class ChunkFactory {
          // generate a point light source of a random colour
          staticObjects.addLight(createColouredLight());
          */
-
-
-
-        // create a fireball hazard:
-        /*
-         * This code creates a FireballControl-type hazard floating in mid-air,
-         * triggering the first time the player bumps into it.
-         */
-        //list.addLast(createHoveringFireball());
 
         counter++;
 

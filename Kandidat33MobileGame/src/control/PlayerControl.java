@@ -57,6 +57,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import variables.P;
 
 /**
  * This is intended to be a replacement for the internal bullet character class.
@@ -187,10 +188,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         //pushback
         if (pushBackInNextTick) {
             pushBackInNextTick = false;
-            velocity.setX(-walkVelocity.length());
+            velocity.setX(P.pushbackSpeed);
             velocity.setY(jumpSpeed);
         }
 
+        // make sure the player never moves sideways
+        velocity.setZ(0f);
+        
         // updating the velocity including both running and jumping
         rigidBody.setLinearVelocity(velocity);
 

@@ -49,8 +49,8 @@ public class Player extends Node implements AnimEventListener {
      */
     public Player(AssetManager assetManager) {
         super("player");
-        playerRunSpeed = P.run_speed;
-        playerJumpSpeed = P.jump_speed;
+        playerRunSpeed = P.runSpeed;
+        playerJumpSpeed = P.jumpSpeed;
 
         // the player casts shadows
         this.setShadowMode(RenderQueue.ShadowMode.Cast);
