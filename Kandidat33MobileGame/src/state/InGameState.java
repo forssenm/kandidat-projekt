@@ -224,6 +224,6 @@ public class InGameState extends AbstractAppState{
     
     private void gameOver(){
         // Re-spawns player a bit behind and above.
-        player.getControl(PlayerControl.class).warp(player.getLocalTranslation().add(new Vector3f(-10.0f,30.0f,0.0f)));
+        player.getControl(PlayerControl.class).warp(player.getLocalTranslation().add(new Vector3f(10.0f,30.0f,0.0f)));
     }
 }

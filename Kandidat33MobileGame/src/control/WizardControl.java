@@ -2,6 +2,8 @@ package control;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import leveldata.LevelContentGenerator;
 import spatial.Player;
@@ -50,6 +52,7 @@ public class WizardControl extends AbstractHazardControl implements LevelContent
      * Wizards do not move.
      */
     protected void positionUpdate(float tpf) {
+        
     }
 
     @Override
@@ -62,8 +65,18 @@ public class WizardControl extends AbstractHazardControl implements LevelContent
             this.levelControl.addToLevel(fireball, this.spatial.getWorldTranslation());
             readyToShoot = false;
         }
+        lookAt(player.getLocalTranslation());
     }
-
+    
+    public void lookAt(Vector3f position){
+        Vector3f direction = position.subtract(spatial.getLocalTranslation());
+        float theta = FastMath.atan2(direction.z-5, direction.x) - FastMath.PI/2;        
+        float [] angles = {-0.2f,theta,0.0f};
+        System.out.println(theta);
+        Quaternion rotation = new Quaternion(angles);
+        this.spatial.setLocalRotation(rotation);
+    }
+    
     public void setLevelControl(LevelControl levelControl) {
         this.levelControl = levelControl;
     }

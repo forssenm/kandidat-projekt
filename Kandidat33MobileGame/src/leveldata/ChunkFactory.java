@@ -94,10 +94,12 @@ public class ChunkFactory {
         } else {
             key = random.nextInt(5);
         }
-        
+
+        list.add(createWizard());
+
         switch (key) {
             case (0): // chilling platforms with wizard
-                list.add(createWizard());
+                
             case (1): // chilling platforms
                 while (d < total) {
 
@@ -246,7 +248,7 @@ public class ChunkFactory {
     /* Creates a wizard shooting fireballs at the player.*/
     private Hazard createWizard() {
         Hazard wizard = new Wizard(assetManager);
-        wizard.move(10, 20, 0);
+        wizard.move(10, 10, 0);
         return wizard;
     }
 }
