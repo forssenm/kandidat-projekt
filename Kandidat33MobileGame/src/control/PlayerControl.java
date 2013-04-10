@@ -33,12 +33,10 @@ package control;
 
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.PhysicsTickListener;
-import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
-import com.jme3.bullet.objects.PhysicsGhostObject;
 import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
@@ -57,7 +55,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import variables.P;
 
 /**
  * This is intended to be a replacement for the internal bullet character class.
@@ -71,6 +68,11 @@ import variables.P;
  */
 public class PlayerControl extends AbstractPhysicsControl implements PhysicsTickListener, ActionListener {
 
+    //Animation code from hello animation tutorial
+   // private AnimChannel channel;
+   // private AnimControl control;
+    
+    //End animation code
     protected static final Logger logger = Logger.getLogger(PlayerControl.class.getName());
     protected PhysicsRigidBody rigidBody;
     protected float radius;
@@ -97,6 +99,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         jumpSpeed = 0f;
     }
 
+    
     /**
      * Creates a new character with the given properties. The jumpSpeed will be
      * set to a default value of 1.25 * mass.
@@ -112,6 +115,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         rigidBody = new PhysicsRigidBody(getShape(), mass);
         jumpSpeed = mass * 1.25f;
         rigidBody.setAngularFactor(0);
+        
     }
 
     @Override
@@ -120,6 +124,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         rigidBody.getPhysicsLocation(location);
         // rotation is never checked since the character can't rotate
         applyPhysicsTransform(location, Quaternion.DIRECTION_Z);
+        
     }
 
     @Override
@@ -180,7 +185,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         //pushback
         if (pushBackInNextTick) {
             pushBackInNextTick = false;
-            velocity.setX(P.knockback_speed);
+            velocity.setX(-walkVelocity.length());
             velocity.setY(jumpSpeed);
         }
 
@@ -317,15 +322,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         List<PhysicsRayTestResult> frontFootResults = space.rayTest(rayStart, rayEnd);
         vars.release();
         for (PhysicsRayTestResult physicsRayTestResult : backFootResults) {
-            PhysicsCollisionObject obj = physicsRayTestResult.getCollisionObject();
-            if (!obj.equals(rigidBody) && !(obj instanceof PhysicsGhostObject)) {
+            if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
                 onGround = true;
                 return;
             }
         }
         for (PhysicsRayTestResult physicsRayTestResult : frontFootResults) {
-            PhysicsCollisionObject obj = physicsRayTestResult.getCollisionObject();
-            if (!obj.equals(rigidBody) && !(obj instanceof PhysicsGhostObject)) {
+            if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
                 onGround = true;
                 return;
             }

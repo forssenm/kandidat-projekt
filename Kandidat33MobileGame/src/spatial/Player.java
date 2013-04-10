@@ -1,5 +1,9 @@
 package spatial;
 
+import com.jme3.animation.AnimChannel;
+import com.jme3.animation.AnimControl;
+import com.jme3.animation.AnimEventListener;
+import com.jme3.animation.LoopMode;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.effect.ParticleEmitter;
@@ -22,7 +26,7 @@ import variables.P;
  *
  * @author dagen
  */
-public class Player extends Node {
+public class Player extends Node implements AnimEventListener {
 
     private float playerRunSpeed;
     private float playerJumpSpeed;
@@ -30,6 +34,10 @@ public class Player extends Node {
     private PlayerControl playerControl;
     private Node playerModel;
 
+    //animation
+    private AnimChannel channel;
+    private AnimControl control;
+    //end animation
     /**
      * Constructs a
      * <code>Player</code> object which is a
@@ -57,12 +65,20 @@ public class Player extends Node {
         this.addControl(playerControl);
 
         //Sets the model of the player
-        playerModel = (Node) assetManager.loadModel ("Models/ghostbody202mca02/ghostbody202mca03.j3o"); 
+        //playerModel = (Node) assetManager.loadModel ("Models/ghostbody202mca02/ghostbody202mca03.j3o"); 
+        playerModel = (Node) assetManager.loadModel ("Models/ghostbody202mca02/002apa1slrs.j3o"); 
         playerModel.setLocalTranslation(0f,1.8f,0f); 
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
         dust.move(0.6f, -2.0f, 0f);
         this.attachChild(playerModel);
+        control = playerModel.getChild("Plane").getControl(AnimControl.class);
+        //control = playerModel.getControl(AnimControl.class);
+        control.addListener(this);
+        channel = control.createChannel();
+        channel.setAnim("ArmatureAction");
+        channel.setLoopMode(LoopMode.Loop);
+        channel.setSpeed(1f);
 
     }
 
@@ -96,4 +112,17 @@ public class Player extends Node {
     fire.getParticleInfluencer().setVelocityVariation(0.3f);
     return fire;
     }
+    
+    //animation function that must be implemented even if unused
+     public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
+    // unused
+  }
+    //animation function that must be implemented even if unused 
+      public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
+    /*if (animName.equals("ArmatureAction")) {
+      channel.setAnim("ArmatureAction", 0.50f);
+      channel.setLoopMode(LoopMode.DontLoop);
+      channel.setSpeed(1f);
+    }*/
+  }
 }
