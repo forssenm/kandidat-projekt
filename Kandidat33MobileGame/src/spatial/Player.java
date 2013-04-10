@@ -57,16 +57,11 @@ public class Player extends Node {
         this.addControl(playerControl);
 
         //Sets the model of the player
-        //playerModel = (Node) assetManager.loadModel("Models/ghost6anim/ghost6animgroups.j3o");
-        playerModel = (Node) assetManager.loadModel("Models/ghost6anim/ghost8.j3o");
-
-        playerModel.setLocalRotation((new Quaternion()).fromAngles(0f,180*FastMath.DEG_TO_RAD,0f));
-        playerModel.setLocalTranslation(0f,1.8f,0f);
-        
+        playerModel = (Node) assetManager.loadModel ("Models/ghostbody202mca02/ghostbody202mca03.j3o"); 
+        playerModel.setLocalTranslation(0f,1.8f,0f); 
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
-        dust.move(1.0f, 0f, 0f);
-        
+        dust.move(0.6f, -2.0f, 0f);
         this.attachChild(playerModel);
 
     }
@@ -92,12 +87,12 @@ public class Player extends Node {
     fire.setImagesY(2); // 2x2 texture animation
     fire.setStartColor(  new ColorRGBA(.40f, 0.40f, 0.40f, 1f));   // bluish grey
     fire.setEndColor(new ColorRGBA(0.05f, 0.05f, 0.05f, 0.5f)); // grey
-    fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 2, 0));
-    fire.setStartSize(3.0f);
+    fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, -1, 0));
+    fire.setStartSize(3.5f);
     fire.setEndSize(0.1f);
-    fire.setGravity(0, -3.0f, 0);
-    fire.setLowLife(0.3f);
-    fire.setHighLife(0.8f);
+    fire.setGravity(0, 0f, 0);
+    fire.setLowLife(0.2f);
+    fire.setHighLife(0.2f);
     fire.getParticleInfluencer().setVelocityVariation(0.3f);
     return fire;
     }
