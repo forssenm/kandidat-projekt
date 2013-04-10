@@ -94,7 +94,7 @@ public class ChunkFactory {
         } else {
             key = random.nextInt(5);
         }
-
+        
         switch (key) {
             case (0): // chilling platforms with wizard
                 list.add(createWizard());
@@ -110,7 +110,7 @@ public class ChunkFactory {
                     float nLength = length * (0.5f + random.nextFloat() / 2);
                     float nDist = dist * (1f + random.nextFloat());
 
-                    list.add(createPlatform(d + nDist, height + random.nextFloat() * 3, nLength));
+                    list.add(createPlatform(d, height + random.nextFloat() * 3, nLength));
                     d += nLength + nDist;
                 }
                 break;
@@ -119,21 +119,21 @@ public class ChunkFactory {
                     float nLength = length * (0.5f + random.nextFloat() / 2);
                     float nDist = dist * (1f + random.nextFloat());
 
-                    list.add(createPlatform(d + nDist, height + random.nextFloat() * 2, nLength));
-                    height += 1 + 5 * random.nextFloat();
+                    list.add(createPlatform(d, height + random.nextFloat() * 2, nLength));
+                    height += 1 + 4 * random.nextFloat();
                     d += nLength + nDist;
                 }
                 break;
             case (4): // descending platforms
-                float lastDescent;
+                float descent;
                 while (d < total) {
                     float nLength = length * (0.5f + random.nextFloat() / 2);
                     float nDist = dist * (1f + random.nextFloat());
-                    lastDescent = 2 + 8 * random.nextFloat();
-                    if (height - lastDescent > P.deathTreshold + 2) {
-                        height -= (2 + 8 * random.nextFloat());
+                    descent = 2 + 8 * random.nextFloat();
+                    if (height - descent > P.deathTreshold + 2) {
+                        height -= descent;
                     }
-                    list.add(createPlatform(d + nDist, height + random.nextFloat() * 4, nLength));
+                    list.add(createPlatform(d, height + random.nextFloat() * 4, nLength));
                     d += nLength + nDist;
                 }
                 break;
