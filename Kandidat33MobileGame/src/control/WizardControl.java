@@ -25,7 +25,7 @@ public class WizardControl extends AbstractHazardControl implements LevelContent
     protected AssetManager assetManager;
 
     /**
-     * Creates a new wizard with an aggro radius of 10. The assetManager is
+     * Creates a new wizard with an aggro radius of 50. The assetManager is
      * needed to create fireballs.
      *
      * @param assetManager
@@ -72,7 +72,6 @@ public class WizardControl extends AbstractHazardControl implements LevelContent
         Vector3f direction = position.subtract(spatial.getLocalTranslation());
         float theta = FastMath.atan2(direction.z-5, direction.x) - FastMath.PI/2;        
         float [] angles = {-0.2f,theta,0.0f};
-        System.out.println(theta);
         Quaternion rotation = new Quaternion(angles);
         this.spatial.setLocalRotation(rotation);
     }

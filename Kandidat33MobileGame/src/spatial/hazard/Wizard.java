@@ -34,17 +34,6 @@ public class Wizard extends Hazard {
     
     @Override
     protected Spatial createModel(AssetManager assetManager) {
-        /*Box model =
-                new Box(Vector3f.ZERO, 0.2f, 2f, 0.2f);
-        Geometry geometry = new Geometry("", model);
-
-        Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        material.setColor("Color", ColorRGBA.Yellow);
-        geometry.setMaterial(material);
-        geometry.setShadowMode(RenderQueue.ShadowMode.Cast);
-        
-        return geometry;
-        * */
         // Node playerModel = (Node) assetManager.loadModel("Models/ghost6anim/clothball.j3o");
         Node playerModel = (Node) assetManager.loadModel("Models/wizard/wizardcloth005.j3o");
 
