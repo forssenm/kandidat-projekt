@@ -68,7 +68,7 @@ public class ChunkFactory {
         // the decorations:
         float wHeight = Math.max(0, 5 * Math.round(height / 5));
 
-        WindowFrame window = createWindowFrame(5f, wHeight + 5f);
+        WindowFrame window = createWindowFrame(5f, wHeight + 18f);
         staticObjects.attachChild(window);
         list.add(staticObjects);
 
