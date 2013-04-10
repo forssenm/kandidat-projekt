@@ -76,7 +76,7 @@ public class ChunkFactory {
         // Generate everything with a physical / game mechanical connection:
 
         // standard length and distance
-        float total = P.chunkLength;
+        float totalLength = P.chunkLength;
         float dist = P.platformDistance;
         float length = P.platformLength;
         float d = distanceOverFlow;
@@ -85,50 +85,59 @@ public class ChunkFactory {
         Random random = new Random();
 
         int key;
-        if (counter < 4) { //nothing special on the first chunk
-            key = 1;
+        if (counter < 4) { //nothing special on the first few chunks
+            key = -1;
+            list.add(createPlatform(0,height,P.chunkLength));
+            d += P.chunkLength;
         } else if (height < -2) {
             key = 3;
         } else if (height > 10) {
             key = 4;
         } else {
-            key = random.nextInt(5);
+            key = random.nextInt(6);
         }
         
+        
+        float nLength;
+        float nDist;
+        
         switch (key) {
-            case (0): // chilling platforms with wizard
-                list.add(createWizard());
+            case (0): // long platform with fireball
+                nLength = length * 2;
+                list.add(createPlatform(d, height, nLength));
+                list.add(createLinearFireball(d, height + 1 + random.nextFloat() * 2));
+                d += nLength + dist;
+                break;
             case (1): // chilling platforms
-                while (d < total) {
+                while (d < totalLength) {
 
                     list.add(createPlatform(d, height + random.nextFloat() * 3, length));
                     d += length + dist;
                 }
                 break;
             case (2): // chilling differentlength platforms
-                while (d < total) {
-                    float nLength = length * (0.5f + random.nextFloat() / 2);
-                    float nDist = dist * (1f + random.nextFloat());
+                while (d < totalLength) {
+                    nLength = length * (0.8f + random.nextFloat());
+                    nDist = dist * (1f + random.nextFloat());
 
                     list.add(createPlatform(d, height + random.nextFloat() * 3, nLength));
                     d += nLength + nDist;
                 }
                 break;
             case (3): // climbing platforms
-                while (d < total) {
-                    float nLength = length * (0.5f + random.nextFloat() / 2);
-                    float nDist = dist * (1f + random.nextFloat());
-
-                    list.add(createPlatform(d, height + random.nextFloat() * 2, nLength));
+                while (d < totalLength) {
+                    nLength = length * (0.5f + random.nextFloat() / 2);
+                    nDist = dist * (1f + random.nextFloat());
                     height += 1 + 4 * random.nextFloat();
+                    list.add(createPlatform(d, height + random.nextFloat() * 2, nLength));
                     d += nLength + nDist;
                 }
                 break;
             case (4): // descending platforms
                 float descent;
-                while (d < total) {
-                    float nLength = length * (0.5f + random.nextFloat() / 2);
-                    float nDist = dist * (1f + random.nextFloat());
+                while (d < totalLength) {
+                    nLength = length * (0.5f + random.nextFloat() / 2);
+                    nDist = dist * (1f + random.nextFloat());
                     descent = 2 + 8 * random.nextFloat();
                     if (height - descent > P.deathTreshold + 2) {
                         height -= descent;
@@ -137,11 +146,32 @@ public class ChunkFactory {
                     d += nLength + nDist;
                 }
                 break;
+            case (5): // long platform with fireball wall
+                nLength = length * 1.5f;
+                list.add(createPlatform(d, height, nLength));
+                list.add(createLinearFireball(d + random.nextInt(4)*10, height + 2));
+                list.add(createLinearFireball(d + random.nextInt(5)*10, height + 7));
+                list.add(createLinearFireball(d + random.nextInt(5)*10, height + 12));
+                
+                d += nLength + dist;
+                break;
             default:
                 break;
+        }
+        
+        while (d < totalLength) {
+            
+            list.add(createPlatform(d, height, length));
+            height += random.nextInt(9) - 4;
+            d += length + dist;
 
         }
-        distanceOverFlow = d - total;
+
+        if (random.nextFloat() < 0.2) {
+            list.add(createWizard(totalLength * 0.8f, height + 8));
+        }
+        
+        distanceOverFlow = d - totalLength;
 
 
 
@@ -169,10 +199,6 @@ public class ChunkFactory {
          */
         //list.addLast(createHoveringFireball());
 
-        // create a wizard (but not for the first two chunks, that's too hard)
-        if (counter > 1) {
-            //list.addLast(createWizard());
-        }
         counter++;
 
         return list;
@@ -230,9 +256,9 @@ public class ChunkFactory {
     }
 
     /* Creates a fireball hazard flying in a straight line.*/
-    private Hazard createLinearFireball() {
-        Hazard hazard = new LinearFireball(assetManager, new Vector3f(-20, 0, 0));
-        hazard.move(5f, 6f, 0f);
+    private Hazard createLinearFireball(float positionX, float positionY) {
+        Hazard hazard = new LinearFireball(assetManager, new Vector3f(-15, 0, 0));
+        hazard.move(positionX + P.chunkLength, positionY, 0f);
         return hazard;
     }
 
@@ -244,9 +270,9 @@ public class ChunkFactory {
     }
 
     /* Creates a wizard shooting fireballs at the player.*/
-    private Hazard createWizard() {
+    private Hazard createWizard(float positionX, float positionY) {
         Hazard wizard = new Wizard(assetManager);
-        wizard.move(10, 20, 0);
+        wizard.move(positionX, positionY, 0f);
         return wizard;
     }
 }
