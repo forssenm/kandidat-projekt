@@ -33,10 +33,12 @@ package control;
 
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.PhysicsTickListener;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
+import com.jme3.bullet.objects.PhysicsGhostObject;
 import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
@@ -322,13 +324,15 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         List<PhysicsRayTestResult> frontFootResults = space.rayTest(rayStart, rayEnd);
         vars.release();
         for (PhysicsRayTestResult physicsRayTestResult : backFootResults) {
-            if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
-                onGround = true;
+            PhysicsCollisionObject obj = physicsRayTestResult.getCollisionObject();
+            if (!obj.equals(rigidBody) && !(obj instanceof PhysicsGhostObject)) {
+    onGround = true;
                 return;
             }
         }
         for (PhysicsRayTestResult physicsRayTestResult : frontFootResults) {
-            if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
+            PhysicsCollisionObject obj = physicsRayTestResult.getCollisionObject();
+            if (!obj.equals(rigidBody) && !(obj instanceof PhysicsGhostObject)) {
                 onGround = true;
                 return;
             }
