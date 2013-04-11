@@ -18,6 +18,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import com.jme3.shadow.PssmShadowRenderer;
+import com.jme3.system.Timer;
 import control.HazardControl;
 import control.LevelControl;
 import control.PlayerControl;
@@ -57,7 +58,10 @@ public class InGameState extends AbstractAppState{
     private Player player;
     
     private ChaseCamera chaseCam;
-     
+    
+    private boolean gameOver = false;
+    private float respawnDelay = 1.0f; // seconds
+    private float respawnTimer = 0.0f; // seconds
     
     /**
      * This method initializes the the InGameState and thus getts the game 
@@ -163,9 +167,31 @@ public class InGameState extends AbstractAppState{
     /**{inheritDoc}*/
     @Override
     public void update(float tpf) {
-        if( player.getWorldTranslation().getY() < P.deathTreshold){
-            gameOver();
+        if(!gameOver){
+            if( player.getWorldTranslation().getY() < P.deathTreshold){
+                this.chaseCam.setEnabled(false);
+                this.gameOver = true;
+            }
+        }else{ // gameOver
+            respawnTimer += tpf;
+            if(respawnTimer > respawnDelay){
+                Vector3f spawnPosition = player.getLocalTranslation();
+                spawnPosition.x = 0.0f;
+                spawnPosition.y = 20.0f;
+                PlayerControl pc = player.getControl(PlayerControl.class); 
+                pc.respawn(spawnPosition);
+                
+                LevelControl levelControl = gameNode.getChild(LEVEL_NODE).getControl(LevelControl.class);
+                levelControl.cleanup();
+                levelControl.initiateLevel();
+                
+                this.chaseCam.setEnabled(true);
+                gameOver = false;
+                respawnTimer = 0.0f;
+            }
         }
+        
+        
     }
 
      
@@ -222,8 +248,5 @@ public class InGameState extends AbstractAppState{
         this.physics.getPhysicsSpace().addCollisionListener(physicsCollisionListener);     
     }
     
-    private void gameOver(){
-        // Re-spawns player a bit behind and above.
-        player.getControl(PlayerControl.class).warp(player.getLocalTranslation().add(new Vector3f(10.0f,30.0f,0.0f)));
-    }
+   
 }

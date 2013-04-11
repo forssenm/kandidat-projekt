@@ -344,6 +344,12 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         onGround = false;
     }
 
+    public void respawn(Vector3f position){
+        this.velocity.set(Vector3f.ZERO);
+        warp(position);
+        
+    }
+    
     /**
      * Responds to the action "initiateJump" by making the player initiateJump.
      * Currently have the same initiateJump behaviour as
