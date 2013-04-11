@@ -183,6 +183,8 @@ public class InGameState extends AbstractAppState{
                 
                 LevelControl levelControl = gameNode.getChild(LEVEL_NODE).getControl(LevelControl.class);
                 levelControl.cleanup();
+                
+                // Try again
                 levelControl.initiateLevel();
                 
                 this.chaseCam.setEnabled(true);

@@ -94,7 +94,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     protected float gravity = -40f;
     private boolean pushBackInNextTick;
     private Vector3f pushBackVelocityAdjustment = new Vector3f(-10f, 10f, 0f);
-
+    private boolean willRespawn = false;
+    
     /**
      * Only used for serialization, do not use this constructor.
      */
@@ -194,6 +195,11 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
 
         // make sure the player never moves sideways
         velocity.setZ(0f);
+        
+        if(willRespawn){
+            willRespawn = false;
+            velocity.set(Vector3f.ZERO);
+        }
         
         // updating the velocity including both running and jumping
         rigidBody.setLinearVelocity(velocity);
@@ -345,9 +351,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     public void respawn(Vector3f position){
-        this.velocity.set(Vector3f.ZERO);
+        willRespawn = true;
         warp(position);
-        
     }
     
     /**
