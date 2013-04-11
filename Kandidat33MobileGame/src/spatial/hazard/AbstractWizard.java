@@ -22,7 +22,7 @@ public abstract class AbstractWizard extends Hazard {
     @Override
     protected Spatial createModel(AssetManager assetManager) {
         // Node playerModel = (Node) assetManager.loadModel("Models/ghost6anim/clothball.j3o");
-        Node playerModel = (Node) assetManager.loadModel("Models/wizard/wizardcloth005.j3o");
+        Node playerModel = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003.j3o");
 
         playerModel.setLocalRotation((new Quaternion()).fromAngles(0f,90*FastMath.DEG_TO_RAD,0f));
         playerModel.scale(1.5f);
