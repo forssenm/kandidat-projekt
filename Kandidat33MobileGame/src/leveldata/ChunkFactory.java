@@ -15,11 +15,12 @@ import java.util.Random;
 import spatial.Platform;
 import spatial.Wall;
 import spatial.WindowFrame;
+import spatial.hazard.BurstWizard;
 import spatial.hazard.Hazard;
 import spatial.hazard.LinearFireball;
+import spatial.hazard.SingleShotWizard;
 import spatial.hazard.SpinningFireball;
 import spatial.hazard.StationaryFireball;
-import spatial.hazard.Wizard;
 import variables.P;
 
 /**
@@ -90,9 +91,9 @@ public class ChunkFactory {
             platformLayoutType = -1;
             enemyType = -1;
         } else {
-            // results 0-2 are actual enemies, a 'roll' of 3 or higher will
+            // results 0-6 are actual enemies, a 'roll' of 7 or higher will
             // give nothing
-            enemyType = random.nextInt(5);
+            enemyType = random.nextInt(11);
 
             // get back to normal height if we're too low or too high
             if (height < -2) {
@@ -169,18 +170,29 @@ public class ChunkFactory {
                 // no enemies;
                 break;
             case (0):
-                // wizard
+            case (1):
+                // single shot wizard
                 float wizardPosX = list.getLast().getLocalTranslation().getX()
                         + random.nextFloat() * length;
                 float wizardPosY = list.getLast().getLocalTranslation().getY()
                         + 18;
                 list.add(createWizard(wizardPosX, wizardPosY));
                 break;
-            case (1):
+            case (2):
+                // burst wizard
+                wizardPosX = list.getLast().getLocalTranslation().getX()
+                        + random.nextFloat() * length;
+                wizardPosY = list.getLast().getLocalTranslation().getY()
+                        + 18;
+                list.add(createBurstWizard(wizardPosX, wizardPosY));
+                break;
+            case (3):
+            case (4):
                 // single fireball
                 list.add(createLinearFireball(d, height + 1 + random.nextFloat() * 2));
                 break;
-            case (2):
+            case (5):
+            case (6):
                 // three fireballs
                 list.add(createLinearFireball(d + random.nextInt(4) * 10, height + 2));
                 list.add(createLinearFireball(d + random.nextInt(5) * 10, height + 7));
@@ -188,7 +200,7 @@ public class ChunkFactory {
                 break;
             default:
                 // no enemies
-                break;  
+                break;
         }
 
 
@@ -210,12 +222,12 @@ public class ChunkFactory {
         return list;
 
     }
-    
+
     public void reset() {
         counter = 0;
         height = 0;
         distanceOverFlow = 0;
-        
+
     }
 
     /* Creates a platform at a given 2d position */
@@ -284,7 +296,14 @@ public class ChunkFactory {
 
     /* Creates a wizard shooting fireballs at the player.*/
     private Hazard createWizard(float positionX, float positionY) {
-        Hazard wizard = new Wizard(assetManager);
+        Hazard wizard = new SingleShotWizard(assetManager);
+        wizard.move(positionX, positionY, 0f);
+        return wizard;
+    }
+
+    /* Creates a wizard shooting multiple fireballs at the player.*/
+    private Hazard createBurstWizard(float positionX, float positionY) {
+        Hazard wizard = new BurstWizard(assetManager);
         wizard.move(positionX, positionY, 0f);
         return wizard;
     }

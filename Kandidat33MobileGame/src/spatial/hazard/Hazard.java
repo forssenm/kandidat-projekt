@@ -36,8 +36,6 @@ public abstract class Hazard extends Node {
     /**
      * Creates the HazardControl for this hazard. A HazardControl makes sure
      * something happens when this hazard collides with the player.
-     *
-     * @param assetManager The AssetManager used to load models and materials
      */
     protected abstract HazardControl createControl();
 }

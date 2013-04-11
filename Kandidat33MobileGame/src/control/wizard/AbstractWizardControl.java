@@ -1,12 +1,15 @@
-package control;
+package control.wizard;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import control.AbstractHazardControl;
+import control.LevelControl;
 import leveldata.LevelContentGenerator;
 import spatial.Player;
+import spatial.hazard.AbstractWizard;
 import spatial.hazard.LinearFireball;
 
 /**
@@ -15,13 +18,12 @@ import spatial.hazard.LinearFireball;
  *
  * @author jonatankilhamn
  */
-public class WizardControl extends AbstractHazardControl implements LevelContentGenerator {
+public abstract class AbstractWizardControl extends AbstractHazardControl implements LevelContentGenerator {
 
     protected boolean readyToShoot = true;
-    protected static final float fireballCoolDown = 5.0f;
-    protected static final float fireballSpeed = 15.0f;
     protected LevelControl levelControl;
-    protected float time;
+    protected float reloadTimer;
+    protected float fireballSpeed = 15f;
     protected AssetManager assetManager;
 
     /**
@@ -30,7 +32,7 @@ public class WizardControl extends AbstractHazardControl implements LevelContent
      *
      * @param assetManager
      */
-    public WizardControl(AssetManager assetManager) {
+    public AbstractWizardControl(AssetManager assetManager) {
         super(new SphereCollisionShape(50f));
         this.assetManager = assetManager;
     }
@@ -39,9 +41,8 @@ public class WizardControl extends AbstractHazardControl implements LevelContent
     public void update(float tpf) {
         super.update(tpf);
         if (!readyToShoot) {
-            time += tpf;
-            if (time > 0) {
-                time -= fireballCoolDown;
+            reloadTimer += tpf;
+            if (reloadTimer > 0) {
                 readyToShoot = true;
             }
         }
@@ -58,14 +59,29 @@ public class WizardControl extends AbstractHazardControl implements LevelContent
     @Override
     public void collideWithPlayer(Player player) {
         if (readyToShoot) {
-            Vector3f direction = player.getLocalTranslation().
-                    subtract(this.spatial.getWorldTranslation());
-            direction.normalizeLocal();
-            LinearFireball fireball = new LinearFireball(assetManager, direction.mult(fireballSpeed));
-            this.levelControl.addToLevel(fireball, this.spatial.getWorldTranslation());
-            readyToShoot = false;
+            shootAtPlayerAndReload(player);
         }
         lookAt(player.getLocalTranslation());
+    }
+    
+    /**
+     * Try to shoot at the player. Implementations of this method must take care
+     * of setting readyToShoot = false and decreasing reloadTimer by an
+     * appropriate amount.
+     * @param player Handle to the player, for aiming.
+     */
+    protected abstract void shootAtPlayerAndReload(Player player);
+    
+    protected void shootFireballAt(Vector3f targetPosition) {
+                    Vector3f direction = targetPosition.
+                    subtract((this.spatial).getWorldTranslation());
+                    direction.setZ(0);
+            direction.normalizeLocal();
+            LinearFireball fireball = new LinearFireball(assetManager, direction.mult(fireballSpeed));
+            this.levelControl.addToLevel(fireball,
+                    //shoot from the wand:
+                    this.spatial.getWorldTranslation().add(direction)
+                    );
     }
     
     public void lookAt(Vector3f position){

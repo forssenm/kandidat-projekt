@@ -11,7 +11,7 @@ import com.jme3.math.Vector3f;
 public class P {
 
     //level variables
-    public static final float platformLength = 12.0f;
+    public static final float platformLength = 16.0f;
     public static final float platformWidth = 4f;
     public static final float platformHeight = 1f;
     public static final float platformDistance = 5.0f;

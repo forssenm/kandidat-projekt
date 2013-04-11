@@ -10,24 +10,14 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import control.HazardControl;
-import control.WizardControl;
 
 /**
  * A class for a Wizard, using a
- * <code>WizardControl</code> to control its behaviour.
+ * <code>AbstractWizardControl</code> to control its behaviour.
  *
  * @author jonatankilhamn
  */
-public class Wizard extends Hazard {
-    private final AssetManager assetManager;
-
-    public Wizard(AssetManager assetManager) {
-        this.assetManager = assetManager;
-        this.attachChild(createModel(assetManager));
-        this.addControl(createControl());
-    }
-
+public abstract class AbstractWizard extends Hazard {
     
     @Override
     protected Spatial createModel(AssetManager assetManager) {
@@ -36,22 +26,15 @@ public class Wizard extends Hazard {
 
         playerModel.setLocalRotation((new Quaternion()).fromAngles(0f,90*FastMath.DEG_TO_RAD,0f));
         playerModel.scale(1.5f);
-        ParticleEmitter sparkle = getWandParticleEmitter();
+        ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
         playerModel.attachChild(sparkle);
        //denna positionering (z-led) ser konstig ut men har att göra med att modellen är roterad 90 grader. Bättre vore att ha en modell som inte behöver roteras. Jobbar på det /130410
         sparkle.move(0f, 2.0f, -2.0f); 
        
          return playerModel;
     }
-
-    @Override
-    protected HazardControl createControl() {
-        WizardControl wizardControl = new WizardControl(assetManager);
-        return wizardControl;
-    }
     
-    
-    private ParticleEmitter getWandParticleEmitter () {
+    private ParticleEmitter getWandParticleEmitter (AssetManager assetManager) {
              ParticleEmitter fire = 
             new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 10);
     Material mat_red = new Material(assetManager, 
@@ -73,4 +56,5 @@ public class Wizard extends Hazard {
     fire.getParticleInfluencer().setVelocityVariation(0.3f);
     return fire;
     }
+
 }
