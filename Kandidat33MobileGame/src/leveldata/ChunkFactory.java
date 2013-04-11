@@ -210,6 +210,13 @@ public class ChunkFactory {
         return list;
 
     }
+    
+    public void reset() {
+        counter = 0;
+        height = 0;
+        distanceOverFlow = 0;
+        
+    }
 
     /* Creates a platform at a given 2d position */
     private Platform createPlatform(float positionX, float positionY, float length) {
