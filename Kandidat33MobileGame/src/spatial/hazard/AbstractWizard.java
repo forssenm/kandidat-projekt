@@ -24,12 +24,12 @@ public abstract class AbstractWizard extends Hazard {
         // Node playerModel = (Node) assetManager.loadModel("Models/ghost6anim/clothball.j3o");
         Node playerModel = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003.j3o");
 
-        playerModel.setLocalRotation((new Quaternion()).fromAngles(0f,90*FastMath.DEG_TO_RAD,0f));
+       // playerModel.setLocalRotation((new Quaternion()).fromAngles(0f,90*FastMath.DEG_TO_RAD,0f));
         playerModel.scale(1.5f);
         ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
         playerModel.attachChild(sparkle);
        //denna positionering (z-led) ser konstig ut men har att göra med att modellen är roterad 90 grader. Bättre vore att ha en modell som inte behöver roteras. Jobbar på det /130410
-        sparkle.move(0f, 2.0f, -2.0f); 
+        sparkle.move(0.8f, 1.5f, -1f);   //what should be z effectively is x. what should be x is positive into the picture. Y is as is should be.
        
          return playerModel;
     }
