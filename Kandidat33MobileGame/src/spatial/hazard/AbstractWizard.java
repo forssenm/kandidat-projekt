@@ -5,15 +5,13 @@ import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
- * A class for a Wizard, using a
- * <code>AbstractWizardControl</code> to control its behaviour.
+ * A class for a general Wizard. Any class extending this will have the wizard
+ * model and particle effect on the wand.
  *
  * @author jonatankilhamn
  */
@@ -22,16 +20,14 @@ public abstract class AbstractWizard extends Hazard {
     @Override
     protected Spatial createModel(AssetManager assetManager) {
         // Node playerModel = (Node) assetManager.loadModel("Models/ghost6anim/clothball.j3o");
-        Node playerModel = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003.j3o");
+        Node wizardModel = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003.j3o");
 
-       // playerModel.setLocalRotation((new Quaternion()).fromAngles(0f,90*FastMath.DEG_TO_RAD,0f));
-        playerModel.scale(1.5f);
+        wizardModel.scale(1.5f);
         ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
-        playerModel.attachChild(sparkle);
-       //denna positionering (z-led) ser konstig ut men har att göra med att modellen är roterad 90 grader. Bättre vore att ha en modell som inte behöver roteras. Jobbar på det /130410
+        wizardModel.attachChild(sparkle);
         sparkle.move(0.8f, 1.5f, -1f);   //what should be z effectively is x. what should be x is positive into the picture. Y is as is should be.
        
-         return playerModel;
+         return wizardModel;
     }
     
     private ParticleEmitter getWandParticleEmitter (AssetManager assetManager) {
