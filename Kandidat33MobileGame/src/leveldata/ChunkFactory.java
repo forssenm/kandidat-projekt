@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import spatial.Platform;
+import spatial.Torch;
 import spatial.Wall;
 import spatial.WindowFrame;
 import spatial.hazard.BurstWizard;
@@ -70,7 +71,10 @@ public class ChunkFactory {
         float wHeight = Math.max(0, 5 * Math.round(height / 5));
 
         WindowFrame window = createWindowFrame(5f, wHeight + 18f);
+        Torch torch = createTorch (30, wHeight+ 15);
+        
         staticObjects.attachChild(window);
+        staticObjects.attachChild(torch);
         list.add(staticObjects);
 
 
@@ -241,6 +245,13 @@ public class ChunkFactory {
     private WindowFrame createWindowFrame(float positionX, float positionY) {
         Vector3f windowPos = new Vector3f(positionX, positionY, 0f);
         WindowFrame window = new WindowFrame(this.assetManager, windowPos);
+        return window;
+    }
+    
+    /* Creates a torch on the wall at a given psition */
+    private Torch createTorch (float positionX, float positionY) {
+        Vector3f windowPos = new Vector3f(positionX, positionY, 0f); //beware the Z is  not used
+        Torch window = new Torch(this.assetManager, windowPos);
         return window;
     }
 
