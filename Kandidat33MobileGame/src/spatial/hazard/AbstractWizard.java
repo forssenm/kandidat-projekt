@@ -52,7 +52,7 @@ public abstract class AbstractWizard extends Hazard {
     fire.setEndSize(0.5f);
     fire.setGravity(0, 0f, 0);
     fire.setLowLife(0.2f);
-    fire.setHighLife(0.5f);
+    fire.setHighLife(0.6f);
     fire.getParticleInfluencer().setVelocityVariation(0.3f);
     return fire;
     }

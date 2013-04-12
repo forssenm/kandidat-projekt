@@ -68,41 +68,14 @@ public class Torch extends Node {
         
     //Add different torches with differenc  velocity, gravity and life
     Random r = new Random();
-    int i = r.nextInt(6); 
-    //0,1,2,3 -> normal torch
-    //4       -> fast burner
-    //5       -> 1 out of 3 specials
-    if (i == 5) {
-        i = r.nextInt(3)+5;  //choose 5, 6 or 7 for a special effect
-    }
-    
-    if (i == 4) { //faster burn, bigger flame
+    int[] type = {0,0,0,0,0,0,0,1,1,1,1,2,2,2,3,4,5,5,5,5,5};
+    int i = r.nextInt(type.length); 
+    //type 0 is default torch
+    if (type[i] == 1) { //faster burn, bigger flame
         gravity = new Vector3f (0, 0, 30f);
         startSize = 1.8f;
     }
-    else if (i == 5) {  //dripping green stuff
-       gravity = new Vector3f (0, 30f, 0);
-       startColor = new ColorRGBA (0, 1f, 0.3f, 1f);
-       velocityVariation = 0.5f;
-       fire.setNumParticles(20);
-       startSize = 1.2f;
-       lowLife = 0.3f;
-       highLife = 1f;
-    }
-    else if (i == 6) {  //red growing 
-       fire.setNumParticles(10);
-       startSize = 0.4f;
-       endSize = 2.7f;
-       lowLife = 1.7f;
-       highLife = 2.2f;
-       startColor = new ColorRGBA (0.1f, 0.1f, 0.1f, 1f);
-       endColor   = ColorRGBA.Red;
-       velocityVariation = 0.05f;
-       initialVelocity.y = 1;
-       gravity.y = -1;
-    }
-    
-    else if (i == 7) {  //smoke 
+    else if (type[i] == 2) {  //smoke 
        fire.setNumParticles(25);
        startSize = 0.1f;
        endSize = 1f;
@@ -114,6 +87,43 @@ public class Torch extends Node {
        initialVelocity.y = 1;
        gravity.y = -1;
     }
+    else if (type[i] == 3) {  //dripping green stuff
+       gravity = new Vector3f (0, 30f,0 );
+       startColor = new ColorRGBA (0, 1f, 0.3f, 1.0f);
+       initialVelocity.z = 5;
+       velocityVariation = 0.5f;
+       fire.setNumParticles(25);
+       startSize = 1.7f;
+       lowLife = 0.3f;
+       highLife = 1f;
+    }
+    else if (type[i] == 4) {  //red growing 
+       fire.setNumParticles(10);
+       startSize = 0.4f;
+       endSize = 2.7f;
+       lowLife = 1.7f;
+       highLife = 2.2f;
+       startColor = new ColorRGBA (0.1f, 0.1f, 0.1f, 1f);
+       endColor   = ColorRGBA.Red;
+       velocityVariation = 0.05f;
+       initialVelocity.y = 1;
+       gravity.y = -1;
+    }
+    else if (type[i] == 5) {  //standard torch with random factors
+        float redMod = r.nextFloat() * 4f / 10f -0.3f;   // from -0.3 to +0.1
+        float greenMod = r.nextFloat() * 3f / 10f -0.1f;  //from -0.1 to +0.2
+        
+        startColor.r += redMod;
+        endColor.r   += redMod;
+        startColor.g += greenMod;
+        endColor.g   += greenMod;
+      
+        gravity.y += r.nextInt(3) -1;
+        //velocityVariation += (r.nextFloat()*0.3f-0.1f);  // -0.1 to +0.1
+        
+        
+        
+    }  
     
     fire.setStartColor(  startColor);
     fire.setEndColor(endColor);
