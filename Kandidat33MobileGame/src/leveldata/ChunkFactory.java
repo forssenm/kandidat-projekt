@@ -17,6 +17,7 @@ import spatial.Torch;
 import spatial.Wall;
 import spatial.WindowFrame;
 import spatial.hazard.BurstWizard;
+import spatial.hazard.CalculatingWizard;
 import spatial.hazard.Hazard;
 import spatial.hazard.LinearFireball;
 import spatial.hazard.SingleShotWizard;
@@ -95,9 +96,9 @@ public class ChunkFactory {
             platformLayoutType = -1;
             enemyType = -1;
         } else {
-            // results 0-6 are actual enemies, a 'roll' of 7 or higher will
+            // results 0-7 are actual enemies, a 'roll' of 8 or higher will
             // give nothing
-            enemyType = random.nextInt(11);
+            enemyType = random.nextInt(12);
 
             // get back to normal height if we're too low or too high
             if (height < -2) {
@@ -202,6 +203,9 @@ public class ChunkFactory {
                 list.add(createLinearFireball(d + random.nextInt(5) * 10, height + 7));
                 list.add(createLinearFireball(d + random.nextInt(5) * 10, height + 12));
                 break;
+            case (7):
+                // a wizad in the foreground shooting really fast fireballs
+                list.add(createCalculatingWizard(d, height - 4));
             default:
                 // no enemies
                 break;
@@ -316,6 +320,13 @@ public class ChunkFactory {
     private Hazard createBurstWizard(float positionX, float positionY) {
         Hazard wizard = new BurstWizard(assetManager);
         wizard.move(positionX, positionY, 0f);
+        return wizard;
+    }
+
+    /* Creates a wizard in the foreground, shooting fireballs ahead of the player.*/
+    private Hazard createCalculatingWizard(float positionX, float positionY) {
+        Hazard wizard = new CalculatingWizard(assetManager);
+        wizard.move(positionX, positionY, 15f);
         return wizard;
     }
 }

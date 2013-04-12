@@ -6,7 +6,7 @@ import control.wizard.BurstWizardControl;
 
 /**
  * A class for a Wizard, using a
- * <code>AbstractWizardControl</code> to control its behaviour.
+ * <code>BurstWizardControl</code> to control its behaviour.
  *
  * @author jonatankilhamn
  */
