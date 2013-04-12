@@ -207,11 +207,12 @@ public class InGameState extends AbstractAppState{
         //this.chaseCam.setSmoothMotion(true);
         this.chaseCam.setTrailingEnabled(false);
         this.chaseCam.setDefaultHorizontalRotation(-FastMath.DEG_TO_RAD * 270);
+        this.chaseCam.setDefaultVerticalRotation(FastMath.DEG_TO_RAD * 20);
         //Depth (z) distance from camera to target (player)
         this.chaseCam.setDefaultDistance(50);
         //Offset in x direction so that the target (player) is on the left half 
         //of the screen instead of the center of the screen.
-        this.chaseCam.setLookAtOffset(new Vector3f(6f, 0f, 0f));
+        this.chaseCam.setLookAtOffset(new Vector3f(6f, 8f, 0f));
      }
 
     /**

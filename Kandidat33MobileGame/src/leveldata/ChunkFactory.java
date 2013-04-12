@@ -205,7 +205,7 @@ public class ChunkFactory {
                 break;
             case (7):
                 // a wizad in the foreground shooting really fast fireballs
-                list.add(createCalculatingWizard(d, height - 4));
+                list.add(createCalculatingWizard(d, height));
             default:
                 // no enemies
                 break;
