@@ -23,6 +23,7 @@ import spatial.hazard.LinearFireball;
 import spatial.hazard.SingleShotWizard;
 import spatial.hazard.SpinningFireball;
 import spatial.hazard.StationaryFireball;
+import util.RomanNumber;
 import variables.P;
 
 /**
@@ -39,7 +40,6 @@ import variables.P;
 public class ChunkFactory {
 
     private AssetManager assetManager;
-    private int counter;
     private float height;
     private float distanceOverFlow;
 
@@ -56,7 +56,11 @@ public class ChunkFactory {
      * @return A list of <code>Spatial</code>s.
      *
      */
-    public List<Spatial> generateChunk() {
+    public List<Spatial> generateChunk(int level) {
+        
+        if (level == 1) {
+            this.reset();
+        }
 
 
         LinkedList<Spatial> list = new LinkedList<Spatial>();
@@ -92,7 +96,7 @@ public class ChunkFactory {
 
         int platformLayoutType;
         int enemyType;
-        if (counter < 4) { //nothing special on the first few chunks
+        if (level < 5) { //nothing special on the first few chunks
             platformLayoutType = -1;
             enemyType = -1;
         } else {
@@ -108,6 +112,10 @@ public class ChunkFactory {
             } else {
                 platformLayoutType = random.nextInt(4);
             }
+        }
+        if (level > 7 && level%3 == 0) {
+            //list.add(createMilestone((level-4)/3);
+            System.out.println(RomanNumber.romanNumberString((int)(level-6)/3));
         }
 
 
@@ -225,14 +233,11 @@ public class ChunkFactory {
          staticObjects.addLight(createColouredLight());
          */
 
-        counter++;
-
         return list;
 
     }
 
     public void reset() {
-        counter = 0;
         height = 0;
         distanceOverFlow = 0;
 

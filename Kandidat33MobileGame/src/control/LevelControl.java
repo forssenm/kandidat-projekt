@@ -35,6 +35,7 @@ public class LevelControl implements Control {
     private PhysicsSpace physicsSpace;
     private Player player;
     private ChunkFactory chunkFactory;
+    private int chunkNumber;
 
     /**
      * Creates a new LevelControl.
@@ -96,7 +97,7 @@ public class LevelControl implements Control {
     }
 
     public void initiateLevel() {
-        chunkFactory.reset();
+        chunkNumber = 0;
         // generate starting chunks
         int nbrOfChunks = (int) Math.round((P.minRightDistance + P.minLeftDistance) / P.chunkLength) - 3;
         for (int i = 0; i < nbrOfChunks; i++) {
@@ -111,9 +112,11 @@ public class LevelControl implements Control {
      * @return
      */
     private void generateNextChunk() {
+        
+        chunkNumber++;
 
         // generate a chunk filled the chunk with content
-        List<Spatial> list = chunkFactory.generateChunk();
+        List<Spatial> list = chunkFactory.generateChunk(chunkNumber);
 
         Vector3f newChunkPosition =
                 new Vector3f(nextChunkX, 0f, 0f);
