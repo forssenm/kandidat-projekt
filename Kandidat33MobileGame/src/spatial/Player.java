@@ -65,20 +65,19 @@ public class Player extends Node implements AnimEventListener {
         this.addControl(playerControl);
 
         //Sets the model of the player
-        //playerModel = (Node) assetManager.loadModel ("Models/ghostbody202mca02/ghostbody202mca03.j3o"); 
         playerModel = (Node) assetManager.loadModel ("Models/ghostbody202mca02/002apa1slrs.j3o"); 
         playerModel.setLocalTranslation(0f,1.8f,0f); 
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
         dust.move(0.6f, -2.0f, 0f);
         this.attachChild(playerModel);
+        //All the code below is for animation of the model
         control = playerModel.getChild("Plane").getControl(AnimControl.class);
-        //control = playerModel.getControl(AnimControl.class);
         control.addListener(this);
         channel = control.createChannel();
         channel.setAnim("ArmatureAction");
         channel.setLoopMode(LoopMode.Loop);
-        channel.setSpeed(1f);
+        channel.setSpeed(1f);  //End of animation code
 
     }
 
