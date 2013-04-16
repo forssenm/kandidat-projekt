@@ -75,7 +75,7 @@ public class ChunkFactory {
         // the decorations:
         float wHeight = Math.max(0, 5 * Math.round(height / 5));
 
-        WindowFrame window = createWindowFrame(5f, wHeight + 18f);
+        WindowFrame window = createWindowFrame(5f, wHeight + 23f);
         Torch torch = createTorch (30, wHeight+ 15);
         
         staticObjects.attachChild(window);
@@ -99,6 +99,9 @@ public class ChunkFactory {
         if (level < 5) { //nothing special on the first few chunks
             platformLayoutType = -1;
             enemyType = -1;
+            if (level == 4) {
+                d += dist; // distance after the "starting strip" is over
+            }
         } else {
             // results 0-7 are actual enemies, a 'roll' of 8 or higher will
             // give nothing
@@ -107,7 +110,7 @@ public class ChunkFactory {
             // get back to normal height if we're too low or too high
             if (height < -2) {
                 platformLayoutType = 2;
-            } else if (height > 10) {
+            } else if (height > 5) {
                 platformLayoutType = 3;
             } else {
                 platformLayoutType = random.nextInt(4);
@@ -207,12 +210,22 @@ public class ChunkFactory {
             case (5):
             case (6):
                 // three fireballs
-                list.add(createLinearFireball(d + random.nextInt(4) * 10, height + 2));
-                list.add(createLinearFireball(d + random.nextInt(5) * 10, height + 7));
-                list.add(createLinearFireball(d + random.nextInt(5) * 10, height + 12));
+                int temp1 = (random.nextInt(5)-1) * 10; // 1st fireball distance
+                list.add(createLinearFireball(d + temp1, height + 2));
+
+                int temp2 = temp1;
+                while (temp2 == temp1) {
+                    temp2 = (random.nextInt(5)-1) * 10; // 2nd fireball distance
+                }
+                list.add(createLinearFireball(d + temp2, height + 7));
+                temp1 = temp2;
+                while (temp2 == temp1) {
+                    temp1 = (random.nextInt(5)-1) * 10; // 3rd fireball distance
+                }
+                list.add(createLinearFireball(d + temp1, height + 12));
                 break;
             case (7):
-                // a wizad in the foreground shooting really fast fireballs
+                // a wizard in the foreground shooting fireballs at where the player's going
                 list.add(createCalculatingWizard(d, height));
             default:
                 // no enemies

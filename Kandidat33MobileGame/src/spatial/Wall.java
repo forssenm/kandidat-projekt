@@ -27,7 +27,7 @@ public class Wall extends Node {
     public Wall(AssetManager assetManager){
         super("Wall");
         Box model =
-            new Box(new Vector3f(P.chunkLength/2,0,-P.platformWidth/2-P.playerZOffset), P.chunkLength/2, 40, 0);
+            new Box(new Vector3f(P.chunkLength/2,0,-P.platformWidth/2-P.playerZOffset), P.chunkLength/2, 60, 0);
         
         //Loads the texture and repeats it over the chunk in its correct size 
         //(so that each brick will not be bigger in pixels, or stretched, if 
