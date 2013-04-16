@@ -12,8 +12,9 @@ public class P {
 
     //level variables
     public static final float platformLength = 16.0f;
-    public static final float platformWidth = 4f;
+    public static final float platformWidth = 8f;
     public static final float platformHeight = 1f;
+    public static final float playerZOffset =2f;
     public static final float platformDistance = 5.0f;
     public static final float runSpeed = 14f;
     public static final float pushbackSpeed = -10f;

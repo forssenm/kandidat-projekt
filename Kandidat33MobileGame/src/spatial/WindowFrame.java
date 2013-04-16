@@ -33,7 +33,7 @@ public class WindowFrame extends Node {
         
         this.attachChild(window);
         
-        this.setLocalTranslation(position.x, position.y, -P.platformWidth*2+0.5f);
+        this.setLocalTranslation(position.x, position.y, -P.platformWidth/2-P.playerZOffset-5.8f);
         this.setShadowMode(ShadowMode.Off);   
 
     }

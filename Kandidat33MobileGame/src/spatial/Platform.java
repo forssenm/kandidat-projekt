@@ -7,6 +7,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import variables.P;
 
 /**
  * A class for a physical platform of variable position and size.
@@ -15,7 +16,7 @@ import com.jme3.scene.shape.Box;
 public class Platform extends Geometry {
     /**
      * This constructor creates a <code>Platform</code> represented by a 
-     * <code>Geometry</code> loaded internaly. A <code>RigidBodyControl</code> 
+     * <code>Geometry</code> loaded internally. A <code>RigidBodyControl</code> 
      * is attached to the <code>Platform</code>. The dimentions of the 
      * <code>Platform</code> is currently loaded from the <code>P</code>-class 
      * containing some global variables. 
@@ -27,7 +28,7 @@ public class Platform extends Geometry {
         Box model =
             new Box(Vector3f.ZERO, length/2, height/2, width/2);
         this.mesh = model;
-        this.setLocalTranslation(length/2 + position.x, position.y, position.z);
+        this.setLocalTranslation(length/2 + position.x, position.y, -P.playerZOffset);
         
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         material.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
