@@ -26,6 +26,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
     protected float reloadTimer;
     protected float fireballSpeed = 15f;
     protected AssetManager assetManager;
+    protected float speed = 3f;
 
     /**
      * Creates a new wizard with an aggro radius of 50. The assetManager is
@@ -59,6 +60,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
      * Wizards do not move.
      */
     protected void positionUpdate(float tpf) {
+        spatial.getLocalTranslation().addLocal(tpf*speed,0f,0f);
     }
 
     @Override

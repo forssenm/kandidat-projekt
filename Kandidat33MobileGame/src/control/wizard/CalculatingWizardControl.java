@@ -31,6 +31,7 @@ public class CalculatingWizardControl extends AbstractWizardControl {
     
     @Override
     protected void positionUpdate(float tpf) {
+        super.positionUpdate(tpf);
         time += tpf;
                 
         float y = tpf*radius*FastMath.sin(time);

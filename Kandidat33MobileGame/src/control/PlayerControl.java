@@ -148,13 +148,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         
     public void speedUp() {
         if (speedUpTimer <= 0) {
-            setSpeedFactor(1.6f);
+            setSpeedFactor(2f);
         }
         speedUpTimer += 5;
     }
     
     private void slowDown() {
-        setSpeedFactor(1);
+        setSpeedFactor(P.speedFactor);
     }
     
     public void setSpeedFactor(float factor) {
@@ -229,6 +229,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         //pushback
         if (pushBackInNextTick) {
             pushBackInNextTick = false;
+            this.speedUpTimer = 0;
+            slowDown();
             velocity.setX(pushbackSpeed);
             velocity.setY(jumpSpeed);
         }
@@ -352,7 +354,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     public void respawn(Vector3f position){
-        setSpeedFactor(1);
+        setSpeedFactor(P.speedFactor);
         willRespawn = true;
         warp(position);
     }

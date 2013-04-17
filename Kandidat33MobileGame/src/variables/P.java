@@ -17,7 +17,7 @@ public class P {
     public static final float playerZOffset =2f;
     public static final float platformDistance = 5.0f;
     
-    public static final float speedFactor = 1f; // player speed
+    public static final float speedFactor = 1.4f; // player speed
     
     public static final float chunkLength = 50.0f;
     
