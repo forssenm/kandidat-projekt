@@ -23,6 +23,7 @@ import spatial.hazard.LinearFireball;
 import spatial.hazard.SingleShotWizard;
 import spatial.hazard.SpinningFireball;
 import spatial.hazard.StationaryFireball;
+import spatial.powerup.SpeedPowerup;
 import util.RomanNumber;
 import variables.P;
 
@@ -231,6 +232,10 @@ public class ChunkFactory {
                 // no enemies
                 break;
         }
+        
+        if (random.nextFloat() < 0.2) {
+            list.add(createSpeedPowerup(d-8,height+5));
+        }
 
 
         // the lights:
@@ -346,5 +351,11 @@ public class ChunkFactory {
         PlayerInteractor wizard = new CalculatingWizard(assetManager);
         wizard.move(positionX, positionY, 15f);
         return wizard;
+    }
+
+    private PlayerInteractor createSpeedPowerup(float positionX, float positionY) {
+        SpeedPowerup speedPowerup = new SpeedPowerup(assetManager);
+        speedPowerup.move(positionX, positionY, 0f);
+        return speedPowerup;
     }
 }

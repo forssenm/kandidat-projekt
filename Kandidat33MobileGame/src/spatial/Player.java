@@ -5,14 +5,10 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
-import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
@@ -28,9 +24,6 @@ import variables.P;
  */
 public class Player extends Node implements AnimEventListener {
 
-    private float playerRunSpeed;
-    private float playerJumpSpeed;
-    private CapsuleCollisionShape playerShape;
     private PlayerControl playerControl;
     private Node playerModel;
 
@@ -49,9 +42,7 @@ public class Player extends Node implements AnimEventListener {
      */
     public Player(AssetManager assetManager) {
         super("player");
-        playerRunSpeed = P.runSpeed;
-        playerJumpSpeed = P.jumpSpeed;
-
+        
         // the player casts shadows
         this.setShadowMode(RenderQueue.ShadowMode.Cast);
 
@@ -59,9 +50,8 @@ public class Player extends Node implements AnimEventListener {
         this.setLocalTranslation(0.0f, 5.0f, 0.0f);
 
         // set up the physics control
-        playerControl = new PlayerControl(1f, 4f, 20f);
-        playerControl.setWalkVelocity(Vector3f.UNIT_X.mult(playerRunSpeed));
-        playerControl.setJumpSpeed(playerJumpSpeed);
+        playerControl = new PlayerControl(1f, 4f);
+        playerControl.setSpeedFactor(P.speedFactor);
         this.addControl(playerControl);
 
         //Sets the model of the player

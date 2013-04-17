@@ -57,6 +57,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import spatial.Player;
 import variables.P;
 
 /**
@@ -85,22 +86,31 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * Stores final spatial location, corresponds to RigidBody location.
      */
     protected final Vector3f location = new Vector3f();
-    protected final Vector3f walkVelocity = new Vector3f();
     protected final Vector3f velocity = new Vector3f();
-    protected float jumpSpeed;
+    
+    private static final float defaultRunSpeed = 14f;
+    private static final float defaultPushbackSpeed = -10f;
+    private static final float defaultJumpSpeed = 25f;
+    private static float defaultGravity = -40f;
+    private static final float defaultMass = 20f;
+    
+    protected final Vector3f walkVelocity = new Vector3f(defaultRunSpeed,0,0);
+    protected float jumpSpeed = defaultJumpSpeed;
+    protected float gravity = defaultGravity;
+    protected float pushbackSpeed = defaultPushbackSpeed;
+    
     protected boolean initiateJumpInNextTick = false;
     protected boolean onGround = false;
     protected boolean abortJumpInNextTick = false;
-    protected float gravity = -40f;
     private boolean pushBackInNextTick;
-    private Vector3f pushBackVelocityAdjustment = new Vector3f(-10f, 10f, 0f);
     private boolean willRespawn = false;
+    private float speedUpTimer;
+    private float speedFactor = 1;
     
     /**
      * Only used for serialization, do not use this constructor.
      */
     public PlayerControl() {
-        jumpSpeed = 0f;
     }
 
     
@@ -112,12 +122,11 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * @param height
      * @param mass
      */
-    public PlayerControl(float radius, float height, float mass) {
+    public PlayerControl(float radius, float height) {
         this.radius = radius;
         this.height = height;
         this.mass = mass;
-        rigidBody = new PhysicsRigidBody(getShape(), mass);
-        jumpSpeed = mass * 1.25f;
+        rigidBody = new PhysicsRigidBody(getShape(), defaultMass);
         rigidBody.setAngularFactor(0);
         
     }
@@ -129,7 +138,38 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         // rotation is never checked since the character can't rotate
         applyPhysicsTransform(location, Quaternion.DIRECTION_Z);
         
+        if (speedUpTimer > 0) {
+            speedUpTimer -= tpf;
+            if (speedUpTimer <= 0) {
+                slowDown();
+            }
+        }
     }
+        
+    public void speedUp() {
+        if (speedUpTimer <= 0) {
+            setSpeedFactor(1.6f);
+        }
+        speedUpTimer += 5;
+    }
+    
+    private void slowDown() {
+        setSpeedFactor(1);
+    }
+    
+    public void setSpeedFactor(float factor) {
+        walkVelocity.setX(defaultRunSpeed*factor);
+        jumpSpeed = defaultJumpSpeed*factor;
+        pushbackSpeed = defaultPushbackSpeed*factor;
+        gravity = defaultGravity*factor*factor;
+        rigidBody.setGravity(new Vector3f(0f, gravity, 0f));
+        
+        velocity.multLocal(factor/speedFactor);
+        
+        speedFactor = factor;
+    }
+    
+
 
     @Override
     public void render(RenderManager rm, ViewPort vp) {
@@ -189,7 +229,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         //pushback
         if (pushBackInNextTick) {
             pushBackInNextTick = false;
-            velocity.setX(P.pushbackSpeed);
+            velocity.setX(pushbackSpeed);
             velocity.setY(jumpSpeed);
         }
 
@@ -253,24 +293,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     /**
-     * Set the jump force.
-     *
-     * @param jumpSpeed The new jump force
-     */
-    public void setJumpSpeed(float jumpForce) {
-        this.jumpSpeed = jumpForce;
-    }
-
-    /**
-     * Gets the current jump force. The default is 1.25 * character mass.
-     *
-     * @return The current jumpforce.
-     */
-    public float getJumpSpeed() {
-        return jumpSpeed;
-    }
-
-    /**
      * Check if the character is on the ground. This is determined by a ray test
      * in the center of the character and might return false even if the
      * character is not falling yet.
@@ -279,27 +301,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      */
     public boolean isOnGround() {
         return onGround;
-    }
-
-    /**
-     * Sets the walk direction of the character. This parameter is framerate
-     * independent and the character will move continuously in the direction
-     * given by the vector with the speed given by the vector length in m/s.
-     *
-     * @param vec The movement direction and speed in m/s
-     */
-    public void setWalkVelocity(Vector3f vec) {
-        walkVelocity.set(vec);
-    }
-
-    /**
-     * Gets the current walk direction and speed of the character. The length of
-     * the vector defines the speed.
-     *
-     * @return
-     */
-    public Vector3f getWalkVelocity() {
-        return walkVelocity;
     }
 
     /**
@@ -351,6 +352,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     public void respawn(Vector3f position){
+        setSpeedFactor(1);
         willRespawn = true;
         warp(position);
     }
@@ -450,8 +452,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     public Control cloneForSpatial(Spatial spatial) {
-        PlayerControl control = new PlayerControl(radius, height, mass);
-        control.setJumpSpeed(jumpSpeed);
+        PlayerControl control = new PlayerControl(radius, height);
         control.setSpatial(spatial);
         return control;
     }
@@ -460,20 +461,14 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     public void write(JmeExporter ex) throws IOException {
         super.write(ex);
         OutputCapsule oc = ex.getCapsule(this);
-        oc.write(radius, "radius", 1);
-        oc.write(height, "height", 1);
-        oc.write(mass, "mass", 1);
-        oc.write(jumpSpeed, "jumpForce", 5);
+        oc.write(speedFactor, "speedFactor", 1);
     }
 
     @Override
     public void read(JmeImporter im) throws IOException {
         super.read(im);
         InputCapsule in = im.getCapsule(this);
-        this.radius = in.readFloat("radius", 1);
-        this.height = in.readFloat("height", 2);
-        this.mass = in.readFloat("mass", 80);
-        this.jumpSpeed = in.readFloat("jumpForce", mass * 5);
+        this.setSpeedFactor(in.readFloat("radius", 1));
 
         rigidBody = new PhysicsRigidBody(getShape(), mass);
         rigidBody.setAngularFactor(0);
