@@ -95,6 +95,9 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     private boolean pushBackInNextTick;
     private Vector3f pushBackVelocityAdjustment = new Vector3f(-10f, 10f, 0f);
     private boolean willRespawn = false;
+    private boolean initiateDashInNextTick;
+    private boolean canDash;
+    private boolean hasDashedYet;
     
     /**
      * Only used for serialization, do not use this constructor.
@@ -185,10 +188,21 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         if (designatedUpwardsVelocity > 0) {
             velocity.setY(designatedUpwardsVelocity);
         }
+        
+        // dashing
+        updateDashStatus();
+                
+        if (initiateDashInNextTick) {
+            initiateDashInNextTick = false;
+            hasDashedYet = true;
+            velocity.setY(jumpSpeed*0.2f);
+            velocity.setX(walkVelocity.length());
+        }
 
         //pushback
         if (pushBackInNextTick) {
             pushBackInNextTick = false;
+            hasDashedYet = false; // after pushback player can dash again
             velocity.setX(P.pushbackSpeed);
             velocity.setY(jumpSpeed);
         }
@@ -231,10 +245,11 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * maximum height jump unless abortJump is called shortly hereafter.
      */
     public void initiateJump() {
-        if (!onGround) {
-            return;
+        if (onGround) {
+            initiateJumpInNextTick = true;
+        } else if (canDash) {
+            initiateDashInNextTick = true;
         }
-        initiateJumpInNextTick = true;
     }
 
     /**
@@ -477,5 +492,23 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
 
         rigidBody = new PhysicsRigidBody(getShape(), mass);
         rigidBody.setAngularFactor(0);
+    }
+
+    /* Checks if the player is falling and hasn't used their dash */
+    private void updateDashStatus() {
+        if (!hasDashedYet) {
+            // can dash if in the right position (falling)
+            if (velocity.getY() <= 0) {
+                canDash = true;
+            } else {
+                canDash = false;
+            }
+        } else {
+            canDash = false;    
+            // reset hasDashedYet
+            if (onGround) {
+            hasDashedYet = false;
+            }
+        }
     }
 }
