@@ -1,5 +1,6 @@
 package spatial.hazard;
 
+import spatial.PlayerInteractor;
 import com.jme3.asset.AssetManager;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
@@ -15,7 +16,7 @@ import com.jme3.scene.Spatial;
  *
  * @author jonatankilhamn
  */
-public abstract class AbstractWizard extends Hazard {
+public abstract class AbstractWizard extends PlayerInteractor {
     
     @Override
     protected Spatial createModel(AssetManager assetManager) {

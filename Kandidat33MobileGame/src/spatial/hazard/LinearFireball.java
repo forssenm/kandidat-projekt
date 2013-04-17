@@ -2,7 +2,7 @@ package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
-import control.HazardControl;
+import control.PlayerInteractorControl;
 import control.fireball.LinearFireballControl;
 
 /**
@@ -22,7 +22,7 @@ public class LinearFireball extends AbstractFireball {
     }
     
     @Override
-    protected HazardControl createControl() {
+    protected PlayerInteractorControl createControl() {
         return new LinearFireballControl(velocity);
     }
     

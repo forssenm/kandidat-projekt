@@ -18,7 +18,7 @@ import spatial.Wall;
 import spatial.WindowFrame;
 import spatial.hazard.BurstWizard;
 import spatial.hazard.CalculatingWizard;
-import spatial.hazard.Hazard;
+import spatial.PlayerInteractor;
 import spatial.hazard.LinearFireball;
 import spatial.hazard.SingleShotWizard;
 import spatial.hazard.SpinningFireball;
@@ -307,43 +307,43 @@ public class ChunkFactory {
     }
 
     /* Creates a fireball hazard floating in the air.*/
-    private Hazard createHoveringFireball() {
-        Hazard hazard = new StationaryFireball(assetManager);
+    private PlayerInteractor createHoveringFireball() {
+        PlayerInteractor hazard = new StationaryFireball(assetManager);
         hazard.move(10f, 15f, 0f);
         return hazard;
     }
 
     /* Creates a fireball hazard flying in a straight line.*/
-    private Hazard createLinearFireball(float positionX, float positionY) {
-        Hazard hazard = new LinearFireball(assetManager, new Vector3f(-15, 0, 0));
+    private PlayerInteractor createLinearFireball(float positionX, float positionY) {
+        PlayerInteractor hazard = new LinearFireball(assetManager, new Vector3f(-15, 0, 0));
         hazard.move(positionX + P.chunkLength, positionY, 0f);
         return hazard;
     }
 
     /* Creates a fireball hazard flying in a counter-clockwise circle.*/
-    private Hazard createSpinningFireball() {
-        Hazard hazard = new SpinningFireball(assetManager);
+    private PlayerInteractor createSpinningFireball() {
+        PlayerInteractor hazard = new SpinningFireball(assetManager);
         hazard.move(5f, 6f, 0f);
         return hazard;
     }
 
     /* Creates a wizard shooting fireballs at the player.*/
-    private Hazard createWizard(float positionX, float positionY) {
-        Hazard wizard = new SingleShotWizard(assetManager);
+    private PlayerInteractor createWizard(float positionX, float positionY) {
+        PlayerInteractor wizard = new SingleShotWizard(assetManager);
         wizard.move(positionX, positionY, 0f);
         return wizard;
     }
 
     /* Creates a wizard shooting multiple fireballs at the player.*/
-    private Hazard createBurstWizard(float positionX, float positionY) {
-        Hazard wizard = new BurstWizard(assetManager);
+    private PlayerInteractor createBurstWizard(float positionX, float positionY) {
+        PlayerInteractor wizard = new BurstWizard(assetManager);
         wizard.move(positionX, positionY, 0f);
         return wizard;
     }
 
     /* Creates a wizard in the foreground, shooting fireballs ahead of the player.*/
-    private Hazard createCalculatingWizard(float positionX, float positionY) {
-        Hazard wizard = new CalculatingWizard(assetManager);
+    private PlayerInteractor createCalculatingWizard(float positionX, float positionY) {
+        PlayerInteractor wizard = new CalculatingWizard(assetManager);
         wizard.move(positionX, positionY, 15f);
         return wizard;
     }

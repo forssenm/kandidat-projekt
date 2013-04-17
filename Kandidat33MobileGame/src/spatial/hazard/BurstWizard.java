@@ -1,7 +1,7 @@
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
-import control.HazardControl;
+import control.PlayerInteractorControl;
 import control.wizard.BurstWizardControl;
 
 /**
@@ -20,7 +20,7 @@ public class BurstWizard extends AbstractWizard {
     }
 
     @Override
-    protected HazardControl createControl() {
+    protected PlayerInteractorControl createControl() {
         BurstWizardControl wizardControl = new BurstWizardControl(assetManager);
         return wizardControl;
     }

@@ -1,5 +1,6 @@
 package spatial.hazard;
 
+import spatial.PlayerInteractor;
 import com.jme3.asset.AssetManager;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
@@ -13,12 +14,12 @@ import com.jme3.scene.shape.Sphere;
 import java.util.Random;
 
 /**
- * An abstract AbstractFireball. Any class extending this one will make a Hazard
+ * An abstract AbstractFireball. Any class extending this one will make a PlayerInteractor
  * that looks like a fireball.
  *
  * @author jonatankilhamn
  */
-public abstract class AbstractFireball extends Hazard {
+public abstract class AbstractFireball extends PlayerInteractor {
 
     @Override
     protected Spatial createModel(AssetManager assetManager) {

@@ -1,27 +1,27 @@
-package spatial.hazard;
+package spatial;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import control.HazardControl;
+import control.PlayerInteractorControl;
 
 /**
- * A class for a general hazard.
+ * A class for a general player interactor.
  *
  * @author dagen
  */
-public abstract class Hazard extends Node {
+public abstract class PlayerInteractor extends Node {
 
     @Override
     public String getName() {
         if (super.getName() == null) {
-            super.setName("hazard");
+            super.setName("playerinteractor");
         }
         return super.getName();
     }
 
     /**
-     * Creates the model for this hazard.
+     * Creates the model for this playerinteractor.
      *
      * @param assetManager The AssetManager used to load models and materials
      * @return A Geometry or Node that will give this hazard its look
@@ -34,8 +34,8 @@ public abstract class Hazard extends Node {
      */
 
     /**
-     * Creates the HazardControl for this hazard. A HazardControl makes sure
+     * Creates the PlayerInteractorControl for this playerinteractor. A PlayerInteractorControl makes sure
      * something happens when this hazard collides with the player.
      */
-    protected abstract HazardControl createControl();
+    protected abstract PlayerInteractorControl createControl();
 }

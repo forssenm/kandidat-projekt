@@ -9,19 +9,10 @@ import spatial.Player;
  *
  * @author jonatankilhamn
  */
-public abstract class AbstractHazardControl extends GhostControl implements HazardControl {
+public abstract class AbstractPlayerInteractorControl extends GhostControl implements PlayerInteractorControl {
     
-    public AbstractHazardControl(CollisionShape s) {
+    public AbstractPlayerInteractorControl(CollisionShape s) {
         super(s);
-    }
-    
-    /**
-     * Override this method if you want any behaviour other than pushing back
-     * the player.
-     * @param player 
-     */
-    public void collideWithPlayer(Player player) {
-            player.getControl(PlayerControl.class).pushBack();
     }
     
     @Override

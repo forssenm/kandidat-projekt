@@ -1,7 +1,7 @@
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
-import control.HazardControl;
+import control.PlayerInteractorControl;
 import control.wizard.CalculatingWizardControl;
 
 /**
@@ -20,7 +20,7 @@ public class CalculatingWizard extends AbstractWizard {
     }
 
     @Override
-    protected HazardControl createControl() {
+    protected PlayerInteractorControl createControl() {
         CalculatingWizardControl wizardControl = new CalculatingWizardControl(assetManager);
         return wizardControl;
     }

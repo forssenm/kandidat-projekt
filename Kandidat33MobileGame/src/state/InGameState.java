@@ -19,7 +19,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import com.jme3.shadow.PssmShadowRenderer;
 import com.jme3.system.Timer;
-import control.HazardControl;
+import control.PlayerInteractorControl;
 import control.LevelControl;
 import control.PlayerControl;
 import spatial.Player;
@@ -227,21 +227,21 @@ public class InGameState extends AbstractAppState{
         PhysicsCollisionListener physicsCollisionListener = new PhysicsCollisionListener() {
             public void collision(PhysicsCollisionEvent event) {
                 if (event.getNodeA().getName().equals("player")
-                        && event.getNodeB().getName().equals("hazard")) {
-                    event.getNodeB().getControl(HazardControl.class).collideWithPlayer((Player)event.getNodeA());
+                        && event.getNodeB().getName().equals("playerinteractor")) {
+                    event.getNodeB().getControl(PlayerInteractorControl.class).collideWithPlayer((Player)event.getNodeA());
                 } else if (event.getNodeB().getName().equals("player")
-                        && event.getNodeA().getName().equals("hazard")) {
-                    event.getNodeA().getControl(HazardControl.class).collideWithPlayer((Player)event.getNodeB());
+                        && event.getNodeA().getName().equals("playerinteractor")) {
+                    event.getNodeA().getControl(PlayerInteractorControl.class).collideWithPlayer((Player)event.getNodeB());
                 }
                 // should we ever want to detect collisions between other
-                // combinations than player and hazard, use this:
+                // combinations than player and playerinteractor, use this:
                 /*
-                 if (event.getNodeA().getName().equals("player")
-                 && event.getNodeB().getName().equals("nothazard")) {
+                 if (event.getNodeA().getName().equals("something")
+                 && event.getNodeB().getName().equals("somethingelse")) {
                  final Spatial spatial = event.getNodeA();
                  System.out.println("foo");
-                 } else if (event.getNodeB().getName().equals("player")
-                 && event.getNodeA().getName().equals("nothazard")) {
+                 } else if (event.getNodeB().getName().equals("something")
+                 && event.getNodeA().getName().equals("somethingelse")) {
                  final Spatial spatial = event.getNodeB();
                  System.out.println("bar");
                  }

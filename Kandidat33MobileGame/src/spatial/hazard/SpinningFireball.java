@@ -1,7 +1,7 @@
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
-import control.HazardControl;
+import control.PlayerInteractorControl;
 import control.fireball.SpinningFireballControl;
 
 /**
@@ -18,7 +18,7 @@ public class SpinningFireball extends AbstractFireball {
     }
 
     @Override
-    protected HazardControl createControl() {
+    protected PlayerInteractorControl createControl() {
         return new SpinningFireballControl();
     }
 }

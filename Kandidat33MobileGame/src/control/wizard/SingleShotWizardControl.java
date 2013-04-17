@@ -1,9 +1,7 @@
 package control.wizard;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.math.Vector3f;
 import spatial.Player;
-import spatial.hazard.LinearFireball;
 
 /**
  * A Wizard that shoots a single fireball at a time, directly at the player.

@@ -6,7 +6,7 @@ import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import control.AbstractHazardControl;
+import control.AbstractPlayerInteractorControl;
 import control.LevelControl;
 import leveldata.LevelContentGenerator;
 import spatial.Player;
@@ -19,7 +19,7 @@ import spatial.hazard.LinearFireball;
  *
  * @author jonatankilhamn
  */
-public abstract class AbstractWizardControl extends AbstractHazardControl implements LevelContentGenerator {
+public abstract class AbstractWizardControl extends AbstractPlayerInteractorControl implements LevelContentGenerator {
 
     protected boolean readyToShoot = true;
     protected LevelControl levelControl;

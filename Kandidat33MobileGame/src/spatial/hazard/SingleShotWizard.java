@@ -1,7 +1,7 @@
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
-import control.HazardControl;
+import control.PlayerInteractorControl;
 import control.wizard.SingleShotWizardControl;
 
 /**
@@ -20,7 +20,7 @@ public class SingleShotWizard extends AbstractWizard {
     }
 
     @Override
-    protected HazardControl createControl() {
+    protected PlayerInteractorControl createControl() {
         SingleShotWizardControl wizardControl = new SingleShotWizardControl(assetManager);
         return wizardControl;
     }
