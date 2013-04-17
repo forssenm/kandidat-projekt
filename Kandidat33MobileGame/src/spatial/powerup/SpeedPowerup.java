@@ -67,6 +67,13 @@ public class SpeedPowerup extends PlayerInteractor {
         glow.getParticleInfluencer().setVelocityVariation(0.3f);
         return glow;
     }
+    
+    public void destroy() {
+        this.setName("");
+        ParticleEmitter pe = (ParticleEmitter) this.getChild("Emitter");
+        pe.setLowLife(0f);
+        pe.setHighLife(0f);
+    }
 
     @Override
     protected PlayerInteractorControl createControl() {
@@ -83,9 +90,7 @@ public class SpeedPowerup extends PlayerInteractor {
                     PlayerControl pc = player.getControl(PlayerControl.class);
                     pc.speedUp();
                     hasHit = true;
-                    ParticleEmitter pe = (ParticleEmitter)SpeedPowerup.this.getChild("Emitter");
-                    pe.killAllParticles();
-                    pe.setEnabled(false);
+                    SpeedPowerup.this.destroy();
                 }
             }
         };

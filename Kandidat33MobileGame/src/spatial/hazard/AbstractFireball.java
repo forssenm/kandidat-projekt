@@ -20,6 +20,8 @@ import java.util.Random;
  * @author jonatankilhamn
  */
 public abstract class AbstractFireball extends PlayerInteractor {
+    
+    private ParticleEmitter fire;
 
     @Override
     protected Spatial createModel(AssetManager assetManager) {
@@ -33,7 +35,7 @@ public abstract class AbstractFireball extends PlayerInteractor {
          geometry.setMaterial(material);
         
          fireball.attachChild(geometry);*/
-        ParticleEmitter fire = getFireballParticleEmitter(assetManager);
+        fire = getFireballParticleEmitter(assetManager);
         fireball.attachChild(fire);
 
         return fireball;
@@ -80,4 +82,11 @@ public abstract class AbstractFireball extends PlayerInteractor {
         fire.getParticleInfluencer().setVelocityVariation(0.3f);
         return fire;
     }
+    
+    public void destroy() {
+        this.setName("");
+        fire.setHighLife(0f);
+        fire.setLowLife(0f);
+    }
+    
 }
