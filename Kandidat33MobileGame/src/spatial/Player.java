@@ -48,15 +48,17 @@ public class Player extends Node implements AnimEventListener {
 
         // starting position
         this.setLocalTranslation(0.0f, 5.0f, 0.0f);
-
+        
+        float hoverHeight = 1;
+                
         // set up the physics control
-        playerControl = new PlayerControl(1f, 4f);
+        playerControl = new PlayerControl(1f, 4f+hoverHeight);
         playerControl.setSpeedFactor(P.speedFactor);
         this.addControl(playerControl);
 
         //Sets the model of the player
         playerModel = (Node) assetManager.loadModel ("Models/ghostbody202mca02/002apa1slrs.j3o"); 
-        playerModel.setLocalTranslation(0f,1.8f,0f); 
+        playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
         dust.move(0.6f, -2.0f, 0f);
