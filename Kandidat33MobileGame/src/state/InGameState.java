@@ -20,7 +20,6 @@ import com.jme3.scene.Node;
 import com.jme3.shadow.PssmShadowRenderer;
 import com.jme3.system.Timer;
 import control.HazardControl;
-import control.LevelControl;
 import control.PlayerControl;
 import spatial.Player;
 import variables.P;
@@ -29,7 +28,7 @@ import variables.P;
  * This state is activated to start the game. The class sets up  
  * the different <code>Node</code>s and attaches relevant controls to them.
  * 
- * The level/scene is setup using a <code>LevelControl</code> to continously 
+ * The level/scene is setup using a <code>LevelGeneratingState</code> to continously 
  * generate scene-chunks whene the player moves. 
  * <br/><br/>
  * The player is setup with a
@@ -45,7 +44,6 @@ import variables.P;
  */
 public class InGameState extends AbstractAppState{
     public static final String GAME_NODE = "Game Node";
-    public static final String LEVEL_NODE = "Level Node";
     
     private SimpleApplication app;
     private Node gameNode;
@@ -62,6 +60,7 @@ public class InGameState extends AbstractAppState{
     private boolean gameOver = false;
     private float respawnDelay = 1.0f; // seconds
     private float respawnTimer = 0.0f; // seconds
+    private LevelGeneratingState level;
     
     /**
      * This method initializes the the InGameState and thus getts the game 
@@ -85,11 +84,13 @@ public class InGameState extends AbstractAppState{
         this.viewPort = this.app.getViewPort();
         this.physics = new BulletAppState();
         
+        this.level = new LevelGeneratingState();
+        
+        this.stateManager.attach(level);
         this.stateManager.attach(physics);
         this.stateManager.attach(new RunningState());
         
         initPlayer();
-        initLevel();
         initCollisions();
         initCamera();
         initInputs();
@@ -100,30 +101,6 @@ public class InGameState extends AbstractAppState{
         gameNode.addLight(sun);
         
         initAudio();
-    }
-   
-    /**
-     * This method creates a node with an attached <code>LevelControl</code> 
-     * which will generate platforms as the player moves.  
-     * 
-     * @see LevelControl
-     */
-    private void initLevel() {
-        LevelControl levelControl = new LevelControl(
-                assetManager, physics.getPhysicsSpace(), player);
-        Node levelNode = new Node(LEVEL_NODE);
-        gameNode.attachChild(levelNode);
-        levelNode.addControl(levelControl);
-        /*
-        PssmShadowRenderer shadowRenderer = new PssmShadowRenderer(assetManager, 512,1);
-        shadowRenderer.setDirection(P.windowLightDirection.normalize());
-        shadowRenderer.setLambda(0.55f);
-        shadowRenderer.setShadowIntensity(0.6f);
-        shadowRenderer.setCompareMode(PssmShadowRenderer.CompareMode.Software);
-        shadowRenderer.setFilterMode(PssmShadowRenderer.FilterMode.Dither);
-
-        viewPort.addProcessor(shadowRenderer);
-        */
     }
     
     /**
@@ -181,11 +158,10 @@ public class InGameState extends AbstractAppState{
                 PlayerControl pc = player.getControl(PlayerControl.class); 
                 pc.respawn(spawnPosition);
                 
-                LevelControl levelControl = gameNode.getChild(LEVEL_NODE).getControl(LevelControl.class);
-                levelControl.cleanup();
+                level.cleanup();
                 
                 // Try again
-                levelControl.initiateLevel();
+                level.resetLevel();
                 
                 this.chaseCam.setEnabled(true);
                 gameOver = false;

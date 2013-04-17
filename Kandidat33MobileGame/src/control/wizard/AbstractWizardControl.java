@@ -7,7 +7,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import control.AbstractHazardControl;
-import control.LevelControl;
+import state.LevelGeneratingState;
 import leveldata.LevelContentGenerator;
 import spatial.Player;
 import spatial.hazard.AbstractWizard;
@@ -22,7 +22,7 @@ import spatial.hazard.LinearFireball;
 public abstract class AbstractWizardControl extends AbstractHazardControl implements LevelContentGenerator {
 
     protected boolean readyToShoot = true;
-    protected LevelControl levelControl;
+    protected LevelGeneratingState levelControl;
     protected float reloadTimer;
     protected float fireballSpeed = 15f;
     protected AssetManager assetManager;
@@ -97,7 +97,7 @@ public abstract class AbstractWizardControl extends AbstractHazardControl implem
         this.spatial.setLocalRotation(rotation);
     }
 
-    public void setLevelControl(LevelControl levelControl) {
+    public void setLevelControl(LevelGeneratingState levelControl) {
         this.levelControl = levelControl;
     }
 }
