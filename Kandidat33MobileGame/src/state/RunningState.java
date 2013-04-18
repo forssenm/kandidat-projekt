@@ -42,6 +42,9 @@ public class RunningState extends AbstractAppState{
                 new KeyTrigger(KeyInput.KEY_SPACE),
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT)
                 );
+        inputManager.addMapping("pause", 
+                new KeyTrigger(KeyInput.KEY_P));
+        
     }
     
     /**

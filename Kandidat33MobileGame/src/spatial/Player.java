@@ -81,6 +81,20 @@ public class Player extends Node implements AnimEventListener {
         return this.playerModel;
     }
     
+    /**
+     * Call this to stop the player in its tracks. Useful for a delay before
+     * respawning – the player won't fall miles away from the level.
+     * @param enabled 
+     */
+    public void setEnabled(boolean enabled) {
+        playerControl.setPaused(!enabled);
+        /*if (enabled) {
+            this.attachChild(playerModel);
+        } else {
+            this.detachChild(playerModel);
+        }*/
+    }
+    
     private ParticleEmitter getDustParticleEmitter (AssetManager assetManager) {
              ParticleEmitter fire = 
             new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);

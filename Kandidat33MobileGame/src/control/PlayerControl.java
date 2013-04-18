@@ -73,9 +73,8 @@ import variables.P;
 public class PlayerControl extends AbstractPhysicsControl implements PhysicsTickListener, ActionListener {
 
     //Animation code from hello animation tutorial
-   // private AnimChannel channel;
-   // private AnimControl control;
-    
+    // private AnimChannel channel;
+    // private AnimControl control;
     //End animation code
     protected static final Logger logger = Logger.getLogger(PlayerControl.class.getName());
     protected PhysicsRigidBody rigidBody;
@@ -87,18 +86,15 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      */
     protected final Vector3f location = new Vector3f();
     protected final Vector3f velocity = new Vector3f();
-    
     private static final float defaultRunSpeed = 14f;
     private static final float defaultPushbackSpeed = -10f;
     private static final float defaultJumpSpeed = 25f;
     private static float defaultGravity = -40f;
     private static final float defaultMass = 20f;
-    
-    protected final Vector3f walkVelocity = new Vector3f(defaultRunSpeed,0,0);
+    protected final Vector3f walkVelocity = new Vector3f(defaultRunSpeed, 0, 0);
     protected float jumpSpeed = defaultJumpSpeed;
     protected float gravity = defaultGravity;
     protected float pushbackSpeed = defaultPushbackSpeed;
-    
     protected boolean initiateJumpInNextTick = false;
     protected boolean onGround = false;
     protected boolean abortJumpInNextTick = false;
@@ -106,14 +102,14 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     private boolean willRespawn = false;
     private float speedUpTimer;
     private float speedFactor = 1;
-    
+    private boolean paused;
+
     /**
      * Only used for serialization, do not use this constructor.
      */
     public PlayerControl() {
     }
 
-    
     /**
      * Creates a new character with the given properties. The jumpSpeed will be
      * set to a default value of 1.25 * mass.
@@ -128,7 +124,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         this.mass = mass;
         rigidBody = new PhysicsRigidBody(getShape(), defaultMass);
         rigidBody.setAngularFactor(0);
-        
+
     }
 
     @Override
@@ -137,7 +133,10 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         rigidBody.getPhysicsLocation(location);
         // rotation is never checked since the character can't rotate
         applyPhysicsTransform(location, Quaternion.DIRECTION_Z);
-        
+
+        if (paused) {
+            return;
+        }
         if (speedUpTimer > 0) {
             speedUpTimer -= tpf;
             if (speedUpTimer <= 0) {
@@ -145,31 +144,29 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
             }
         }
     }
-        
+
     public void speedUp() {
         if (speedUpTimer <= 0) {
             setSpeedFactor(2f);
         }
         speedUpTimer += 5;
     }
-    
+
     private void slowDown() {
         setSpeedFactor(P.speedFactor);
     }
-    
+
     public void setSpeedFactor(float factor) {
-        walkVelocity.setX(defaultRunSpeed*factor);
-        jumpSpeed = defaultJumpSpeed*factor;
-        pushbackSpeed = defaultPushbackSpeed*factor;
-        gravity = defaultGravity*factor*factor;
+        walkVelocity.setX(defaultRunSpeed * factor);
+        jumpSpeed = defaultJumpSpeed * factor;
+        pushbackSpeed = defaultPushbackSpeed * factor;
+        gravity = defaultGravity * factor * factor;
         rigidBody.setGravity(new Vector3f(0f, gravity, 0f));
-        
-        velocity.multLocal(factor/speedFactor);
-        
+
+        velocity.multLocal(factor / speedFactor);
+
         speedFactor = factor;
     }
-    
-
 
     @Override
     public void render(RenderManager rm, ViewPort vp) {
@@ -185,6 +182,9 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      */
     public void prePhysicsTick(PhysicsSpace space, float tpf) {
 
+        if (paused) {
+            return;
+        }
         // running
         checkOnGround();
 
@@ -237,12 +237,12 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
 
         // make sure the player never moves sideways
         velocity.setZ(0f);
-        
-        if(willRespawn){
+
+        if (willRespawn) {
             willRespawn = false;
             velocity.set(Vector3f.ZERO);
         }
-        
+
         // updating the velocity including both running and jumping
         rigidBody.setLinearVelocity(velocity);
 
@@ -255,6 +255,9 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * @param tpf
      */
     public void physicsTick(PhysicsSpace space, float tpf) {
+        if (paused) {
+            return;
+        }
         rigidBody.getLinearVelocity(velocity);
     }
 
@@ -315,9 +318,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     public Vector3f getVelocity() {
         return velocity;
     }
-    
     private static final float EPSILON = 0.1f;
-        
+
     /**
      * This checks if the character is on the ground by doing a ray test.
      */
@@ -339,7 +341,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         for (PhysicsRayTestResult physicsRayTestResult : backFootResults) {
             PhysicsCollisionObject obj = physicsRayTestResult.getCollisionObject();
             if (!obj.equals(rigidBody) && !(obj instanceof PhysicsGhostObject)) {
-    onGround = true;
+                onGround = true;
                 return;
             }
         }
@@ -353,12 +355,12 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         onGround = false;
     }
 
-    public void respawn(Vector3f position){
+    public void respawn(Vector3f position) {
         setSpeedFactor(P.speedFactor);
         willRespawn = true;
         warp(position);
     }
-    
+
     /**
      * Responds to the action "initiateJump" by making the player initiateJump.
      * Currently have the same initiateJump behaviour as
@@ -374,6 +376,16 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
                 abortJump();
             }
         }
+        if (name.equals("pause")) {
+            if (isPressed) {
+                setPaused(!paused);
+            }
+        }
+    }
+
+    public void setPaused(boolean paused) {
+        this.rigidBody.setKinematic(paused);
+        this.paused = paused;
     }
 
     /**
