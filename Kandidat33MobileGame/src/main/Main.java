@@ -3,8 +3,16 @@ package main;
 import com.jme3.app.DebugKeysAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
+import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
+import com.jme3.post.Filter;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
+import filters.AmbientOcclusionFilter;
+import filters.MosaicFilter;
+import filters.RedOverlayFilter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import state.InGameState;
@@ -34,16 +42,32 @@ public class Main extends SimpleApplication {
         Logger.getLogger("Kandidat").setLevel(Level.FINE);
     }
     
+    
+    
     @Override
-    public void simpleInitApp() {
+    public void simpleInitApp() { 
         P.screenWidth = settings.getWidth();
         P.screenHeight = settings.getHeight();
         stateManager.attach(new InGameState());
+        //FilterPostProcessor processor = (FilterPostProcessor) assetManager.loadAsset("Filters/PostFilter.j3f");
+        //viewPort.addProcessor(processor);
+        
+        /*
+        AmbientOcclusionFilter aof = new AmbientOcclusionFilter();
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        //Filter testFilter = new SSAOFilter(4, 3, 0.2f, 0.1f);
+        Filter testFilter = aof;
+        fpp.addFilter(testFilter);
+        viewPort.addProcessor(fpp);
+        */
+        
         //stateManager.attach(new InMainMenuState());
     }
 
     @Override
     public void simpleUpdate(float tpf) {
+            //System.out.println(viewPort.getCamera().getScreenCoordinates(viewPort.getCamera().getWorldCoordinates(new Vector2f(10, 10), 0)));
+            
     }
 
     @Override

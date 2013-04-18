@@ -1,0 +1,19 @@
+MaterialDef My MaterialDef {
+
+    MaterialParameters {
+        Int NumSamples
+        Int NumSamplesDepth
+        Texture2D Texture
+        Color Color 
+    }
+
+    Technique {
+        VertexShader GLSL100:   PostProcessing/RedOverlay.vert
+        FragmentShader GLSL100: PostProcessing/RedOverlay.frag
+
+        WorldParameters {
+            WorldViewProjectionMatrix
+        }
+    }
+
+}
