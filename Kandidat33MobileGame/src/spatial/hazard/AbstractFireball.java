@@ -22,19 +22,35 @@ import java.util.Random;
 public abstract class AbstractFireball extends PlayerInteractor {
     
     private ParticleEmitter fire;
-
+    
+    private static final ColorRGBA[] colorArray = new ColorRGBA[9];
+    
+    //for each of the colors in the array, make a list of forbidden combo colors
+    private static int[][] forbidden = {{},{8,6},{6,8},{7,5},{1,5},{4},{1,2},{},{1,2}};
+    static {
+        colorArray[0] = ColorRGBA.White;
+        colorArray[1] = ColorRGBA.Blue;
+        colorArray[2] = ColorRGBA.Red;
+        colorArray[3] = ColorRGBA.Yellow;
+        colorArray[4] = ColorRGBA.Cyan;
+        colorArray[5] = ColorRGBA.Green;
+        colorArray[6] = ColorRGBA.Magenta;
+        colorArray[7] = ColorRGBA.Orange;
+        colorArray[8] = ColorRGBA.Pink; 
+    }
+    
+    private boolean forbiddenColorPair(int x, int y) {
+        for (int i = 0; i < forbidden[x].length; i++) {
+            if (forbidden[x][i] == y) {
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     protected Spatial createModel(AssetManager assetManager) {
         Node fireball = new Node();
-        /*Sphere model =
-         new Sphere(5,5,0.1f);
         
-         Geometry geometry = new Geometry("", model);
-         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-         material.setColor("Color", ColorRGBA.Red);
-         geometry.setMaterial(material);
-        
-         fireball.attachChild(geometry);*/
         fire = getFireballParticleEmitter(assetManager);
         fireball.attachChild(fire);
 
@@ -51,28 +67,16 @@ public abstract class AbstractFireball extends PlayerInteractor {
         fire.setMaterial(mat_red);
         fire.setImagesX(2);
         fire.setImagesY(2); // 2x2 texture animation
-        //COLOR ARRAY FOR BETTER fIREBALLS
-        ColorRGBA[] colorArray = new ColorRGBA[9];
-        colorArray[0] = ColorRGBA.White;
-        colorArray[1] = ColorRGBA.Blue;
-        colorArray[2] = ColorRGBA.Red;
-        colorArray[3] = ColorRGBA.Yellow;
-        colorArray[4] = ColorRGBA.Cyan;
-        colorArray[5] = ColorRGBA.Green;
-        colorArray[6] = ColorRGBA.Magenta;
-        colorArray[7] = ColorRGBA.Orange;
-        colorArray[8] = ColorRGBA.Pink;
+        
         Random r = new Random();
         int i = r.nextInt(9);
         int j = i;
-        while (j == i) {
+        while (j == i  || forbiddenColorPair (i,j)) {
             j = r.nextInt(9);
         }
-        //STOP COLOR ARRAY
-        // fire.setStartColor(  new ColorRGBA(1f, 0f, 0f, 1f));   // red
+       
         fire.setStartColor(colorArray[i]);
         fire.setEndColor(colorArray[j]);
-        // fire.setEndColor(new ColorRGBA(1f, 1f, 0f, 0.5f)); // yellow
         fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 2, 0));
         fire.setStartSize(3.5f);
         fire.setEndSize(0.1f);
