@@ -16,13 +16,13 @@ import spatial.Player;
 import spatial.PlayerInteractor;
 
 /**
- * An powerup that gives the player a boost to run and jump speed.
+ * An powerup that gives the player the ability to double jump.
  *
  * @author jonatankilhamn
  */
-public class SpeedPowerup extends PlayerInteractor {
+public class DoubleJumpPowerup extends PlayerInteractor {
 
-    public SpeedPowerup(AssetManager assetManager) {
+    public DoubleJumpPowerup(AssetManager assetManager) {
         this.attachChild(this.createModel(assetManager));
         this.addControl(this.createControl());
     }
@@ -56,12 +56,12 @@ public class SpeedPowerup extends PlayerInteractor {
         glow.setImagesX(2);
         glow.setImagesY(2); // 2x2 texture animation
 
-        glow.setStartColor(ColorRGBA.Cyan);
-        glow.setEndColor(ColorRGBA.White);
+        glow.setStartColor(ColorRGBA.Green);
+        glow.setEndColor(ColorRGBA.DarkGray);
         glow.getParticleInfluencer().setInitialVelocity(Vector3f.ZERO);
         glow.setStartSize(3.5f);
         glow.setEndSize(0.1f);
-        glow.setGravity(0, -20, 0);
+        glow.setGravity(0, 30, 0);
         glow.setLowLife(0.4f);
         glow.setHighLife(1f);
         glow.getParticleInfluencer().setVelocityVariation(0.3f);
@@ -88,9 +88,9 @@ public class SpeedPowerup extends PlayerInteractor {
             public void collideWithPlayer(Player player) {
                 if (!hasHit) {
                     PlayerControl pc = player.getControl(PlayerControl.class);
-                    pc.speedBoostPowerup();
+                    pc.doubleJumpPowerup();
                     hasHit = true;
-                    SpeedPowerup.this.destroy();
+                    DoubleJumpPowerup.this.destroy();
                 }
             }
         };

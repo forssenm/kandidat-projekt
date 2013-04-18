@@ -19,7 +19,7 @@ public class FireballControl extends AbstractPlayerInteractorControl {
     
     public void collideWithPlayer(Player player) {
         if (!hasHit) {
-        player.getControl(PlayerControl.class).pushBack();
+        player.getControl(PlayerControl.class).damage();
         hasHit = false;
         ((AbstractFireball)spatial).destroy();
         }

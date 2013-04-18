@@ -103,6 +103,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     private float speedUpTimer;
     private float speedFactor = 1;
     private boolean paused;
+    private int noOfJumps;
+    private int maxNoOfJumps = 1;
 
     /**
      * Only used for serialization, do not use this constructor.
@@ -137,25 +139,31 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         if (paused) {
             return;
         }
-        if (speedUpTimer > 0) {
+        if (speedUpTimer > 0) { // speed boost power up goes off over time
             speedUpTimer -= tpf;
             if (speedUpTimer <= 0) {
-                slowDown();
+                undoSpeedBoostPowerup();
             }
         }
     }
 
-    public void speedUp() {
+    public void speedBoostPowerup() {
         if (speedUpTimer <= 0) {
             setSpeedFactor(2f);
         }
         speedUpTimer += 5;
     }
+    
 
-    private void slowDown() {
+
+    private void undoSpeedBoostPowerup() {
         setSpeedFactor(P.speedFactor);
     }
-
+    
+    public void doubleJumpPowerup() {
+        maxNoOfJumps = 2;
+    }
+    
     public void setSpeedFactor(float factor) {
         walkVelocity.setX(defaultRunSpeed * factor);
         jumpSpeed = defaultJumpSpeed * factor;
@@ -229,8 +237,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         //pushback
         if (pushBackInNextTick) {
             pushBackInNextTick = false;
-            this.speedUpTimer = 0;
-            slowDown();
             velocity.setX(pushbackSpeed);
             velocity.setY(jumpSpeed);
         }
@@ -276,10 +282,14 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * maximum height jump unless abortJump is called shortly hereafter.
      */
     public void initiateJump() {
-        if (!onGround) {
-            return;
+        
+        if (onGround) {
+            initiateJumpInNextTick = true;
+        } else if (noOfJumps < maxNoOfJumps) {
+            initiateJumpInNextTick = true;
+            noOfJumps++;
         }
-        initiateJumpInNextTick = true;
+        
     }
 
     /**
@@ -291,12 +301,15 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     /**
-     * Makes the character fly backwards.
+     * Makes the character fly backwards and lose powerups.
      */
-    public void pushBack() {
+    public void damage() {
         pushBackInNextTick = true;
+        maxNoOfJumps = 1; // remove double jump powerup
+        this.speedUpTimer = 0; // remove speed boost powerup
+        undoSpeedBoostPowerup();
     }
-
+    
     /**
      * Check if the character is on the ground. This is determined by a ray test
      * in the center of the character and might return false even if the
@@ -341,18 +354,28 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         for (PhysicsRayTestResult physicsRayTestResult : backFootResults) {
             PhysicsCollisionObject obj = physicsRayTestResult.getCollisionObject();
             if (!obj.equals(rigidBody) && !(obj instanceof PhysicsGhostObject)) {
-                onGround = true;
+                setOnGround(true);
                 return;
             }
         }
         for (PhysicsRayTestResult physicsRayTestResult : frontFootResults) {
             PhysicsCollisionObject obj = physicsRayTestResult.getCollisionObject();
             if (!obj.equals(rigidBody) && !(obj instanceof PhysicsGhostObject)) {
-                onGround = true;
+                setOnGround(true);
                 return;
             }
         }
-        onGround = false;
+        setOnGround(false);
+    }
+    
+    private void setOnGround(boolean onGround) {
+        if (this.onGround && !onGround) {
+            noOfJumps++; //we just took off
+        }
+        if (!this.onGround && onGround) {
+            noOfJumps = 0; //we just landed
+        }
+        this.onGround = onGround; // update status regardless;
     }
 
     public void respawn(Vector3f position) {

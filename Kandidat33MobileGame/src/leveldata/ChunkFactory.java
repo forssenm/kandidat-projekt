@@ -23,6 +23,7 @@ import spatial.hazard.LinearFireball;
 import spatial.hazard.SingleShotWizard;
 import spatial.hazard.SpinningFireball;
 import spatial.hazard.StationaryFireball;
+import spatial.powerup.DoubleJumpPowerup;
 import spatial.powerup.SpeedPowerup;
 import util.RomanNumber;
 import variables.P;
@@ -97,9 +98,11 @@ public class ChunkFactory {
 
         int platformLayoutType;
         int enemyType;
+        int powerupType;
         if (level < 5) { //nothing special on the first few chunks
             platformLayoutType = -1;
             enemyType = -1;
+            powerupType = -1;
             if (level == 4) {
                 d += dist; // distance after the "starting strip" is over
             }
@@ -107,6 +110,7 @@ public class ChunkFactory {
             // results 0-7 are actual enemies, a 'roll' of 8 or higher will
             // give nothing
             enemyType = random.nextInt(12);
+            powerupType = random.nextInt(6);
 
             // get back to normal height if we're too low or too high
             if (height < -2) {
@@ -233,8 +237,18 @@ public class ChunkFactory {
                 break;
         }
         
-        if (random.nextFloat() < 0.2) {
-            list.add(createSpeedPowerup(d-8,height+5));
+        
+        switch (powerupType) {
+            case (-1): // nothing
+                break;
+            case (0): // speed boost
+                list.add(createSpeedPowerup(d-8,height+5));
+                break;
+            case (1): // double jump
+                list.add(createDoubleJumpPowerup(d-3,height+10));
+                break;
+            default:
+                break;
         }
 
 
@@ -358,4 +372,11 @@ public class ChunkFactory {
         speedPowerup.move(positionX, positionY, 0f);
         return speedPowerup;
     }
+    
+    private PlayerInteractor createDoubleJumpPowerup(float positionX, float positionY) {
+        DoubleJumpPowerup doubleJumpPowerup = new DoubleJumpPowerup(assetManager);
+        doubleJumpPowerup.move(positionX, positionY, 0f);
+        return doubleJumpPowerup;
+    }
+    
 }
