@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty>
     <screen id="splashScreen"
-        controller="control.SplashScreenController">
+        controller="nifty.controller.SplashScreenController">
         <layer childLayout="center">
             <image id="imageId" filename="/Textures/bluefire.jpg">
                 <effect>

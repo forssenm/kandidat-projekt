@@ -7,9 +7,11 @@
     <useControls filename="nifty-default-controls.xml"/>
     <screen id="mainMenuScreen" controller="control.MainMenuScreenController">
         <layer childLayout="center">
-            <panel id="menuPanel" childLayout="vertical" backgroundColor="#55a5">
-                <control id="playButton" name="button" label="Play">
-                </control>
+            <panel id="menuPanel" childLayout="vertical">
+                <control id="playButton" name="button" label="Play" margin="15px" focusable="false"/>
+                <control id="settingsButton" name="button" label="Settings" margin="15px" focusable="false"/>
+                <control id="highscoreButton" name="button" label="Highscore" margin="15px" focusable="false"/>
+                <control id="exitButton" name="button" label="Exit" margin="15px" focusable="false"/> 
             </panel>
         </layer>
     </screen>
