@@ -78,7 +78,7 @@ public class InMainMenuState extends AbstractAppState {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, app.getAudioRenderer(), app.getGuiViewPort());
         nifty = niftyDisplay.getNifty();
         nifty.subscribeAnnotations(this);
-        nifty.fromXml("/xmlgui/MainMenuScreen.xml", "mainMenuScreen");
+        nifty.fromXml("/xmlgui/Screens.xml", "splashScreen");
         //nifty.fromXml("/xmlgui/SplashScreen.xml", "splashScreen");
         app.getGuiViewPort().addProcessor(niftyDisplay);
     }
@@ -93,12 +93,12 @@ public class InMainMenuState extends AbstractAppState {
 
     @NiftyEventSubscriber(id = "settingsButton")
     public void onSettingsClick(String id, NiftyMousePrimaryClickedEvent event) {
-        nifty.fromXml("/xmlgui/SettingsScreen.xml", "settingsScreen");
+        nifty.gotoScreen("settingsScreen");
     }
 
     @NiftyEventSubscriber(id = "highscoreButton")
     public void onSHighscoreClick(String id, NiftyMousePrimaryClickedEvent event) {
-        nifty.fromXml("/xmlgui/HighscoreScreen.xml", "highscoreScreen");
+        nifty.gotoScreen("highscoreScreen");
     }
 
     @NiftyEventSubscriber(id = "exitButton")
@@ -108,6 +108,6 @@ public class InMainMenuState extends AbstractAppState {
 
     @NiftyEventSubscriber(id = "backButton")
     public void onBackClick(String id, NiftyMousePrimaryClickedEvent event) {
-        nifty.fromXml("/xmlgui/MainMenuScreen.xml", "mainMenuScreenScreen");
+        nifty.gotoScreen("mainMenuScreen");
     }
 }

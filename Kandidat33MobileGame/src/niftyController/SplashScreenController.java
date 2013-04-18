@@ -19,12 +19,12 @@ public class SplashScreenController implements ScreenController {
     @Override
     public void bind(final Nifty newNifty, final Screen newScreen) {
         this.nifty = newNifty;
-        this.image = newScreen.findElementByName("imageId");
+        this.image = newScreen.findElementByName("splashImage");
+        image.startEffect(EffectEventId.onCustom, new FadeInEnd(), "fadeIn");
     }
 
     @Override
     public void onStartScreen() {
-        image.startEffect(EffectEventId.onCustom, new FadeInEnd(), "fadeIn");
     }
 
     @Override
@@ -45,7 +45,7 @@ public class SplashScreenController implements ScreenController {
         @Override
         public void perform() {
             System.out.println("fadeOut has ended.");
-            nifty.fromXml("/xmlgui/MainMenuScreen.xml", "mainMenuScreen" );
+            nifty.gotoScreen("mainMenuScreen");
         }
     }
 }
