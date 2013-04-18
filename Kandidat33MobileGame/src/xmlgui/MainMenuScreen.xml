@@ -5,7 +5,8 @@
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <useStyles filename="nifty-default-styles.xml"/>
     <useControls filename="nifty-default-controls.xml"/>
-    <screen id="mainMenuScreen" controller="control.MainMenuScreenController">
+    
+    <screen id="mainMenuScreen" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center">
             <panel id="menuPanel" childLayout="vertical">
                 <control id="playButton" name="button" label="Play" margin="15px" focusable="false"/>
@@ -15,4 +16,6 @@
             </panel>
         </layer>
     </screen>
+    
+    
 </nifty>
