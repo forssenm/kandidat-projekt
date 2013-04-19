@@ -51,7 +51,7 @@ public class DoubleJumpPowerup extends PlayerInteractor {
         Material mat_red = new Material(assetManager,
                 "Common/MatDefs/Misc/Particle.j3md");
         mat_red.setTexture("Texture", assetManager.loadTexture(
-                "Effects/Explosion/flame.png"));
+                "Textures/Explosion/flame.png"));
         glow.setMaterial(mat_red);
         glow.setImagesX(2);
         glow.setImagesY(2); // 2x2 texture animation

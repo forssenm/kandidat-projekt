@@ -49,7 +49,7 @@ public class Torch extends Node {
     Material mat_red = new Material(assetManager, 
             "Common/MatDefs/Misc/Particle.j3md");
     mat_red.setTexture("Texture", assetManager.loadTexture(
-            "Effects/Explosion/flame.png"));
+            "Textures/Explosion/flame.png"));
    // mat_red.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); för att kunna göra svarta partiklar
     fire.setMaterial(mat_red);
     fire.setImagesX(2); 

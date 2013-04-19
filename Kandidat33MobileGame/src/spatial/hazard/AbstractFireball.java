@@ -63,7 +63,7 @@ public abstract class AbstractFireball extends PlayerInteractor {
         Material mat_red = new Material(assetManager,
                 "Common/MatDefs/Misc/Particle.j3md");
         mat_red.setTexture("Texture", assetManager.loadTexture(
-                "Effects/Explosion/flame.png"));
+                "Textures/Explosion/flame.png"));
         fire.setMaterial(mat_red);
         fire.setImagesX(2);
         fire.setImagesY(2); // 2x2 texture animation
