@@ -17,30 +17,33 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
-import control.LevelControl;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
 import spatial.Player;
 import variables.P;
 
 /**
- * This state is activated to start the game. The class sets up the different
- * <code>Node</code>s and attaches relevant controls to them.
- *
- * The level/scene is setup using a
- * <code>LevelControl</code> to continously generate scene-chunks when the
- * player moves. <br/><br/> The player is setup with a
- * <code>PlayerControl</code> which keeps the player moving to the right and
- * handles jump-events. <br/><br/> Background music is set to play. <br/><br/>
- * Lights are added <br/><br/> The camera is set to follow the player with a
- * <code>ChaseCam</code>
- *
+ * This state is activated to start the game. The class sets up  
+ * the different <code>Node</code>s and attaches relevant controls to them.
+ * 
+ * The level/scene is setup using a <code>LevelGeneratingState</code> to continously 
+ * generate scene-chunks whene the player moves. 
+ * <br/><br/>
+ * The player is setup with a
+ * <code>PlayerControl</code> which keeps the player moving to the right and 
+ * handles jump-events.
+ * <br/><br/>
+ * Background music is set to play.
+ * <br/><br/>
+ * Lights are added.
+ * <br/><br/>
+ * The camera is set to follow the player with a <code>ChaseCam</code>
  * @author forssenm, dagson
  */
 public class InGameState extends AbstractAppState {
 
     public static final String GAME_NODE = "Game Node";
-    public static final String LEVEL_NODE = "Level Node";
+
     private SimpleApplication app;
     private Node gameNode;
     private AssetManager assetManager;
@@ -53,7 +56,8 @@ public class InGameState extends AbstractAppState {
     private boolean gameOver = false;
     private float respawnDelay = 1.0f; // seconds
     private float respawnTimer = 0.0f; // seconds
-
+    private LevelGeneratingState level;
+    
     /**
      * This method initializes the the InGameState and thus gets the game ready
      * for playing. That implies setting up the level, player, camera and music
@@ -76,12 +80,14 @@ public class InGameState extends AbstractAppState {
         this.inputManager = this.app.getInputManager();
         this.viewPort = this.app.getViewPort();
         this.physics = new BulletAppState();
-
+        
+        this.level = new LevelGeneratingState();
+        
+        this.stateManager.attach(level);
         this.stateManager.attach(physics);
         this.stateManager.attach(new RunningState());
 
         initPlayer();
-        initLevel();
         initCollisions();
         initCamera();
         initInputs();
@@ -93,22 +99,6 @@ public class InGameState extends AbstractAppState {
 
         initAudio();
     }
-
-    /**
-     * This method creates a node with an attached
-     * <code>LevelControl</code> which will generate platforms as the player
-     * moves.
-     *
-     * @see LevelControl
-     */
-    private void initLevel() {
-        LevelControl levelControl = new LevelControl(
-                assetManager, physics.getPhysicsSpace(), player);
-        Node levelNode = new Node(LEVEL_NODE);
-        gameNode.attachChild(levelNode);
-        levelNode.addControl(levelControl);
-    }
-
     /**
      * This method creates a node for the player. Also the default player model
      * is loaded and attached. A
@@ -204,11 +194,10 @@ public class InGameState extends AbstractAppState {
         spawnPosition.y = 20.0f;
         PlayerControl pc = player.getControl(PlayerControl.class);
         pc.respawn(spawnPosition);
-
-        LevelControl levelControl = gameNode.getChild(LEVEL_NODE).getControl(LevelControl.class);
+        
+        level.cleanup();
         // Try again
-        levelControl.cleanup();
-        levelControl.initiateLevel();
+        level.resetLevel();
 
         this.chaseCam.setEnabled(true);
     }
