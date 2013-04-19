@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- start screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <useStyles filename="nifty-default-styles.xml"/>
+    <useControls filename="nifty-default-controls.xml"/>
+    
+    <screen id="splashScreen"
+                controller="niftyController.SplashScreenController">
+        <layer childLayout="center">
+            <image id="splashImage" filename="/Textures/bluefire.jpg">
+                <effect>
+                    <onCustom customKey="fadeIn" name="fade" start="#0" end="#f" length="2500" />
+                    <onCustom customKey="fadeOut" name="fade" start="#f" end="#0" length="2500" neverStopRendering="true" />
+                </effect>
+            </image>
+        </layer>
+    </screen>
+    
+    <screen id="mainMenuScreen" controller="niftyController.MainMenuScreenController">
+        <layer childLayout="center">
+            <panel id="mainMenuPanel" childLayout="vertical">
+                <control id="playButton" name="button" label="Play" margin="15px" focusable="false"/>
+                <control id="settingsButton" name="button" label="Settings" margin="15px" focusable="false"/>
+                <control id="highscoreButton" name="button" label="Highscore" margin="15px" focusable="false"/>
+                <control id="exitButton" name="button" label="Exit" margin="15px" focusable="false"/> 
+            </panel>
+        </layer>
+    </screen>
+    
+    <screen id="settingsScreen" controller="niftyController.MainMenuScreenController">
+        <layer childLayout="center">
+            <panel id="settingsPanel" childLayout="vertical">
+                <control id="backButton" name="button" label="Back" margin="15px" focusable="false"/> 
+            </panel>
+        </layer>
+    </screen>
+    
+    <screen id="highscoreScreen" controller="niftyController.MainMenuScreenController">
+        <layer childLayout="center">
+            <panel id="highscorePanel" childLayout="vertical">
+                <control id="backButton" name="button" label="Back" margin="15px" focusable="false"/> 
+            </panel>
+        </layer>
+    </screen>
+</nifty>

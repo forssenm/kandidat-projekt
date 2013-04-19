@@ -78,14 +78,36 @@ public class InMainMenuState extends AbstractAppState {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, app.getAudioRenderer(), app.getGuiViewPort());
         nifty = niftyDisplay.getNifty();
         nifty.subscribeAnnotations(this);
-        nifty.fromXml("/xmlgui/SplashScreen.xml", "splashScreen");
+        nifty.fromXml("/xmlgui/Screens.xml", "splashScreen");
+        //nifty.fromXml("/xmlgui/SplashScreen.xml", "splashScreen");
         app.getGuiViewPort().addProcessor(niftyDisplay);
     }
 
+    //Might need to move these methods to the controllers
     @NiftyEventSubscriber(id = "playButton")
-    public void onClick(String id, NiftyMousePrimaryClickedEvent event) {
+    public void onPlayClick(String id, NiftyMousePrimaryClickedEvent event) {
         nifty.exit();
         this.setEnabled(false);
         stateManager.attach(new InGameState());
+    }
+
+    @NiftyEventSubscriber(id = "settingsButton")
+    public void onSettingsClick(String id, NiftyMousePrimaryClickedEvent event) {
+        nifty.gotoScreen("settingsScreen");
+    }
+
+    @NiftyEventSubscriber(id = "highscoreButton")
+    public void onSHighscoreClick(String id, NiftyMousePrimaryClickedEvent event) {
+        nifty.gotoScreen("highscoreScreen");
+    }
+
+    @NiftyEventSubscriber(id = "exitButton")
+    public void onExitClick(String id, NiftyMousePrimaryClickedEvent event) {
+        this.app.stop();
+    }
+
+    @NiftyEventSubscriber(id = "backButton")
+    public void onBackClick(String id, NiftyMousePrimaryClickedEvent event) {
+        nifty.gotoScreen("mainMenuScreen");
     }
 }
