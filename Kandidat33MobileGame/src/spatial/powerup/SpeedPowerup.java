@@ -10,6 +10,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import control.AbstractPlayerInteractorControl;
+import control.AbstractPowerupControl;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
 import spatial.Player;
@@ -77,13 +78,8 @@ public class SpeedPowerup extends PlayerInteractor {
 
     @Override
     protected PlayerInteractorControl createControl() {
-        return new AbstractPlayerInteractorControl(new SphereCollisionShape(1f)) {
+        return new AbstractPowerupControl() {
             private boolean hasHit;
-
-            @Override
-            protected void positionUpdate(float tpf) {
-                // do not move
-            }
 
             public void collideWithPlayer(Player player) {
                 if (!hasHit) {
@@ -94,11 +90,6 @@ public class SpeedPowerup extends PlayerInteractor {
                 }
             }            
 
-            /**
-             * Do nothing.
-             */
-            public void collideWithStatic() {
-            }
         };
     }
 }
