@@ -15,12 +15,26 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.math.Vector4f;
+import com.jme3.post.Filter;
+import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import control.LevelControl;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
+import com.jme3.scene.Spatial;
+import com.jme3.shadow.PssmShadowRenderer;
+import com.jme3.system.Timer;
+import control.PlayerInteractorControl;
+import control.LevelControl;
+import control.PlayerControl;
+import filters.AmbientOcclusionFilter;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import spatial.Player;
+import spatial.hazard.LinearFireball;
 import variables.P;
 
 /**
@@ -53,6 +67,7 @@ public class InGameState extends AbstractAppState {
     private boolean gameOver = false;
     private float respawnDelay = 1.0f; // seconds
     private float respawnTimer = 0.0f; // seconds
+    AmbientOcclusionFilter aof;
 
     /**
      * This method initializes the the InGameState and thus gets the game ready
@@ -92,6 +107,8 @@ public class InGameState extends AbstractAppState {
         gameNode.addLight(sun);
 
         initAudio();
+
+        //initAO();
     }
 
     /**
@@ -148,32 +165,65 @@ public class InGameState extends AbstractAppState {
         this.app.getRootNode().detachChild(this.gameNode);
     }
 
-    
+    /**
+     * {inheritDoc}
+     */
+    private void initAO() {
+        aof = new AmbientOcclusionFilter();
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        //Filter testFilter = new SSAOFilter(4, 3, 0.2f, 0.1f);
+        Filter testFilter = aof;
+        fpp.addFilter(testFilter);
+        viewPort.addProcessor(fpp);
+    }
+
+    /*
+     * this implementation does no longer match the structure of the scene graph
+     * see LevelControl for current structure
+     */
+    private void updateAOIntervals() {
+        Vector3f playerCenter = viewPort.getCamera().getScreenCoordinates(player.getWorldTranslation());
+        List<Spatial> movingObjects = new LinkedList<Spatial>();
+        for (Spatial s : ((Node) gameNode.getChild(LEVEL_NODE)).getChildren()) {
+            if (s.getName().equals("hazard") && s.getClass() != LinearFireball.class) {
+                movingObjects.add(s);
+            }
+        }
+        int margin = 42;
+        Vector4f[] values = new Vector4f[1 + movingObjects.size()];
+        values[0] = new Vector4f(playerCenter.x - margin, playerCenter.x + margin, playerCenter.y - margin / 2, playerCenter.y + margin * 2);
+        for (int i = 1; i < values.length; i++) {
+            Vector3f center = viewPort.getCamera().getScreenCoordinates(movingObjects.get(i - 1).getWorldTranslation());
+            values[i] = new Vector4f(center.x - margin, center.x + margin, center.y - margin, center.y + margin);
+        }
+        aof.updateIntervals(values);
+    }
     private float gameTime;
     private int difficultyLevel;
-    
+
     /**
      * {inheritDoc}
      */
     @Override
     public void update(float tpf) {
-        
+
         if (!gameOver) {
             if (player.getWorldTranslation().getY() < P.deathTreshold) {
                 this.chaseCam.setEnabled(false);
                 this.gameOver = true;
             }
-            
+
             gameTime += tpf;
-            if (gameTime > difficultyLevel*3f) {
+            if (gameTime > difficultyLevel * 3f) {
                 difficultyLevel++;
                 if (P.speedFactor < P.maxSpeedFactor) {
-                    P.speedFactor = P.minSpeedFactor + difficultyLevel*0.05f;
+                    P.speedFactor = P.minSpeedFactor + difficultyLevel * 0.05f;
                     player.getControl(PlayerControl.class).setSpeedFactor(P.speedFactor);
                 }
             }
-            
+
         } else { // gameOver
+            //this.updateAOIntervals();
             respawnTimer += tpf;
             if (!player.checkCulling(this.app.getCamera())) {
                 // staps the player from moving if outside the camera
@@ -198,7 +248,7 @@ public class InGameState extends AbstractAppState {
         gameTime = 0;
         difficultyLevel = 0;
         P.speedFactor = P.minSpeedFactor;
-        
+
         Vector3f spawnPosition = player.getLocalTranslation();
         spawnPosition.x = 0.0f;
         spawnPosition.y = 20.0f;
@@ -237,7 +287,7 @@ public class InGameState extends AbstractAppState {
     private void initInputs() {
         inputManager.addListener(player.getControl(PlayerControl.class), "jump");
         inputManager.addListener(player.getControl(PlayerControl.class), "pause");
-        
+
     }
 
     private void initCollisions() {
