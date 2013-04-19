@@ -95,17 +95,19 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     private float jumpSpeed = defaultJumpSpeed;
     private float gravity = defaultGravity;
     private float pushbackSpeed = defaultPushbackSpeed;
+    private float speedFactor = 1;
+    private boolean paused;
+    private int noOfJumps;
+    private int maxNoOfJumps = 1;
     private boolean initiateJumpInNextTick = false;
     private boolean onGround = false;
     private boolean abortJumpInNextTick = false;
     private boolean pushBackInNextTick;
     private boolean willRespawn = false;
     private float speedUpTimer;
-    private float speedFactor = 1;
-    private boolean paused;
-    private int noOfJumps;
-    private int maxNoOfJumps = 1;
+    private float invulnTimer;
 
+    
     /**
      * Only used for serialization, do not use this constructor.
      */
@@ -136,12 +138,20 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         if (paused) {
             return;
         }
-        if (speedUpTimer > 0) { // speed boost power up goes off over time
+        if (speedUpTimer > 0) { // speed boost powerup goes off over time
             speedUpTimer -= tpf;
             if (speedUpTimer <= 0) {
                 undoSpeedBoostPowerup();
             }
         }
+        if (invulnTimer > 0) { // invulnerability powerup goes off over time
+            invulnTimer -= tpf;
+        }
+    }
+    
+    
+    public void invulnerabilityPowerup() {
+        invulnTimer += 5f;
     }
 
     public void speedBoostPowerup() {
@@ -311,6 +321,9 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * Makes the character fly backwards and lose powerups.
      */
     public void damage() {
+        if (invulnTimer > 0) {
+            return;
+        }
         pushBackInNextTick = true;
         undoSpeedBoostPowerup();
         undoDoubleJumpPowerup();

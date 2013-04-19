@@ -24,6 +24,7 @@ import spatial.hazard.SingleShotWizard;
 import spatial.hazard.SpinningFireball;
 import spatial.hazard.StationaryFireball;
 import spatial.powerup.DoubleJumpPowerup;
+import spatial.powerup.InvulnerabilityPowerup;
 import spatial.powerup.SlowDownPowerup;
 import spatial.powerup.SpeedPowerup;
 import util.RomanNumber;
@@ -112,7 +113,7 @@ public class ChunkFactory {
              * will give nothing */
             enemyType = random.nextInt(12);
             /* results 0-3 are powerups; 4 or higher gives nothing */
-            powerupType = random.nextInt(7);
+            powerupType = random.nextInt(8);
 
             // get back to normal height if we're too low or too high
             if (height < -2) {
@@ -253,6 +254,9 @@ public class ChunkFactory {
                 break;
             case (3):
                 list.add(createSlowDownPowerup(d-15, height + 7));
+                break;
+            case (4):
+                list.add(createInvulnerabilityPowerup(d-10, height + 6));
             default:
                 break;
         }
@@ -391,4 +395,10 @@ public class ChunkFactory {
         return slowDownPowerup;
     }
     
+    private Spatial createInvulnerabilityPowerup(float positionX, float positionY) {
+        InvulnerabilityPowerup invulnerabilityPowerup =
+                new InvulnerabilityPowerup(assetManager);
+        invulnerabilityPowerup.move(positionX, positionY, 0f);
+        return invulnerabilityPowerup;
+    }
 }
