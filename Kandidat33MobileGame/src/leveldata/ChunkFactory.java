@@ -60,14 +60,15 @@ public class ChunkFactory {
      * @return A list of <code>Spatial</code>s.
      *
      */
-    public List<Spatial> generateChunk(int level) {
+    public List<Object> generateChunk(int level) {
         
         if (level == 1) {
             this.reset();
         }
 
 
-        LinkedList<Spatial> list = new LinkedList<Spatial>();
+        LinkedList<Spatial> spatials = new LinkedList<Spatial>();
+        LinkedList<Light> lights = new LinkedList<Light>();
 
         // Generate the background:
         Node staticObjects = new Node("background");
@@ -80,11 +81,12 @@ public class ChunkFactory {
         float wHeight = Math.max(0, 5 * Math.round(height / 5));
 
         WindowFrame window = createWindowFrame(5f, wHeight + 23f);
-        Torch torch = createTorch (30, wHeight+ 15);
+        Torch torch = createTorch (30, wHeight + 15);
+        //lights.add(this.createTorchLight(30f, wHeight + 15f));
         
         staticObjects.attachChild(window);
         staticObjects.attachChild(torch);
-        list.add(staticObjects);
+        spatials.add(staticObjects);
 
 
         // Generate everything with a physical / game mechanical connection:
@@ -135,12 +137,12 @@ public class ChunkFactory {
 
         switch (platformLayoutType) {
             case (-1): // one long platform (boring)
-                list.add(createPlatform(0, height, P.chunkLength));
+                spatials.add(createPlatform(0, height, P.chunkLength));
                 d += P.chunkLength;
                 break;
             case (0): // chilling platforms
                 while (d < totalLength) {
-                    list.add(createPlatform(d, height + random.nextFloat() * 3, length));
+                    spatials.add(createPlatform(d, height + random.nextFloat() * 3, length));
                     d += length + dist;
                 }
                 break;
@@ -149,7 +151,7 @@ public class ChunkFactory {
                     nLength = length * (0.8f + random.nextFloat());
                     nDist = dist * (1f + random.nextFloat());
 
-                    list.add(createPlatform(d, height + random.nextFloat() * 3, nLength));
+                    spatials.add(createPlatform(d, height + random.nextFloat() * 3, nLength));
                     d += nLength + nDist;
                 }
                 break;
@@ -158,7 +160,7 @@ public class ChunkFactory {
                     nLength = length * (0.5f + random.nextFloat() / 2);
                     nDist = dist * (1f + random.nextFloat());
                     height += 1 + 4 * random.nextFloat();
-                    list.add(createPlatform(d, height + random.nextFloat() * 2, nLength));
+                    spatials.add(createPlatform(d, height + random.nextFloat() * 2, nLength));
                     d += nLength + nDist;
                 }
                 break;
@@ -171,7 +173,7 @@ public class ChunkFactory {
                     if (height - descent > P.deathTreshold + 2) {
                         height -= descent;
                     }
-                    list.add(createPlatform(d, height + random.nextFloat() * 4, nLength));
+                    spatials.add(createPlatform(d, height + random.nextFloat() * 4, nLength));
                     d += nLength + nDist;
                 }
                 break;
@@ -181,7 +183,7 @@ public class ChunkFactory {
 
         // fill up with platforms if whatever was in the switch statement didn't already
         while (d < totalLength) {
-            list.add(createPlatform(d, height, length));
+            spatials.add(createPlatform(d, height, length));
             height += random.nextInt(9) - 4;
             d += length + dist;
         }
@@ -196,45 +198,45 @@ public class ChunkFactory {
             case (0):
             case (1):
                 // single shot wizard
-                float wizardPosX = list.getLast().getLocalTranslation().getX()
+                float wizardPosX = spatials.getLast().getLocalTranslation().getX()
                         + random.nextFloat() * length;
-                float wizardPosY = list.getLast().getLocalTranslation().getY()
+                float wizardPosY = spatials.getLast().getLocalTranslation().getY()
                         + 18;
-                list.add(createWizard(wizardPosX, wizardPosY));
+                spatials.add(createWizard(wizardPosX, wizardPosY));
                 break;
             case (2):
                 // burst wizard
-                wizardPosX = list.getLast().getLocalTranslation().getX()
+                wizardPosX = spatials.getLast().getLocalTranslation().getX()
                         + random.nextFloat() * length;
-                wizardPosY = list.getLast().getLocalTranslation().getY()
+                wizardPosY = spatials.getLast().getLocalTranslation().getY()
                         + 18;
-                list.add(createBurstWizard(wizardPosX, wizardPosY));
+                spatials.add(createBurstWizard(wizardPosX, wizardPosY));
                 break;
             case (3):
             case (4):
                 // single fireball
-                list.add(createLinearFireball(d, height + 1 + random.nextFloat() * 2));
+                spatials.add(createLinearFireball(d, height + 1 + random.nextFloat() * 2));
                 break;
             case (5):
             case (6):
                 // three fireballs
                 int temp1 = (random.nextInt(5)-1) * 10; // 1st fireball distance
-                list.add(createLinearFireball(d + temp1, height + 2));
+                spatials.add(createLinearFireball(d + temp1, height + 2));
 
                 int temp2 = temp1;
                 while (temp2 == temp1) {
                     temp2 = (random.nextInt(5)-1) * 10; // 2nd fireball distance
                 }
-                list.add(createLinearFireball(d + temp2, height + 7));
+                spatials.add(createLinearFireball(d + temp2, height + 7));
                 temp1 = temp2;
                 while (temp2 == temp1) {
                     temp1 = (random.nextInt(5)-1) * 10; // 3rd fireball distance
                 }
-                list.add(createLinearFireball(d + temp1, height + 12));
+                spatials.add(createLinearFireball(d + temp1, height + 12));
                 break;
             case (7):
                 // a wizard in the foreground shooting fireballs at where the player's going
-                list.add(createCalculatingWizard(d, height));
+                spatials.add(createCalculatingWizard(d, height));
             default:
                 // no enemies
                 break;
@@ -246,17 +248,17 @@ public class ChunkFactory {
             case (-1): // nothing
                 break;
             case (0): // speed boost
-                list.add(createSpeedPowerup(d-8,height+5));
+                spatials.add(createSpeedPowerup(d-8,height+5));
                 break;
             case (1): // double jump
             case (2):
-                list.add(createDoubleJumpPowerup(d-3,height+10));
+                spatials.add(createDoubleJumpPowerup(d-3,height+10));
                 break;
             case (3):
-                list.add(createSlowDownPowerup(d-15, height + 7));
+                spatials.add(createSlowDownPowerup(d-15, height + 7));
                 break;
             case (4):
-                list.add(createInvulnerabilityPowerup(d-10, height + 6));
+                spatials.add(createInvulnerabilityPowerup(d-10, height + 6));
             default:
                 break;
         }
@@ -275,6 +277,10 @@ public class ChunkFactory {
          staticObjects.addLight(createColouredLight());
          */
 
+        LinkedList<Object> list = new LinkedList<Object>();
+        list.addAll(spatials);
+        list.addAll(lights);
+        
         return list;
 
     }
@@ -318,13 +324,13 @@ public class ChunkFactory {
         return windowLight;
     }
 
-    /* Creates a light of a random colour, a bit above and in front of the player */
-    private Light createColouredLight() {
+    /* Creates a light of a random colour, to use with a torch */
+    private Light createTorchLight(float positionX, float positionY) {
         Random random = new Random();
         int rand = random.nextInt(6);
         PointLight light = new PointLight();
-        light.setRadius(40);
-        light.setPosition(new Vector3f(15f, 10f, 0f));
+        light.setRadius(20);
+        light.setPosition(new Vector3f(positionX, positionY, -P.platformWidth/2 - P.playerZOffset));
         if (rand < 3) {
             light.setColor(ColorRGBA.Blue);
         } else if (rand < 5) {

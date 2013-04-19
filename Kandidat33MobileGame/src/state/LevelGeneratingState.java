@@ -11,6 +11,9 @@ import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.light.DirectionalLight;
+import com.jme3.light.Light;
+import com.jme3.light.PointLight;
+import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
@@ -92,6 +95,11 @@ public class LevelGeneratingState extends AbstractAppState {
         initiateLevel();
     }
 
+    private float leftBound;
+    private float rightBound;
+    private float lowerBound;
+    private Vector3f tempVec;
+    
     /**
      * Checks if any chunk of the level is outside the view and needs moving. If
      * so, performs that move.
@@ -100,6 +108,13 @@ public class LevelGeneratingState extends AbstractAppState {
      */
     @Override
     public void update(float tpf) {
+        
+        tempVec = this.player.getLocalTranslation();
+        leftBound = tempVec.getX() - P.minLeftDistance;
+        rightBound = tempVec.getX() + P.minRightDistance;
+        lowerBound = tempVec.getY() - P.minDownDistance;
+        
+        
         for (Spatial spatial : getAllLevelObjects()) {
             if (isOutsideLevelBounds(spatial.getLocalTranslation())) {
                 removeFromLevel(spatial);
@@ -108,6 +123,17 @@ public class LevelGeneratingState extends AbstractAppState {
                  */
                 if (spatial.getName().equals("background")) {
                     generateNextChunk();
+                }
+            }
+        }
+        for (Light light : this.gameNode.getLocalLightList()) {
+            if (light instanceof PointLight) {
+                if (isOutsideLevelBounds(((PointLight)light).getPosition())) {
+                    this.gameNode.removeLight(light);
+                }
+            } else if (light instanceof SpotLight) {
+                if (isOutsideLevelBounds(((SpotLight)light).getPosition())) {
+                    this.gameNode.removeLight(light);
                 }
             }
         }
@@ -125,11 +151,6 @@ public class LevelGeneratingState extends AbstractAppState {
     }
 
     private boolean isOutsideLevelBounds(Vector3f position) {
-        Vector3f playerPosition = this.player.getLocalTranslation();
-        final float leftBound = playerPosition.getX() - P.minLeftDistance;
-        final float rightBound = playerPosition.getX() + P.minRightDistance;
-        final float lowerBound = playerPosition.getY() - P.minDownDistance;
-
         return (position.getX() < leftBound || position.getX() > rightBound
                 || position.getY() < lowerBound);
     }
@@ -155,13 +176,22 @@ public class LevelGeneratingState extends AbstractAppState {
         chunkNumber++;
 
         // generate a chunk filled with content
-        List<Spatial> list = chunkFactory.generateChunk(chunkNumber);
+        List<Object> list = chunkFactory.generateChunk(chunkNumber);
         Vector3f newChunkPosition =
                 new Vector3f(nextChunkX, 0f, 0f);
         nextChunkX += P.chunkLength;
 
-        for (Spatial spatial : list) {
-            addToLevel(spatial, spatial.getLocalTranslation().add(newChunkPosition));
+        for (Object object : list) {
+            if (object instanceof Spatial) {
+                Spatial spatial = (Spatial) object;
+                addToLevel(spatial, spatial.getLocalTranslation().add(newChunkPosition));
+            } else if (object instanceof SpotLight) {
+                SpotLight light = (SpotLight) object;
+                addToLevel(light, light.getPosition().add(newChunkPosition));
+            } else if (object instanceof PointLight) {
+                PointLight light = (PointLight) object;
+                addToLevel(light, light.getPosition().add(newChunkPosition));   
+            }
         }
 
     }
@@ -231,6 +261,20 @@ public class LevelGeneratingState extends AbstractAppState {
         } else {
             miscNode.detachChild(spatial);
         }
+    }
+    
+    private void addToLevel(SpotLight light, Vector3f position) {
+        light.setPosition(position);
+        this.gameNode.addLight(light);
+    }
+    
+    private void addToLevel(PointLight light, Vector3f position) {
+        light.setPosition(position);
+        this.gameNode.addLight(light);
+    }
+    
+    private void removeFromLevel(Light light) {
+        this.gameNode.removeLight(light);
     }
 
     public Player getPlayer() {
