@@ -146,22 +146,28 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         }
         if (invulnTimer > 0) { // invulnerability powerup goes off over time
             invulnTimer -= tpf;
+            if (invulnTimer <= 0) {
+                ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.INVULN, false);
+            }
         }
     }
     
     
     public void invulnerabilityPowerup() {
         invulnTimer += 5f;
+        ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.INVULN, true);
     }
 
     public void speedBoostPowerup() {
         speedUpTimer += 5;
-        setSpeedFactor(P.speedFactor);        
+        setSpeedFactor(P.speedFactor);
+        ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.SPEED, true);
     }
 
     private void undoSpeedBoostPowerup() {
         speedUpTimer = 0;
         setSpeedFactor(P.speedFactor);
+        ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.SPEED, false);
     }
     
     public void slowDownPowerup() {
@@ -171,11 +177,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     
     public void doubleJumpPowerup() {
         maxNoOfJumps = 2;
+        ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.DOUBLEJUMP, true);
     }
     
     
     private void undoDoubleJumpPowerup() {
         maxNoOfJumps = 1;
+        ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.DOUBLEJUMP, false);
     }
     
     public void setSpeedFactor(float factor) {

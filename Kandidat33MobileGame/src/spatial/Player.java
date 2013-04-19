@@ -81,6 +81,40 @@ public class Player extends Node implements AnimEventListener {
         return this.playerModel;
     }
     
+    public enum Powerup {
+        SPEED, INVULN, DOUBLEJUMP
+    }
+    
+    public void updateModelAfterPowerup(Powerup powerup, boolean setting) {
+        ParticleEmitter dust = (ParticleEmitter)this.playerModel.getChild("Emitter");
+        switch(powerup) {
+            case SPEED:
+                if (setting) {
+                    dust.setHighLife(4f);
+                } else {
+                    dust.setHighLife(0.2f);
+                }
+                break;
+            case INVULN:
+                if (setting) {
+                    dust.setGravity(0f,20f,0f);
+                    dust.setEndSize(3.5f);
+                } else {
+                    dust.setGravity(0f,0f,0f);
+                    dust.setEndSize(0.1f);
+                }
+                break;
+            case DOUBLEJUMP:
+                if (setting) {
+                    dust.setEndColor(ColorRGBA.Green);
+                } else {
+                    dust.setEndColor(new ColorRGBA(0.05f, 0.05f, 0.05f, 0.5f));
+                }
+                break;
+                
+        }
+    }
+    
     /**
      * Call this to stop the player in its tracks. Useful for a delay before
      * respawning – the player won't fall miles away from the level.

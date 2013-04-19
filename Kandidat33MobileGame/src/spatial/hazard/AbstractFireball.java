@@ -78,11 +78,11 @@ public abstract class AbstractFireball extends PlayerInteractor {
         fire.setStartColor(colorArray[i]);
         fire.setEndColor(colorArray[j]);
         fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 2, 0));
-        fire.setStartSize(3.5f);
+        fire.setStartSize(2.5f);
         fire.setEndSize(0.1f);
         fire.setGravity(0, 0, 0);
         fire.setLowLife(0.4f);
-        fire.setHighLife(1f);
+        fire.setHighLife(0.6f);
         fire.getParticleInfluencer().setVelocityVariation(0.3f);
         return fire;
     }
