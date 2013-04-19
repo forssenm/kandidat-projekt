@@ -168,7 +168,7 @@ public class InGameState extends AbstractAppState {
             if (gameTime > difficultyLevel*3f) {
                 difficultyLevel++;
                 if (P.speedFactor < P.maxSpeedFactor) {
-                    P.speedFactor = P.minSpeedFactor + difficultyLevel*0.05f;
+                    P.speedFactor += 0.05f;
                     player.getControl(PlayerControl.class).setSpeedFactor(P.speedFactor);
                 }
             }

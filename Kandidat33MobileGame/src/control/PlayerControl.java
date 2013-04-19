@@ -148,19 +148,23 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         speedUpTimer += 5;
         setSpeedFactor(P.speedFactor);        
     }
-    
-
 
     private void undoSpeedBoostPowerup() {
         speedUpTimer = 0;
         setSpeedFactor(P.speedFactor);
     }
     
+    public void slowDownPowerup() {
+        P.speedFactor = Math.max(P.speedFactor - 0.4f, P.minSpeedFactor);
+        undoSpeedBoostPowerup();
+    }
+    
     public void doubleJumpPowerup() {
         maxNoOfJumps = 2;
     }
     
-    public void undoDoubleJumpPowerup() {
+    
+    private void undoDoubleJumpPowerup() {
         maxNoOfJumps = 1;
     }
     
@@ -513,4 +517,5 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         rigidBody = new PhysicsRigidBody(getShape(), mass);
         rigidBody.setAngularFactor(0);
     }
+
 }

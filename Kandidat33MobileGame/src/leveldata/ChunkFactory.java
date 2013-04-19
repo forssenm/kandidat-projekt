@@ -24,6 +24,7 @@ import spatial.hazard.SingleShotWizard;
 import spatial.hazard.SpinningFireball;
 import spatial.hazard.StationaryFireball;
 import spatial.powerup.DoubleJumpPowerup;
+import spatial.powerup.SlowDownPowerup;
 import spatial.powerup.SpeedPowerup;
 import util.RomanNumber;
 import variables.P;
@@ -107,10 +108,11 @@ public class ChunkFactory {
                 d += dist; // distance after the "starting strip" is over
             }
         } else {
-            // results 0-7 are actual enemies, a 'roll' of 8 or higher will
-            // give nothing
+            /*results 0-7 are actual enemies; a 'roll' of 8 or higher
+             * will give nothing */
             enemyType = random.nextInt(12);
-            powerupType = random.nextInt(6);
+            /* results 0-3 are powerups; 4 or higher gives nothing */
+            powerupType = random.nextInt(7);
 
             // get back to normal height if we're too low or too high
             if (height < -2) {
@@ -238,6 +240,7 @@ public class ChunkFactory {
         }
         
         
+        // generate powerups:
         switch (powerupType) {
             case (-1): // nothing
                 break;
@@ -245,8 +248,11 @@ public class ChunkFactory {
                 list.add(createSpeedPowerup(d-8,height+5));
                 break;
             case (1): // double jump
+            case (2):
                 list.add(createDoubleJumpPowerup(d-3,height+10));
                 break;
+            case (3):
+                list.add(createSlowDownPowerup(d-15, height + 7));
             default:
                 break;
         }
@@ -377,6 +383,12 @@ public class ChunkFactory {
         DoubleJumpPowerup doubleJumpPowerup = new DoubleJumpPowerup(assetManager);
         doubleJumpPowerup.move(positionX, positionY, 0f);
         return doubleJumpPowerup;
+    }
+
+    private Spatial createSlowDownPowerup(float positionX, float positionY) {
+        SlowDownPowerup slowDownPowerup = new SlowDownPowerup(assetManager);
+        slowDownPowerup.move(positionX, positionY, 0f);
+        return slowDownPowerup;
     }
     
 }
