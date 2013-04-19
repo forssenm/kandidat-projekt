@@ -103,7 +103,7 @@ public class InMainMenuState extends AbstractAppState {
 
     @NiftyEventSubscriber(id = "exitButton")
     public void onExitClick(String id, NiftyMousePrimaryClickedEvent event) {
-        System.exit(0);
+        this.app.stop();
     }
 
     @NiftyEventSubscriber(id = "backButton")
