@@ -76,28 +76,28 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     // private AnimChannel channel;
     // private AnimControl control;
     //End animation code
-    protected static final Logger logger = Logger.getLogger(PlayerControl.class.getName());
-    protected PhysicsRigidBody rigidBody;
-    protected float radius;
-    protected float height;
-    protected float mass;
+    private static final Logger logger = Logger.getLogger(PlayerControl.class.getName());
+    private PhysicsRigidBody rigidBody;
+    private float radius;
+    private float height;
+    private float mass;
     /**
      * Stores final spatial location, corresponds to RigidBody location.
      */
-    protected final Vector3f location = new Vector3f();
-    protected final Vector3f velocity = new Vector3f();
+    private final Vector3f location = new Vector3f();
+    private final Vector3f velocity = new Vector3f();
     private static final float defaultRunSpeed = 14f;
     private static final float defaultPushbackSpeed = -10f;
     private static final float defaultJumpSpeed = 25f;
     private static float defaultGravity = -40f;
     private static final float defaultMass = 20f;
-    protected final Vector3f walkVelocity = new Vector3f(defaultRunSpeed, 0, 0);
-    protected float jumpSpeed = defaultJumpSpeed;
-    protected float gravity = defaultGravity;
-    protected float pushbackSpeed = defaultPushbackSpeed;
-    protected boolean initiateJumpInNextTick = false;
-    protected boolean onGround = false;
-    protected boolean abortJumpInNextTick = false;
+    private final Vector3f walkVelocity = new Vector3f(defaultRunSpeed, 0, 0);
+    private float jumpSpeed = defaultJumpSpeed;
+    private float gravity = defaultGravity;
+    private float pushbackSpeed = defaultPushbackSpeed;
+    private boolean initiateJumpInNextTick = false;
+    private boolean onGround = false;
+    private boolean abortJumpInNextTick = false;
     private boolean pushBackInNextTick;
     private boolean willRespawn = false;
     private float speedUpTimer;
@@ -113,17 +113,14 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     /**
-     * Creates a new character with the given properties. The jumpSpeed will be
-     * set to a default value of 1.25 * mass.
+     * Creates a new character with the given properties.
      *
      * @param radius
      * @param height
-     * @param mass
      */
     public PlayerControl(float radius, float height) {
         this.radius = radius;
         this.height = height;
-        this.mass = mass;
         rigidBody = new PhysicsRigidBody(getShape(), defaultMass);
         rigidBody.setAngularFactor(0);
 
@@ -148,15 +145,14 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     public void speedBoostPowerup() {
-        if (speedUpTimer <= 0) {
-            setSpeedFactor(2f);
-        }
         speedUpTimer += 5;
+        setSpeedFactor(P.speedFactor);        
     }
     
 
 
     private void undoSpeedBoostPowerup() {
+        speedUpTimer = 0;
         setSpeedFactor(P.speedFactor);
     }
     
@@ -164,7 +160,14 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         maxNoOfJumps = 2;
     }
     
+    public void undoDoubleJumpPowerup() {
+        maxNoOfJumps = 1;
+    }
+    
     public void setSpeedFactor(float factor) {
+        if (speedUpTimer > 0) {
+            factor = Math.min(factor+0.5f, P.maxSpeedFactor);
+        }
         walkVelocity.setX(defaultRunSpeed * factor);
         jumpSpeed = defaultJumpSpeed * factor;
         pushbackSpeed = defaultPushbackSpeed * factor;
@@ -305,9 +308,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      */
     public void damage() {
         pushBackInNextTick = true;
-        maxNoOfJumps = 1; // remove double jump powerup
-        this.speedUpTimer = 0; // remove speed boost powerup
         undoSpeedBoostPowerup();
+        undoDoubleJumpPowerup();
     }
     
     /**
@@ -379,7 +381,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     }
 
     public void respawn(Vector3f position) {
-        setSpeedFactor(P.speedFactor);
+        undoSpeedBoostPowerup();
+        undoDoubleJumpPowerup();
         willRespawn = true;
         warp(position);
     }

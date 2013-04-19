@@ -149,16 +149,30 @@ public class InGameState extends AbstractAppState {
     }
 
     
+    private float gameTime;
+    private int difficultyLevel;
+    
     /**
      * {inheritDoc}
      */
     @Override
     public void update(float tpf) {
+        
         if (!gameOver) {
             if (player.getWorldTranslation().getY() < P.deathTreshold) {
                 this.chaseCam.setEnabled(false);
                 this.gameOver = true;
             }
+            
+            gameTime += tpf;
+            if (gameTime > difficultyLevel*3f) {
+                difficultyLevel++;
+                if (P.speedFactor < P.maxSpeedFactor) {
+                    P.speedFactor = P.minSpeedFactor + difficultyLevel*0.05f;
+                    player.getControl(PlayerControl.class).setSpeedFactor(P.speedFactor);
+                }
+            }
+            
         } else { // gameOver
             respawnTimer += tpf;
             if (!player.checkCulling(this.app.getCamera())) {
@@ -181,6 +195,10 @@ public class InGameState extends AbstractAppState {
      */
     private void restartLevel() {
         player.setEnabled(true);
+        gameTime = 0;
+        difficultyLevel = 0;
+        P.speedFactor = P.minSpeedFactor;
+        
         Vector3f spawnPosition = player.getLocalTranslation();
         spawnPosition.x = 0.0f;
         spawnPosition.y = 20.0f;

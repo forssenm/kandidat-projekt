@@ -16,9 +16,11 @@ public class P {
     public static final float platformHeight = 1f;
     public static final float playerZOffset =2f;
     public static final float platformDistance = 5.0f;
-    
-    public static final float speedFactor = 1.4f; // player speed
-    
+    public static final float minSpeedFactor = 1.2f;
+    public static final float maxSpeedFactor = 2.4f;
+    public static float speedFactor = 1.2f; // player speed
+        
+        
     public static final float chunkLength = 50.0f;
     
     public static final float deathTreshold = -20.0f;  
@@ -33,5 +35,6 @@ public class P {
     
     public static int screenWidth;
     public static int screenHeight;
+
     
 }
