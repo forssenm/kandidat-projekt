@@ -93,6 +93,12 @@ public class DoubleJumpPowerup extends PlayerInteractor {
                     DoubleJumpPowerup.this.destroy();
                 }
             }
+
+            /**
+             * Do nothing.
+             */
+            public void collideWithStatic() {
+            }
         };
     }
 }

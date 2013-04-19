@@ -22,4 +22,6 @@ public interface PlayerInteractorControl extends Control {
      * @param player
      */
     public void collideWithPlayer(Player player);
+
+    public void collideWithStatic();
 }

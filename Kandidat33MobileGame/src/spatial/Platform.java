@@ -24,7 +24,7 @@ public class Platform extends Geometry {
      * texture of the <code>Platform</code>.
      */
     public Platform(AssetManager assetManager, Vector3f position, float length, float height, float width) {
-        super("Platform");
+        super("platform");
         Box model =
             new Box(Vector3f.ZERO, length/2, height/2, width/2);
         this.mesh = model;

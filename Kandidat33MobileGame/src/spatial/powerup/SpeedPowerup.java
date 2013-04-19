@@ -92,6 +92,12 @@ public class SpeedPowerup extends PlayerInteractor {
                     hasHit = true;
                     SpeedPowerup.this.destroy();
                 }
+            }            
+
+            /**
+             * Do nothing.
+             */
+            public void collideWithStatic() {
             }
         };
     }

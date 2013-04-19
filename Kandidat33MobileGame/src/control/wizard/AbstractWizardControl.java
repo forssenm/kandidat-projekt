@@ -102,4 +102,8 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
     public void setLevelControl(LevelControl levelControl) {
         this.levelControl = levelControl;
     }
+    
+    public void collideWithStatic() {
+    }
+    
 }

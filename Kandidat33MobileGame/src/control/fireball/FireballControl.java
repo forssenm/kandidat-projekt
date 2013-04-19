@@ -29,5 +29,9 @@ public class FireballControl extends AbstractPlayerInteractorControl {
     protected void positionUpdate(float tpf) {
         // do not move
     }
+
+    public void collideWithStatic() {
+        ((AbstractFireball)spatial).destroy();
+    }
     
 }

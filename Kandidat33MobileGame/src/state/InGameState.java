@@ -228,23 +228,11 @@ public class InGameState extends AbstractAppState {
                 if (event.getNodeA().getName().equals("player")
                         && event.getNodeB().getName().equals("playerinteractor")) {
                     event.getNodeB().getControl(PlayerInteractorControl.class).collideWithPlayer((Player) event.getNodeA());
-                } else if (event.getNodeB().getName().equals("player")
-                        && event.getNodeA().getName().equals("playerinteractor")) {
-                    event.getNodeA().getControl(PlayerInteractorControl.class).collideWithPlayer((Player) event.getNodeB());
+                } else if (event.getNodeB().getName().equals("playerinteractor")
+                        && event.getNodeA().getName().equals("platform")) {
+                    event.getNodeB().getControl(PlayerInteractorControl.class).collideWithStatic();
                 }
-                // should we ever want to detect collisions between other
-                // combinations than player and playerinteractor, use this:
-                /*
-                 if (event.getNodeA().getName().equals("something")
-                 && event.getNodeB().getName().equals("somethingelse")) {
-                 final Spatial spatial = event.getNodeA();
-                 System.out.println("foo");
-                 } else if (event.getNodeB().getName().equals("something")
-                 && event.getNodeA().getName().equals("somethingelse")) {
-                 final Spatial spatial = event.getNodeB();
-                 System.out.println("bar");
-                 }
-                 */
+
             }
         };
         this.physics.getPhysicsSpace().addCollisionListener(physicsCollisionListener);
