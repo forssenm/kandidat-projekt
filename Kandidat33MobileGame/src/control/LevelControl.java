@@ -13,11 +13,15 @@ import com.jme3.scene.SceneGraphVisitor;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import leveldata.ChunkFactory;
 import leveldata.LevelContentGenerator;
+import spatial.Platform;
 import spatial.Player;
+import spatial.hazard.AbstractFireball;
+import spatial.hazard.AbstractWizard;
 import variables.P;
 
 /**
@@ -30,6 +34,10 @@ import variables.P;
 public class LevelControl implements Control {
 
     private Node levelNode;
+    private Node platformNode = new Node("platforms");
+    private Node wizardNode = new Node("wizards");
+    private Node fireballNode = new Node("fireballs");
+    private Node miscNode = new Node("misc");
     private float nextChunkX;
     private AssetManager assetManager;
     private PhysicsSpace physicsSpace;
@@ -63,6 +71,10 @@ public class LevelControl implements Control {
             cleanup();
         }
         this.levelNode = (Node) spatial;
+        levelNode.attachChild(wizardNode);
+        levelNode.attachChild(fireballNode);
+        levelNode.attachChild(platformNode);
+        levelNode.attachChild(miscNode);
         initiateLevel();
     }
 
@@ -73,7 +85,7 @@ public class LevelControl implements Control {
      * @param tpf
      */
     public void update(float tpf) {
-        for (Spatial spatial : levelNode.getChildren()) {
+        for (Spatial spatial : getAllLevelObjects()) {
             if (isOutsideLevelBounds(spatial.getLocalTranslation())) {
                 removeFromLevel(spatial);
                 /* the background node (wall and window) acts as a checkpoint –
@@ -84,6 +96,17 @@ public class LevelControl implements Control {
                 }
             }
         }
+    }
+    
+    Collection tempColl = new LinkedList<Spatial>();
+    
+    public Collection<Spatial> getAllLevelObjects() {
+        tempColl.clear();
+        tempColl.addAll(wizardNode.getChildren());
+        tempColl.addAll(fireballNode.getChildren());
+        tempColl.addAll(platformNode.getChildren());
+        tempColl.addAll(miscNode.getChildren());
+        return tempColl;
     }
 
     private boolean isOutsideLevelBounds(Vector3f position) {
@@ -169,12 +192,30 @@ public class LevelControl implements Control {
                     }
                 });
         
-        levelNode.attachChild(spatial);
+        if (spatial instanceof AbstractFireball) {
+            fireballNode.attachChild(spatial);
+        } else if (spatial instanceof AbstractWizard) {
+            wizardNode.attachChild(spatial);
+        } else if (spatial instanceof Platform) {
+            platformNode.attachChild(spatial);
+        } else {
+            miscNode.attachChild(spatial);
+        }
+        
+        //levelNode.attachChild(spatial);
     }
 
     public void removeFromLevel(Spatial spatial) {
         physicsSpace.removeAll(spatial);
-        levelNode.detachChild(spatial);
+        if (spatial instanceof AbstractFireball) {
+            fireballNode.detachChild(spatial);
+        } else if (spatial instanceof AbstractWizard) {
+            wizardNode.detachChild(spatial);
+        } else if (spatial instanceof Platform) {
+            platformNode.detachChild(spatial);
+        } else {
+            miscNode.detachChild(spatial);
+        }
     }
 
     public Player getPlayer() {
@@ -182,7 +223,7 @@ public class LevelControl implements Control {
     }
 
     public void cleanup() {
-        for (Spatial spatial : levelNode.getChildren()) {
+        for (Spatial spatial : getAllLevelObjects()) {
             removeFromLevel(spatial);
         }
         this.nextChunkX = -P.minLeftDistance;

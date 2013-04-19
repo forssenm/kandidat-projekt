@@ -28,7 +28,7 @@ import variables.P;
  * <code>Node</code>s and attaches relevant controls to them.
  *
  * The level/scene is setup using a
- * <code>LevelControl</code> to continously generate scene-chunks whene the
+ * <code>LevelControl</code> to continously generate scene-chunks when the
  * player moves. <br/><br/> The player is setup with a
  * <code>PlayerControl</code> which keeps the player moving to the right and
  * handles jump-events. <br/><br/> Background music is set to play. <br/><br/>
