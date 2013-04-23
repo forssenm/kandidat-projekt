@@ -10,6 +10,8 @@ import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
+import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
 import com.jme3.light.PointLight;
@@ -32,6 +34,7 @@ import spatial.Platform;
 import spatial.Player;
 import spatial.hazard.AbstractFireball;
 import spatial.hazard.AbstractWizard;
+import util.RomanNumber;
 import variables.P;
 
 /**
@@ -52,6 +55,8 @@ public class LevelGeneratingState extends AbstractAppState {
     private Player player;
     private ChunkFactory chunkFactory;
     private int chunkNumber;
+    private int gameProgress;
+    
     private SimpleApplication app;
     private AssetManager assetManager;
     private AppStateManager stateManager;
@@ -59,6 +64,7 @@ public class LevelGeneratingState extends AbstractAppState {
     private PhysicsSpace physicsSpace;
     
     public static final String LEVEL_NODE = "Level Node";
+    private BitmapFont guiFont;
 
     /**
      * This method initializes the the InGameState and thus gets the game 
@@ -123,6 +129,7 @@ public class LevelGeneratingState extends AbstractAppState {
                  */
                 if (spatial.getName().equals("background")) {
                     generateNextChunk();
+                    showLevelProgress();
                 }
             }
         }
@@ -163,6 +170,7 @@ public class LevelGeneratingState extends AbstractAppState {
         for (int i = 0; i < nbrOfChunks; i++) {
             generateNextChunk();
         }
+        gameProgress = 0;
     }
 
     /**
@@ -174,7 +182,8 @@ public class LevelGeneratingState extends AbstractAppState {
     private void generateNextChunk() {
         
         chunkNumber++;
-
+        gameProgress++;
+        
         // generate a chunk filled with content
         List<Object> list = chunkFactory.generateChunk(chunkNumber);
         Vector3f newChunkPosition =
@@ -312,5 +321,17 @@ public class LevelGeneratingState extends AbstractAppState {
 
     public void read(JmeImporter im) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void showLevelProgress() {
+        Node guiNode = app.getGuiNode();
+        guiNode.detachAllChildren();
+        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+        BitmapText helloText = new BitmapText(guiFont, false);
+        helloText.setSize(guiFont.getCharSet().getRenderedSize());
+        String romanNumber = RomanNumber.romanNumberString(gameProgress);
+        helloText.setText(romanNumber);
+        helloText.setLocalTranslation(300, helloText.getLineHeight(), 0);
+        guiNode.attachChild(helloText);
     }
 }

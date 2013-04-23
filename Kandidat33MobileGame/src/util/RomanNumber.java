@@ -31,6 +31,9 @@ public class RomanNumber {
      * @return Roman numeral
      */
     public static String romanNumberString(int number){
+        if(number <= 0 ){
+            return "";
+        }
         int countDown = number;
         StringBuilder romanNumberBuilder = new StringBuilder();
         int[] onesNumbers = {1000,100,10,1};
