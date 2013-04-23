@@ -42,7 +42,8 @@ public class Main extends SimpleApplication {
         P.screenWidth = settings.getWidth();
         P.screenHeight = settings.getHeight();
         inGameState = new InGameState();
-        stateManager.attach(new InMainMenuState());
+        inMainMenuState = new InMainMenuState();
+        stateManager.attach(inMainMenuState);
     }
 
     @Override

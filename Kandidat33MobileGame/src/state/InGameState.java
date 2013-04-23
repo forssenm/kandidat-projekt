@@ -147,12 +147,11 @@ public class InGameState extends AbstractAppState {
      * {inheritDoc}
      */
     @Override
-    public void update(float tpf) {
-        
+    public void update(float tpf) {        
         if (!gameOver) {
             // check for game over
             if (player.getWorldTranslation().getY() < P.deathTreshold) {
-                this.chaseCam.setEnabled(false);
+                //this.chaseCam.setEnabled(false);
                 this.gameOver = true;
             }
             // check for difficulty increase
@@ -166,9 +165,16 @@ public class InGameState extends AbstractAppState {
             }
             
         } else { // gameOver
-            player.setEnabled(false);
             this.app.gameOver();
+            System.out.println("Game over");
         }
+    }
+        
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        player.setEnabled(enabled);
+        physics.setEnabled(enabled);
     }
 
     /*
@@ -179,7 +185,6 @@ public class InGameState extends AbstractAppState {
      */
     public void restartLevel() {
         gameOver = false;
-        player.setEnabled(true);
         gameTime = 0;
         difficultyLevel = 0;
         P.speedFactor = P.minSpeedFactor;

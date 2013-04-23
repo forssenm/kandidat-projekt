@@ -13,6 +13,7 @@ import com.jme3.scene.Node;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
+import main.Main;
 
 /**
  * This class handles all the menu things
@@ -64,7 +65,7 @@ public class InMainMenuState extends AbstractAppState {
         } else {
             //Remove the things not needed when the state is inactive
             System.out.println("InMainMenuState is now inactive");
-            cleanup();
+            //cleanup();
         }
     }
 
@@ -87,8 +88,9 @@ public class InMainMenuState extends AbstractAppState {
     @NiftyEventSubscriber(id = "playButton")
     public void onPlayClick(String id, NiftyMousePrimaryClickedEvent event) {
         nifty.exit();
-        this.setEnabled(false);
-        stateManager.attach(new InGameState());
+        ((Main)this.app).gameStart();
+        //this.setEnabled(false);
+        //stateManager.attach(new InGameState());
     }
 
     @NiftyEventSubscriber(id = "settingsButton")
