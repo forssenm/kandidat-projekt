@@ -18,6 +18,9 @@ import variables.P;
  */
 public class Main extends SimpleApplication {
     
+    private InMainMenuState inMainMenuState;
+    private InGameState inGameState;
+    
     public static void main(String[] args) {
         AppSettings appSettings = new AppSettings(true);
         appSettings.setSamples(2);
@@ -38,18 +41,31 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         P.screenWidth = settings.getWidth();
         P.screenHeight = settings.getHeight();
-        //stateManager.attach(new InGameState());
+        inGameState = new InGameState();
         stateManager.attach(new InMainMenuState());
     }
 
     @Override
     public void simpleUpdate(float tpf) {
     }
+    
+    public void gameStart() {
+        this.inMainMenuState.setEnabled(false);
+        if (!inGameState.isInitialized()) {
+            this.stateManager.attach(inGameState);
+        } else {
+            inGameState.setEnabled(true);
+            inGameState.restartLevel();
+        }
+    }
+    
+    public void gameOver() {
+        this.inGameState.setEnabled(false);
+        this.inMainMenuState.setEnabled(true);
+    }
 
     @Override
     public void simpleRender(RenderManager rm) {
-        //TODO: add render code
     }
     
-    // BAra skriver en kommentar för att testa push
 }
