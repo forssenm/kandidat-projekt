@@ -410,6 +410,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         undoDoubleJumpPowerup();
         willRespawn = true;
         warp(position);
+        update(0f);
     }
 
     /**

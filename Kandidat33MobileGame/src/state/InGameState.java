@@ -166,7 +166,6 @@ public class InGameState extends AbstractAppState {
             
         } else { // gameOver
             this.app.gameOver();
-            System.out.println("Game over");
         }
     }
         
@@ -175,13 +174,13 @@ public class InGameState extends AbstractAppState {
         super.setEnabled(enabled);
         player.setEnabled(enabled);
         physics.setEnabled(enabled);
+        gameOver = false;
     }
 
-    /*
-     * When implementing a gameover-menu and a restart-button, just remove the
-     * respawn-timer behaviour from update, keep the rest of the
-     * if(!gameOver)-else statement, and make sure to call this method when
-     * "restart" is pressed.
+
+    /**
+     * Restarts the level after a game over. Respawns the player, resets the
+     * level and difficulty.
      */
     public void restartLevel() {
         gameOver = false;

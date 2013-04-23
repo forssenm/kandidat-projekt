@@ -35,7 +35,7 @@ public class CalculatingWizardControl extends AbstractWizardControl {
         time += tpf;
                 
         float y = tpf*radius*FastMath.sin(time);
-        this.spatial.setLocalTranslation(this.spatial.getLocalTranslation().add(Vector3f.UNIT_Y.mult(y)));
+        this.spatial.setLocalTranslation(this.spatial.getLocalTranslation().add(0f,y,0f));
     }
 
     @Override
