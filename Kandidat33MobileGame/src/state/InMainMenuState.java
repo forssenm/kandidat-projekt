@@ -13,6 +13,7 @@ import com.jme3.scene.Node;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
+import main.Main;
 
 /**
  * This class handles all the menu things
@@ -21,7 +22,7 @@ import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
  */
 public class InMainMenuState extends AbstractAppState {
 
-    private SimpleApplication app;
+    private Main app;
     private Node rootNode;
     private AssetManager assetManager;
     private AppStateManager stateManager;
@@ -39,7 +40,7 @@ public class InMainMenuState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        this.app = (SimpleApplication) app;
+        this.app = (Main) app;
         this.rootNode = this.app.getRootNode();
         this.assetManager = this.app.getAssetManager();
         this.stateManager = this.app.getStateManager();
@@ -61,10 +62,11 @@ public class InMainMenuState extends AbstractAppState {
         if (enabled) {
             //Initiate the things that are needed when the state is active
             System.out.println("InMainMenuState is now active");
+            nifty.gotoScreen("mainMenuScreen");
         } else {
             //Remove the things not needed when the state is inactive
             System.out.println("InMainMenuState is now inactive");
-            cleanup();
+            //cleanup();
         }
     }
 
@@ -87,8 +89,7 @@ public class InMainMenuState extends AbstractAppState {
     @NiftyEventSubscriber(id = "playButton")
     public void onPlayClick(String id, NiftyMousePrimaryClickedEvent event) {
         nifty.exit();
-        this.setEnabled(false);
-        stateManager.attach(new InGameState());
+        this.app.gameStart();
     }
 
     @NiftyEventSubscriber(id = "settingsButton")

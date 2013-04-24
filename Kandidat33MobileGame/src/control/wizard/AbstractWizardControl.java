@@ -59,7 +59,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
      * Wizards do not move.
      */
     protected void positionUpdate(float tpf) {
-        spatial.getLocalTranslation().addLocal(tpf*speed,0f,0f);
+        spatial.setLocalTranslation(spatial.getLocalTranslation().add(tpf*speed,0f,0f));
     }
 
     @Override

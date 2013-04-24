@@ -19,6 +19,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
+import main.Main;
 import spatial.Player;
 import variables.P;
 
@@ -44,7 +45,7 @@ public class InGameState extends AbstractAppState {
 
     public static final String GAME_NODE = "Game Node";
 
-    private SimpleApplication app;
+    private Main app;
     private Node gameNode;
     private AssetManager assetManager;
     private AppStateManager stateManager;
@@ -72,7 +73,7 @@ public class InGameState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        this.app = (SimpleApplication) app;
+        this.app = (Main) app;
         this.gameNode = new Node(GAME_NODE);
         this.app.getRootNode().attachChild(this.gameNode);
         this.assetManager = this.app.getAssetManager();
@@ -146,14 +147,14 @@ public class InGameState extends AbstractAppState {
      * {inheritDoc}
      */
     @Override
-    public void update(float tpf) {
-        
+    public void update(float tpf) {        
         if (!gameOver) {
+            // check for game over
             if (player.getWorldTranslation().getY() < P.deathTreshold) {
-                this.chaseCam.setEnabled(false);
+                //this.chaseCam.setEnabled(false);
                 this.gameOver = true;
             }
-            
+            // check for difficulty increase
             gameTime += tpf;
             if (gameTime > difficultyLevel*3f) {
                 difficultyLevel++;
@@ -164,27 +165,25 @@ public class InGameState extends AbstractAppState {
             }
             
         } else { // gameOver
-            respawnTimer += tpf;
-            if (!player.checkCulling(this.app.getCamera())) {
-                // staps the player from moving if outside the camera
-                player.setEnabled(false);
-            }
-            if (respawnTimer > respawnDelay) {
-                restartLevel();
-                gameOver = false;
-                respawnTimer = 0.0f;
-            }
+            this.app.gameOver();
         }
     }
+        
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        player.setEnabled(enabled);
+        physics.setEnabled(enabled);
+        gameOver = false;
+    }
 
-    /*
-     * When implementing a gameover-menu and a restart-button, just remove the
-     * respawn-timer behaviour from update, keep the rest of the
-     * if(!gameOver)-else statement, and make sure to call this method when
-     * "restart" is pressed.
+
+    /**
+     * Restarts the level after a game over. Respawns the player, resets the
+     * level and difficulty.
      */
-    private void restartLevel() {
-        player.setEnabled(true);
+    public void restartLevel() {
+        gameOver = false;
         gameTime = 0;
         difficultyLevel = 0;
         P.speedFactor = P.minSpeedFactor;
