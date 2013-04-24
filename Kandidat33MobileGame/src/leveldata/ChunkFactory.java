@@ -85,8 +85,8 @@ public class ChunkFactory {
         Torch torch = createTorch (30, wHeight + 15);
         //lights.add(this.createTorchLight(30f, wHeight + 15f));
 
-        if (level > 4 && level%3 == 0) {
-            staticObjects.attachChild(createMileStone((int)(level-1)/3,30f,wHeight + 20f));
+        if (level > 4) {
+            staticObjects.attachChild(createMileStone((int)(level-4),30f,wHeight + 20f));
         }
         
         staticObjects.attachChild(window);

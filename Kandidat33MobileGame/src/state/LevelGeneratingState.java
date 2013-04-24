@@ -170,7 +170,7 @@ public class LevelGeneratingState extends AbstractAppState {
         for (int i = 0; i < nbrOfChunks; i++) {
             generateNextChunk();
         }
-        gameProgress = 0;
+        gameProgress = -1;
     }
 
     /**
