@@ -62,7 +62,7 @@ public class Main extends SimpleApplication {
     }
     
     public void gameOver() {
-        this.inGameState.setEnabled(false);
+        //this.inGameState.setEnabled(false);
         this.inMainMenuState.setEnabled(true);
     }
 

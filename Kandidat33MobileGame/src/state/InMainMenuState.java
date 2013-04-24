@@ -14,6 +14,7 @@ import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
 import main.Main;
+import niftyController.MainMenuScreenController;
 
 /**
  * This class handles all the menu things
@@ -80,7 +81,7 @@ public class InMainMenuState extends AbstractAppState {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, app.getAudioRenderer(), app.getGuiViewPort());
         nifty = niftyDisplay.getNifty();
         nifty.subscribeAnnotations(this);
-        nifty.fromXml("/xmlgui/Screens.xml", "splashScreen");
+        nifty.fromXml("/xmlgui/Screens.xml", "splashScreen",new MainMenuScreenController());
         //nifty.fromXml("/xmlgui/SplashScreen.xml", "splashScreen");
         app.getGuiViewPort().addProcessor(niftyDisplay);
     }

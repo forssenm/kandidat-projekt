@@ -83,7 +83,6 @@ public class InGameState extends AbstractAppState {
         this.physics = new BulletAppState();
         
         this.level = new LevelGeneratingState();
-        
         this.stateManager.attach(level);
         this.stateManager.attach(physics);
         this.stateManager.attach(new RunningState());
@@ -151,8 +150,7 @@ public class InGameState extends AbstractAppState {
         if (!gameOver) {
             // check for game over
             if (player.getWorldTranslation().getY() < P.deathTreshold) {
-                //this.chaseCam.setEnabled(false);
-                this.gameOver = true;
+                this.gameOver();// = true;
             }
             // check for difficulty increase
             gameTime += tpf;
@@ -165,8 +163,17 @@ public class InGameState extends AbstractAppState {
             }
             
         } else { // gameOver
-            this.app.gameOver();
+            // wait until player has fallen down
+            if (!player.checkCulling(this.app.getCamera())) {
+                this.setEnabled(false);
+            }
         }
+    }
+    
+    private void gameOver() {
+        gameOver = true;
+        this.app.gameOver();
+        this.chaseCam.setEnabled(false);
     }
         
     @Override
