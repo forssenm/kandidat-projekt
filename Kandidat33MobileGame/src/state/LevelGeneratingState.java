@@ -331,7 +331,8 @@ public class LevelGeneratingState extends AbstractAppState {
         helloText.setSize(guiFont.getCharSet().getRenderedSize());
         String romanNumber = RomanNumber.romanNumberString(gameProgress);
         helloText.setText(romanNumber);
-        helloText.setLocalTranslation(300, helloText.getLineHeight(), 0);
+        float xPos = P.screenWidth/2 - helloText.getLineWidth()/2;
+        helloText.setLocalTranslation(xPos, helloText.getLineHeight(), 0);
         guiNode.attachChild(helloText);
     }
 }

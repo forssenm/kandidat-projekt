@@ -25,6 +25,7 @@ public class Main extends SimpleApplication {
         AppSettings appSettings = new AppSettings(true);
         appSettings.setSamples(2);
         appSettings.setVSync(true);
+        appSettings.setFrameRate(30);
         Main app = new Main();
         app.setSettings(appSettings); 
         app.start();

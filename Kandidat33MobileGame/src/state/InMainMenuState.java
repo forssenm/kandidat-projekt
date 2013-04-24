@@ -62,7 +62,7 @@ public class InMainMenuState extends AbstractAppState {
         if (enabled) {
             //Initiate the things that are needed when the state is active
             System.out.println("InMainMenuState is now active");
-            nifty.gotoScreen("mainMenuScreen");
+            nifty.gotoScreen("gameOverScreen");
         } else {
             //Remove the things not needed when the state is inactive
             System.out.println("InMainMenuState is now inactive");

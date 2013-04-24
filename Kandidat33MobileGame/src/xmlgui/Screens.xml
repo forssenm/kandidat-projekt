@@ -19,12 +19,26 @@
     </screen>
     
     <screen id="mainMenuScreen" controller="niftyController.MainMenuScreenController">
-        <layer childLayout="center">
-            <panel id="mainMenuPanel" childLayout="vertical">
+        <layer childLayout="center" backgroundColor="#000F">
+            <panel id="mainMenuPanel" childLayout="vertical" align="left">
                 <control id="playButton" name="button" label="Play" margin="15px" focusable="false"/>
                 <control id="settingsButton" name="button" label="Settings" margin="15px" focusable="false"/>
                 <control id="highscoreButton" name="button" label="Highscore" margin="15px" focusable="false"/>
                 <control id="exitButton" name="button" label="Exit" margin="15px" focusable="false"/> 
+            </panel>
+        </layer>
+    </screen>
+    
+    
+    <screen id="gameOverScreen" controller="niftyController.MainMenuScreenController">
+        <layer childLayout="horizontal">
+            <panel id="gameOverPanelLeft" childLayout="center" valign="bottom" height = "20%" width="50%">
+                <control id="playButton" name="button" label="Play" focusable="false"
+                height="100%" width="90%"/>
+            </panel>
+            <panel id="gameOverPanelRight" childLayout="center" valign="bottom" height = "20%" width="50%">
+                <control id="backButton" name="button" label="Back" focusable="false"
+                height="100%" width="90%" />
             </panel>
         </layer>
     </screen>
@@ -44,4 +58,6 @@
             </panel>
         </layer>
     </screen>
+    
+    
 </nifty>
