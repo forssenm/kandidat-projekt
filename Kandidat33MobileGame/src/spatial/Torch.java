@@ -13,6 +13,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import java.util.Random;
 import variables.P;
+import spatial.StandardParticleEmitter;
 
 /**
  * A class for a non-physical window frame, purely for decoration.
@@ -44,7 +45,7 @@ public class Torch extends Node {
     }
     
     private ParticleEmitter getTorchParticleEmitter (AssetManager assetManager) {
-             ParticleEmitter fire = 
+             /*ParticleEmitter fire = 
             new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
     Material mat_red = new Material(assetManager, 
             "Common/MatDefs/Misc/Particle.j3md");
@@ -54,7 +55,8 @@ public class Torch extends Node {
     fire.setMaterial(mat_red);
     fire.setImagesX(2); 
     fire.setImagesY(2); // 2x2 texture animation
-    
+    */
+        ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
     //Default values for a standard Torch
     ColorRGBA startColor = new ColorRGBA (0.9f, 0.3f, 0.1f, 0.8f);
     ColorRGBA endColor = new ColorRGBA (0.45f, 0.4f, 0f, 0.5f);
