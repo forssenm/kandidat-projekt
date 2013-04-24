@@ -19,17 +19,22 @@ import spatial.StandardParticleEmitter;
  */
 public abstract class AbstractWizard extends PlayerInteractor {
     
+    private static Node modelForWizard;
+    
     @Override
     protected Spatial createModel(AssetManager assetManager) {
-        // Node playerModel = (Node) assetManager.loadModel("Models/ghost6anim/clothball.j3o");
-        Node wizardModel = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003.j3o");
-
-        wizardModel.scale(1.5f);
+        
+        if (modelForWizard == null) {
+            modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003.j3o");
+            modelForWizard.scale(1.5f);
+        }
+        
+        Node model = (Node) modelForWizard.clone();
         ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
-        wizardModel.attachChild(sparkle);
+        model.attachChild(sparkle);
         sparkle.move(0.8f, 1.5f, -1f);   //what should be z effectively is x. what should be x is positive into the picture. Y is as is should be.
-       
-         return wizardModel;
+
+        return model;
     }
     
     private ParticleEmitter getWandParticleEmitter (AssetManager assetManager) {

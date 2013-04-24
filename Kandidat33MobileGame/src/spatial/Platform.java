@@ -14,6 +14,9 @@ import variables.P;
  * @author dagen
  */
 public class Platform extends Geometry {
+    
+    private static Material materialForPlatforms;
+    
     /**
      * This constructor creates a <code>Platform</code> represented by a 
      * <code>Geometry</code> loaded internally. A <code>RigidBodyControl</code> 
@@ -30,9 +33,11 @@ public class Platform extends Geometry {
         this.mesh = model;
         this.setLocalTranslation(length/2 + position.x, position.y, -P.playerZOffset);
         
-        Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        material.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
-        this.setMaterial(material);
+        if (materialForPlatforms == null) {
+            materialForPlatforms = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+            materialForPlatforms.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
+        }
+        this.setMaterial(materialForPlatforms);
 
         RigidBodyControl rigidBodyControl = new RigidBodyControl(0.0f);
         this.addControl(rigidBodyControl);

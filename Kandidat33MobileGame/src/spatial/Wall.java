@@ -16,6 +16,9 @@ import variables.P;
  * @author jonatankilhamn
  */
 public class Wall extends Node {
+    
+    private static Geometry geometryForWall;
+    
     /**
      * This constructor creates a <code>Wall</code> represented by a 
      * <code>Geometry</code> loaded internaly. The dimensions of the 
@@ -26,6 +29,17 @@ public class Wall extends Node {
      */
     public Wall(AssetManager assetManager){
         super("Wall");
+        
+        if (geometryForWall == null) {
+            initGeometry(assetManager);
+        }
+ 
+        this.setShadowMode(ShadowMode.Receive);
+        
+        this.attachChild(geometryForWall.clone());
+    }
+    
+    private static void initGeometry(AssetManager assetManager) {
         Box model =
             new Box(new Vector3f(P.chunkLength/2,0,-P.platformWidth/2-P.playerZOffset), P.chunkLength/2, 60, 0);
         
@@ -36,14 +50,10 @@ public class Wall extends Node {
         texture.setWrap(Texture.WrapMode.Repeat);
         model.scaleTextureCoordinates(new Vector2f(Math.round(18f*P.screenWidth/640), Math.round(40f*P.screenHeight/480)));
         
-        Geometry geometry = new Geometry("",model);
+        geometryForWall = new Geometry("",model);
         
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         material.setTexture("DiffuseMap", texture);
-        geometry.setMaterial(material);
- 
-        this.setShadowMode(ShadowMode.Receive);
-        
-        this.attachChild(geometry);
+        geometryForWall.setMaterial(material);
     }
 }
