@@ -37,7 +37,7 @@
                 height="100%" width="90%"/>
             </panel>
             <panel id="gameOverPanelRight" childLayout="center" valign="bottom" height = "20%" width="50%">
-                <control id="backButton" name="button" label="Back" focusable="false"
+                <control id="backButton" name="button" label="Main Menu" focusable="false"
                 height="100%" width="90%" />
             </panel>
         </layer>

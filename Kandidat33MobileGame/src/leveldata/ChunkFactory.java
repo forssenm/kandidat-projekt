@@ -12,6 +12,7 @@ import com.jme3.scene.Spatial;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import spatial.MileStone;
 import spatial.Platform;
 import spatial.Torch;
 import spatial.Wall;
@@ -83,6 +84,10 @@ public class ChunkFactory {
         WindowFrame window = createWindowFrame(5f, wHeight + 23f);
         Torch torch = createTorch (30, wHeight + 15);
         //lights.add(this.createTorchLight(30f, wHeight + 15f));
+
+        if (level > 4 && level%3 == 0) {
+            staticObjects.attachChild(createMileStone((int)(level-1)/3,30f,wHeight + 20f));
+        }
         
         staticObjects.attachChild(window);
         staticObjects.attachChild(torch);
@@ -125,10 +130,6 @@ public class ChunkFactory {
             } else {
                 platformLayoutType = random.nextInt(4);
             }
-        }
-        if (level > 7 && level%3 == 0) {
-            //list.add(createMilestone((level-4)/3);
-            System.out.println(RomanNumber.romanNumberString((int)(level-6)/3));
         }
 
 
@@ -406,5 +407,11 @@ public class ChunkFactory {
                 new InvulnerabilityPowerup(assetManager);
         invulnerabilityPowerup.move(positionX, positionY, 0f);
         return invulnerabilityPowerup;
+    }
+    
+    private Spatial createMileStone(int progress, float positionX, float positionY) {
+        MileStone mileStone = new MileStone(assetManager, progress);
+        mileStone.setLocalTranslation(positionX, positionY, 0f);
+        return mileStone;
     }
 }
