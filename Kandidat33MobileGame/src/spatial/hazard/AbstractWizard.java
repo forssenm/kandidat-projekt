@@ -33,17 +33,6 @@ public abstract class AbstractWizard extends PlayerInteractor {
     }
     
     private ParticleEmitter getWandParticleEmitter (AssetManager assetManager) {
-            /* ParticleEmitter fire = 
-            new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 5);
-    Material mat_red = new Material(assetManager, 
-            "Common/MatDefs/Misc/Particle.j3md");
-    mat_red.setTexture("Texture", assetManager.loadTexture(
-            "Textures/Explosion/flash.png"));
-   // mat_red.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); för att kunna göra svarta partiklar
-    fire.setMaterial(mat_red);
-    fire.setImagesX(2); 
-    fire.setImagesY(2); // 2x2 texture animation*/
-    
     ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
     fire.setNumParticles(5);
     fire.getMaterial().setTexture("Texture", assetManager.loadTexture(
