@@ -31,14 +31,15 @@ public class SpeedPowerup extends PlayerInteractor {
 
     @Override
     protected Spatial createModel(AssetManager assetManager) {
-        Node fireball = new Node();
+        Node modelNode = new Node("modelnode");
         
-        Node ico = (Node)assetManager.loadModel("Models/icosphere/ico001.j3o");
+        Node model = (Node)assetManager.loadModel("Models/icosphere/ico001.j3o");
+        model.setName("model");
         ParticleEmitter glow = getPowerupParticleEmitter(assetManager);
-        fireball.attachChild(glow);
-        fireball.attachChild(ico);
+        modelNode.attachChild(glow);
+        modelNode.attachChild(model);
 
-        return fireball;
+        return modelNode;
     }
 
     private ParticleEmitter getPowerupParticleEmitter(AssetManager assetManager) {
@@ -61,12 +62,14 @@ public class SpeedPowerup extends PlayerInteractor {
         ParticleEmitter pe = (ParticleEmitter) this.getChild("Emitter");
         pe.setLowLife(0f);
         pe.setHighLife(0f);
+        ((Node)this.getChild("modelnode")).detachChild(this.getChild("model"));
     }
 
     @Override
     protected PlayerInteractorControl createControl() {
         return new AbstractPowerupControl() {
             private boolean hasHit;
+            private float time;
 
             public void collideWithPlayer(Player player) {
                 if (!hasHit) {
@@ -75,7 +78,19 @@ public class SpeedPowerup extends PlayerInteractor {
                     hasHit = true;
                     SpeedPowerup.this.destroy();
                 }
-            }            
+            }
+            
+            @Override
+            protected void positionUpdate(float tpf) {
+                time += tpf;
+                Spatial model = ((Node)this.spatial).getChild("model");
+                if (model != null) {
+                model.setLocalTranslation(
+                        (float)Math.cos(time*15)*2f,
+                        (float)Math.sin(time*18)*2f,
+                        (float)Math.sin(2+time*21)*2f);
+                }
+            }
 
         };
     }
