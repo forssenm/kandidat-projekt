@@ -130,16 +130,8 @@ public class Player extends Node implements AnimEventListener {
     }
     
     private ParticleEmitter getDustParticleEmitter (AssetManager assetManager) {
-             ParticleEmitter fire = 
-            new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
-    Material mat_red = new Material(assetManager, 
-            "Common/MatDefs/Misc/Particle.j3md");
-    mat_red.setTexture("Texture", assetManager.loadTexture(
-            "Textures/Explosion/flame.png"));
-   // mat_red.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); för att kunna göra svarta partiklar
-    fire.setMaterial(mat_red);
-    fire.setImagesX(2); 
-    fire.setImagesY(2); // 2x2 texture animation
+             ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
+            
     fire.setStartColor(  new ColorRGBA(.40f, 0.40f, 0.40f, 1f));   // bluish grey
     fire.setEndColor(new ColorRGBA(0.05f, 0.05f, 0.05f, 0.5f)); // grey
     fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, -1, 0));

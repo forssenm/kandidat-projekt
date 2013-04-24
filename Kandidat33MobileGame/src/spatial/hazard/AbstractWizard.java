@@ -9,6 +9,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import spatial.StandardParticleEmitter;
 
 /**
  * A class for a general Wizard. Any class extending this will have the wizard
@@ -32,7 +33,7 @@ public abstract class AbstractWizard extends PlayerInteractor {
     }
     
     private ParticleEmitter getWandParticleEmitter (AssetManager assetManager) {
-             ParticleEmitter fire = 
+            /* ParticleEmitter fire = 
             new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 5);
     Material mat_red = new Material(assetManager, 
             "Common/MatDefs/Misc/Particle.j3md");
@@ -41,7 +42,13 @@ public abstract class AbstractWizard extends PlayerInteractor {
    // mat_red.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); för att kunna göra svarta partiklar
     fire.setMaterial(mat_red);
     fire.setImagesX(2); 
-    fire.setImagesY(2); // 2x2 texture animation
+    fire.setImagesY(2); // 2x2 texture animation*/
+    
+    ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
+    fire.setNumParticles(5);
+    fire.getMaterial().setTexture("Texture", assetManager.loadTexture(
+            "Textures/Explosion/flash.png"));
+    
     fire.setStartColor( new ColorRGBA(.10f, 0.40f, 0.90f, 1f));   // bright cyan
     fire.setEndColor(new ColorRGBA(0f, 0.1f, 0.25f, 0.5f)); // dark blue
     fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, -5, 0));

@@ -12,6 +12,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import java.util.Random;
+import spatial.StandardParticleEmitter;
 
 /**
  * An abstract AbstractFireball. Any class extending this one will make a PlayerInteractor
@@ -58,15 +59,8 @@ public abstract class AbstractFireball extends PlayerInteractor {
     }
 
     private ParticleEmitter getFireballParticleEmitter(AssetManager assetManager) {
-        ParticleEmitter fire =
-                new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
-        Material mat_red = new Material(assetManager,
-                "Common/MatDefs/Misc/Particle.j3md");
-        mat_red.setTexture("Texture", assetManager.loadTexture(
-                "Textures/Explosion/flame.png"));
-        fire.setMaterial(mat_red);
-        fire.setImagesX(2);
-        fire.setImagesY(2); // 2x2 texture animation
+        ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
+                
         
         Random r = new Random();
         int i = r.nextInt(9);

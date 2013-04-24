@@ -13,6 +13,7 @@ import control.PlayerControl;
 import control.PlayerInteractorControl;
 import spatial.Player;
 import spatial.PlayerInteractor;
+import spatial.StandardParticleEmitter;
 
 /**
  * An powerup that gives the player a boost to run and jump speed.
@@ -45,15 +46,8 @@ public class SlowDownPowerup extends PlayerInteractor {
     }
 
     private ParticleEmitter getPowerupParticleEmitter(AssetManager assetManager) {
-        ParticleEmitter glow =
-                new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
-        Material mat_red = new Material(assetManager,
-                "Common/MatDefs/Misc/Particle.j3md");
-        mat_red.setTexture("Texture", assetManager.loadTexture(
-                "Textures/Explosion/flame.png"));
-        glow.setMaterial(mat_red);
-        glow.setImagesX(2);
-        glow.setImagesY(2); // 2x2 texture animation
+        ParticleEmitter glow = StandardParticleEmitter.make(assetManager);
+              
 
         glow.setStartColor(ColorRGBA.DarkGray);
         glow.setEndColor(ColorRGBA.Red);
