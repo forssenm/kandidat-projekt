@@ -22,7 +22,6 @@ public class StandardParticleEmitter extends ParticleEmitter {
             "Common/MatDefs/Misc/Particle.j3md");
             mat_red.setTexture("Texture", assetManager.loadTexture(
             "Textures/Explosion/flame.png"));
-   // mat_red.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); för att kunna göra svarta partiklar
             fire.setMaterial(mat_red);
             fire.setImagesX(2); 
             fire.setImagesY(2); // 2x2 texture animation
