@@ -32,17 +32,11 @@ public class SpeedPowerup extends PlayerInteractor {
     @Override
     protected Spatial createModel(AssetManager assetManager) {
         Node fireball = new Node();
-        /*Sphere model =
-         new Sphere(5,5,0.1f);
         
-         Geometry geometry = new Geometry("", model);
-         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-         material.setColor("Color", ColorRGBA.Red);
-         geometry.setMaterial(material);
-        
-         fireball.attachChild(geometry);*/
+        Node ico = (Node)assetManager.loadModel("Models/icosphere/ico001.j3o");
         ParticleEmitter glow = getPowerupParticleEmitter(assetManager);
         fireball.attachChild(glow);
+        fireball.attachChild(ico);
 
         return fireball;
     }
