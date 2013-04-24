@@ -25,7 +25,7 @@ public abstract class AbstractWizard extends PlayerInteractor {
     protected Spatial createModel(AssetManager assetManager) {
         
         if (modelForWizard == null) {
-            modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003.j3o");
+            modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003-nolightcam.j3o");
             modelForWizard.scale(1.5f);
         }
         
