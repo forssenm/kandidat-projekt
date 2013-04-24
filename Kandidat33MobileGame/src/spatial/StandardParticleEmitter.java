@@ -10,20 +10,19 @@ import com.jme3.material.Material;
  */
 public class StandardParticleEmitter extends ParticleEmitter {
     
-    private static Material materialForParticles;
+    //private static Material materialForParticles;
     
     public StandardParticleEmitter () {}
     public static ParticleEmitter make (AssetManager assetManager) {
         ParticleEmitter fire = 
             new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
-        if (materialForParticles == null) {
-            materialForParticles = new Material(assetManager, 
+            Material materialForParticles = new Material(assetManager, 
             "Common/MatDefs/Misc/Particle.j3md");
             materialForParticles.setTexture("Texture", assetManager.loadTexture(
             "Textures/Explosion/flame.png"));
-        }
+        
 
-            fire.setMaterial(materialForParticles);
+            fire.setMaterial(materialForParticles.clone());
             fire.setImagesX(2); 
             fire.setImagesY(2); // 2x2 texture animation
         return fire;
