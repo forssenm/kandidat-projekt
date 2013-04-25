@@ -48,12 +48,12 @@ public class SpeedPowerup extends PlayerInteractor {
         glow.setStartColor(ColorRGBA.Cyan);
         glow.setEndColor(ColorRGBA.White);
         glow.getParticleInfluencer().setInitialVelocity(Vector3f.ZERO);
-        glow.setStartSize(3.5f);
+        glow.setStartSize(3.0f);
         glow.setEndSize(0.1f);
-        glow.setGravity(0, -20, 0);
+        glow.setGravity(0, 0, 0);
         glow.setLowLife(0.4f);
         glow.setHighLife(1f);
-        glow.getParticleInfluencer().setVelocityVariation(0.3f);
+        glow.getParticleInfluencer().setVelocityVariation(3f);
         return glow;
     }
     
@@ -86,9 +86,9 @@ public class SpeedPowerup extends PlayerInteractor {
                 Spatial model = ((Node)this.spatial).getChild("model");
                 if (model != null) {
                 model.setLocalTranslation(
-                        (float)Math.cos(time*15)*2f,
-                        (float)Math.sin(time*18)*2f,
-                        (float)Math.sin(2+time*21)*2f);
+                        (float)Math.cos(time*10)*2f,
+                        (float)Math.sin(time*12)*2f,
+                        (float)Math.sin(2+time*14)*2f);
                 }
             }
 

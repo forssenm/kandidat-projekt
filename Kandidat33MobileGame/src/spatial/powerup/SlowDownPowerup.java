@@ -29,16 +29,11 @@ public class SlowDownPowerup extends PlayerInteractor {
 
     @Override
     protected Spatial createModel(AssetManager assetManager) {
-        Node fireball = new Node();
-        /*Sphere model =
-         new Sphere(5,5,0.1f);
-        
-         Geometry geometry = new Geometry("", model);
-         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-         material.setColor("Color", ColorRGBA.Red);
-         geometry.setMaterial(material);
-        
-         fireball.attachChild(geometry);*/
+        Node fireball = new Node("modelnode");
+        Node model = (Node) assetManager.loadModel("Models/pyramidred/pyramidred.j3o");
+        model.setName("model");
+      //  model.scale(1.5f);
+        fireball.attachChild(model);
         ParticleEmitter glow = getPowerupParticleEmitter(assetManager);
         fireball.attachChild(glow);
 
@@ -47,12 +42,12 @@ public class SlowDownPowerup extends PlayerInteractor {
 
     private ParticleEmitter getPowerupParticleEmitter(AssetManager assetManager) {
         ParticleEmitter glow = StandardParticleEmitter.make(assetManager);
-              
+       // glow.setName("glow");      
 
         glow.setStartColor(ColorRGBA.DarkGray);
         glow.setEndColor(ColorRGBA.Red);
         glow.getParticleInfluencer().setInitialVelocity(Vector3f.ZERO);
-        glow.setStartSize(4f);
+        glow.setStartSize(3f);
         glow.setEndSize(0.1f);
         glow.setGravity(0, 0, 0);
         glow.setLowLife(0.4f);
@@ -66,13 +61,15 @@ public class SlowDownPowerup extends PlayerInteractor {
         ParticleEmitter pe = (ParticleEmitter) this.getChild("Emitter");
         pe.setLowLife(0f);
         pe.setHighLife(0f);
+        ((Node)this.getChild("modelnode")).detachChild(this.getChild("model"));
     }
 
     @Override
     protected PlayerInteractorControl createControl() {
         return new AbstractPowerupControl() {
             private boolean hasHit;
-
+            private float time;
+            
             public void collideWithPlayer(Player player) {
                 if (!hasHit) {
                     PlayerControl pc = player.getControl(PlayerControl.class);
@@ -80,7 +77,24 @@ public class SlowDownPowerup extends PlayerInteractor {
                     hasHit = true;
                     SlowDownPowerup.this.destroy();
                 }
-            }            
+            }
+            
+            @Override
+            protected void positionUpdate(float tpf) {
+                time += tpf;
+                //Spatial model = ((Node)this.spatial).getChild("model");
+                //if (model != null) {
+                //    model.rotate(0.09f, 0.18f, 0.04f);
+                //model.setLocalTranslation(
+                  //      (float)Math.cos(time*15)*2f,
+                    //    (float)Math.sin(time*18)*2f,
+                      //  (float)Math.sin(2+time*21)*2f);
+                //}
+                ParticleEmitter glow = (ParticleEmitter)((Node)this.spatial).getChild("Emitter");
+                if (glow != null) {
+                    glow.setStartSize(3.0f - (float)Math.cos(time*4)*1.6f);
+                }
+            }
 
         };
     }
