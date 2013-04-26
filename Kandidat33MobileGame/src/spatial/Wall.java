@@ -8,6 +8,7 @@ import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
 import variables.P;
 
@@ -39,10 +40,11 @@ public class Wall extends Node {
         this.attachChild(geometryForWall.clone());
     }
     
+    private static final float WALL_HEIGHT = 120.0f;
+    
     private static void initGeometry(AssetManager assetManager) {
-        Box model =
-            new Box(new Vector3f(P.chunkLength/2,0,-P.platformWidth/2-P.playerZOffset), P.chunkLength/2, 60, 0);
-        
+        //Box model = new Box(new Vector3f(P.chunkLength/2,0,-P.platformWidth/2-P.playerZOffset), P.chunkLength/2, 60, 0);
+        Quad model = new Quad(P.chunkLength,WALL_HEIGHT);
         //Loads the texture and repeats it over the chunk in its correct size 
         //(so that each brick will not be bigger in pixels, or stretched, if 
         //the resolution is higher is greater than 640x480)
@@ -51,6 +53,7 @@ public class Wall extends Node {
         model.scaleTextureCoordinates(new Vector2f(Math.round(18f*P.screenWidth/640), Math.round(40f*P.screenHeight/480)));
         
         geometryForWall = new Geometry("",model);
+        geometryForWall.setLocalTranslation(new Vector3f(0,-WALL_HEIGHT/2,-P.platformWidth/2-P.playerZOffset));
         
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         material.setTexture("DiffuseMap", texture);
