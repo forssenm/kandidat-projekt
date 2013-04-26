@@ -57,19 +57,25 @@ public class Player extends Node implements AnimEventListener {
         this.addControl(playerControl);
 
         //Sets the model of the player
-        playerModel = (Node) assetManager.loadModel ("Models/ghost/ghost2-moreanim-nolightcam-shadeless.j3o"); 
+        //playerModel = (Node) assetManager.loadModel ("Models/ghost/ghost2-moreanim-nolightcam-shadeless.j3o"); 
+        playerModel = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim2fix.j3o"); 
+        
+        
         playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
+        playerModel.rotate(1.0f, 0.7f, 0);
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
         dust.move(0.6f, -2.0f, 0f);
         this.attachChild(playerModel);
         //All the code below is for animation of the model
-        control = playerModel.getChild("Plane").getControl(AnimControl.class);
+        //control = playerModel.getChild("Plane").getControl(AnimControl.class);
+        control = playerModel.getChild("Sphere").getControl(AnimControl.class); //for the bat
+        
         control.addListener(this);
         channel = control.createChannel();
         channel.setAnim("ArmatureAction");
         channel.setLoopMode(LoopMode.Loop);
-        channel.setSpeed(1f);  //End of animation code
+        channel.setSpeed(3f);  //End of animation code
 
     }
 
