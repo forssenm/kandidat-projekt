@@ -18,7 +18,7 @@ import variables.P;
  */
 public class Wall extends Node {
     
-    private static Geometry geometryForWall;
+    private static Node modelNodeForWall;
     
     /**
      * This constructor creates a <code>Wall</code> represented by a 
@@ -31,32 +31,42 @@ public class Wall extends Node {
     public Wall(AssetManager assetManager){
         super("Wall");
         
-        if (geometryForWall == null) {
-            initGeometry(assetManager);
+        if (modelNodeForWall == null) {
+            initModel(assetManager);
         }
  
         this.setShadowMode(ShadowMode.Receive);
         
-        this.attachChild(geometryForWall.clone());
+        this.attachChild(modelNodeForWall.clone());
     }
     
     private static final float WALL_HEIGHT = 120.0f;
     
-    private static void initGeometry(AssetManager assetManager) {
+    private static void initModel(AssetManager assetManager) {
+        modelNodeForWall = new Node();
         //Box model = new Box(new Vector3f(P.chunkLength/2,0,-P.platformWidth/2-P.playerZOffset), P.chunkLength/2, 60, 0);
-        Quad model = new Quad(P.chunkLength,WALL_HEIGHT);
+        Quad model1 = new Quad(P.chunkLength,WALL_HEIGHT/2);
+        Quad model2 = new Quad(P.chunkLength,WALL_HEIGHT/2);
         //Loads the texture and repeats it over the chunk in its correct size 
         //(so that each brick will not be bigger in pixels, or stretched, if 
         //the resolution is higher is greater than 640x480)
         Texture texture = assetManager.loadTexture("Textures/bricks.jpg");
         texture.setWrap(Texture.WrapMode.Repeat);
-        model.scaleTextureCoordinates(new Vector2f(Math.round(18f*P.screenWidth/640), Math.round(40f*P.screenHeight/480)));
+        model1.scaleTextureCoordinates(new Vector2f(Math.round(18f*P.screenWidth/640), Math.round(20f*P.screenHeight/480)));
+        model2.scaleTextureCoordinates(new Vector2f(Math.round(18f*P.screenWidth/640), Math.round(20f*P.screenHeight/480)));
         
-        geometryForWall = new Geometry("",model);
-        geometryForWall.setLocalTranslation(new Vector3f(0,-WALL_HEIGHT/2,-P.platformWidth/2-P.playerZOffset));
+
+        Geometry geometry1 = new Geometry("",model1);
+        Geometry geometry2 = new Geometry("",model2);
+        geometry1.setLocalTranslation(new Vector3f(0,0,-P.platformWidth/2-P.playerZOffset));
+        geometry2.setLocalTranslation(new Vector3f(0,-WALL_HEIGHT/2,-P.platformWidth/2-P.playerZOffset));
         
         Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         material.setTexture("DiffuseMap", texture);
-        geometryForWall.setMaterial(material);
+        geometry1.setMaterial(material);
+        geometry2.setMaterial(material);
+
+        modelNodeForWall.attachChild(geometry1);        
+        modelNodeForWall.attachChild(geometry2);
     }
 }

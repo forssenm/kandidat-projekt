@@ -83,7 +83,7 @@ public class ChunkFactory {
         float wHeight = Math.max(0, 5 * Math.round(height / 5));
 
         WindowFrame window = createWindowFrame(5f, wHeight + 23f);
-        //lights.add(this.createWindowLight(5f, wHeight+23f));
+        lights.add(this.createWindowLight(5f, wHeight+23f));
         Torch torch = createTorch (30, wHeight + 15);
         lights.add(this.createTorchLight(30f, wHeight + 15f));
 
@@ -318,29 +318,22 @@ public class ChunkFactory {
     /* Creates a spotlight shining through a window at a given position */
     private Light createWindowLight(float positionX, float positionY) {
         SpotLight windowLight = new SpotLight();
-        windowLight.setSpotOuterAngle(90f * FastMath.DEG_TO_RAD);
-        windowLight.setSpotInnerAngle(25f * FastMath.DEG_TO_RAD);
-        Vector3f windowPosition = new Vector3f(positionX, positionY+10f, -P.platformWidth/2 + 0.2f);
+        windowLight.setColor(new ColorRGBA(99/255f,184/255f,1f,0f));
+        windowLight.setSpotOuterAngle(45f * FastMath.DEG_TO_RAD);
+        windowLight.setSpotInnerAngle(12f * FastMath.DEG_TO_RAD);
+        Vector3f windowPosition = new Vector3f(positionX, positionY+8f, -P.platformWidth/2 + 0.2f);
         windowLight.setPosition(windowPosition);
         windowLight.setDirection(P.windowLightDirection);
         windowLight.setSpotRange(100f);
         return windowLight;
     }
 
-    /* Creates a light of a random colour, to use with a torch */
+    /* Creates a pointlight, to use with a torch */
     private Light createTorchLight(float positionX, float positionY) {
-        Random random = new Random();
-        int rand = random.nextInt(6);
         PointLight light = new PointLight();
-        light.setRadius(100);
+        light.setRadius(50);
         light.setPosition(new Vector3f(positionX, positionY, -P.platformWidth/2 + 0.2f));
-        if (rand < 3) {
-            light.setColor(ColorRGBA.Blue);
-        } else if (rand < 5) {
-            light.setColor(ColorRGBA.Red);
-        } else {
-            light.setColor(ColorRGBA.Green);
-        }
+        light.setColor(new ColorRGBA(1f,0.3f,0f,0f));
         return light;
     }
 
