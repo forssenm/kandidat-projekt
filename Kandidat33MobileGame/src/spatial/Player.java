@@ -24,6 +24,7 @@ import variables.P;
  */
 public class Player extends Node implements AnimEventListener {
 
+    private static final int BATMODE = 1;
     private PlayerControl playerControl;
     private Node playerModel;
 
@@ -57,25 +58,35 @@ public class Player extends Node implements AnimEventListener {
         this.addControl(playerControl);
 
         //Sets the model of the player
-        //playerModel = (Node) assetManager.loadModel ("Models/ghost/ghost2-moreanim-nolightcam-shadeless.j3o"); 
-        playerModel = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim2fix.j3o"); 
-        
+        if (BATMODE == 1) {
+            playerModel = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim2fix.j3o"); 
+            playerModel.rotate(1.0f, 0.7f, 0);  //bat special 
+            control = playerModel.getChild("Sphere").getControl(AnimControl.class); //for the bat
+            channel = control.createChannel();
+            
+        }
+        else{
+             playerModel = (Node) assetManager.loadModel ("Models/ghost/ghost2-moreanim-nolightcam-shadeless.j3o"); 
+             control = playerModel.getChild("Plane").getControl(AnimControl.class);
+             channel = control.createChannel();
+        }
         
         playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
-        playerModel.rotate(1.0f, 0.7f, 0);
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
         dust.move(0.6f, -2.0f, 0f);
         this.attachChild(playerModel);
         //All the code below is for animation of the model
-        //control = playerModel.getChild("Plane").getControl(AnimControl.class);
-        control = playerModel.getChild("Sphere").getControl(AnimControl.class); //for the bat
+        
         
         control.addListener(this);
-        channel = control.createChannel();
+        
         channel.setAnim("ArmatureAction");
         channel.setLoopMode(LoopMode.Loop);
-        channel.setSpeed(3f);  //End of animation code
+        if (BATMODE == 1) {
+            channel.setSpeed(3f);
+        }
+      //End of animation code
 
     }
 
