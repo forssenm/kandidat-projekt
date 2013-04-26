@@ -88,7 +88,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     private final Vector3f velocity = new Vector3f();
     private static final float defaultRunSpeed = 14f;
     private static final float defaultPushbackSpeed = -10f;
-    private static final float defaultJumpSpeed = 25f;
+    private static final float defaultJumpSpeed = 27f;
     private static float defaultGravity = -40f;
     private static final float defaultMass = 20f;
     private final Vector3f walkVelocity = new Vector3f(defaultRunSpeed, 0, 0);
@@ -101,11 +101,13 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     private int maxNoOfJumps = 1;
     private boolean initiateJumpInNextTick = false;
     private boolean onGround = false;
+    private boolean walking;
     private boolean abortJumpInNextTick = false;
     private boolean pushBackInNextTick;
     private boolean willRespawn = false;
     private float speedUpTimer;
     private float invulnTimer;
+
 
     
     /**
@@ -221,7 +223,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         // running
         checkOnGround();
 
-        if (onGround) {
+        if (walking) {
             float designatedVelocity = walkVelocity.length();
 
             if (designatedVelocity > 0) {
@@ -264,6 +266,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
             pushBackInNextTick = false;
             velocity.setX(pushbackSpeed);
             velocity.setY(jumpSpeed);
+            walking = false;
         }
 
         // make sure the player never moves sideways
@@ -398,9 +401,11 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     private void setOnGround(boolean onGround) {
         if (this.onGround && !onGround) {
             noOfJumps++; //we just took off
+            walking = false;
         }
         if (!this.onGround && onGround) {
             noOfJumps = 0; //we just landed
+            walking = true;
         }
         this.onGround = onGround; // update status regardless;
     }

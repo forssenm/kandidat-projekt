@@ -150,7 +150,7 @@ public class ChunkFactory {
                 break;
             case (1): // chilling differentlength platforms
                 while (d < totalLength) {
-                    nLength = length * (0.8f + random.nextFloat());
+                    nLength = length * (0.4f + random.nextFloat());
                     nDist = dist * (1f + random.nextFloat());
 
                     spatials.add(createPlatform(d, height + random.nextFloat() * 3, nLength));
@@ -160,7 +160,7 @@ public class ChunkFactory {
             case (2): // climbing platforms
                 while (d < totalLength) {
                     nLength = length * (0.5f + random.nextFloat() / 2);
-                    nDist = dist * (1f + random.nextFloat());
+                    nDist = dist * (0.6f + 0.5f*random.nextFloat());
                     height += 1 + 4 * random.nextFloat();
                     spatials.add(createPlatform(d, height + random.nextFloat() * 2, nLength));
                     d += nLength + nDist;
@@ -216,25 +216,25 @@ public class ChunkFactory {
                 break;
             case (3):
             case (4):
-                // single fireball
-                spatials.add(createLinearBat(d, height + 1 + random.nextFloat() * 2));
+                // single bat
+                spatials.add(createLinearBat(d, height + 4 + random.nextFloat() * 2));
                 break;
             case (5):
             case (6):
-                // three fireballs
+                // three bats
                 int temp1 = (random.nextInt(5)-1) * 10; // 1st fireball distance
-                spatials.add(createLinearBat(d + temp1, height + 2));
+                spatials.add(createLinearBat(d + temp1, height + 7));
 
                 int temp2 = temp1;
                 while (temp2 == temp1) {
                     temp2 = (random.nextInt(5)-1) * 10; // 2nd fireball distance
                 }
-                spatials.add(createLinearBat(d + temp2, height + 7));
+                spatials.add(createLinearBat(d + temp2, height + 13));
                 temp1 = temp2;
                 while (temp2 == temp1) {
                     temp1 = (random.nextInt(5)-1) * 10; // 3rd fireball distance
                 }
-                spatials.add(createLinearBat(d + temp1, height + 12));
+                spatials.add(createLinearBat(d + temp1, height + 19));
                 break;
             case (7):
                 // a wizard in the foreground shooting fireballs at where the player's going

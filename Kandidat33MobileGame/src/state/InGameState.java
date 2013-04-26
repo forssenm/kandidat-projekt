@@ -164,7 +164,7 @@ public class InGameState extends AbstractAppState {
             
         } else { // gameOver
             // wait until player has fallen down
-            if (!player.checkCulling(this.app.getCamera())) {
+            if (player.getWorldTranslation().getY() < P.deathTreshold - 30) {
                 this.setEnabled(false);
             }
         }

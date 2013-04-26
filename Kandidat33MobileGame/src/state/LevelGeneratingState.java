@@ -166,7 +166,7 @@ public class LevelGeneratingState extends AbstractAppState {
         this.nextChunkX = -P.minLeftDistance;
         chunkNumber = 0;
         // generate starting chunks
-        int nbrOfChunks = (int) Math.round((P.minRightDistance + P.minLeftDistance) / P.chunkLength) - 3;
+        int nbrOfChunks = (int) Math.round((P.minRightDistance + P.minLeftDistance) / P.chunkLength) - 2;
         for (int i = 0; i < nbrOfChunks; i++) {
             generateNextChunk();
         }
