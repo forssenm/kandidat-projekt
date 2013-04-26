@@ -79,9 +79,9 @@ public class Player extends Node implements AnimEventListener {
       //End of animation code
         
         // sound
-        /*AudioNode jumpSoundNode = new AudioNode(assetManager, "Sound/Effects/Gun.wav", false);
+        AudioNode jumpSoundNode = new AudioNode(assetManager, "Sound/Effects/Gun.wav", false);
         jumpSoundNode.setName("jumpsound");
-        this.attachChild(jumpSoundNode);*/
+        this.attachChild(jumpSoundNode);
     }
 
     /**
@@ -127,7 +127,7 @@ public class Player extends Node implements AnimEventListener {
     }
     
     public void updateModelAfterJump() {
-        //((AudioNode)this.getChild("jumpsound")).playInstance();
+        ((AudioNode)this.getChild("jumpsound")).playInstance();
     }
     
     /**

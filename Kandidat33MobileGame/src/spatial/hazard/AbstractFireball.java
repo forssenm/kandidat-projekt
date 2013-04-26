@@ -56,10 +56,12 @@ public abstract class AbstractFireball extends PlayerInteractor {
         fire = getFireballParticleEmitter(assetManager);
         fireball.attachChild(fire);
         
-        /*AudioNode audio = new AudioNode(assetManager, "fire-sound-effect", false);
+        //AudioNode audio = new AudioNode(assetManager, "fire-sound-effect", false);
+        AudioNode audio = new AudioNode(assetManager, "Sound/Effects/Bang.wav", false);
+        
         audio.setName("audio");
         
-        fireball.attachChild(audio);*/
+        fireball.attachChild(audio);
 
         return fireball;
     }
@@ -91,8 +93,8 @@ public abstract class AbstractFireball extends PlayerInteractor {
         this.setName("");
         fire.setHighLife(0f);
         fire.setLowLife(0f);
-        //AudioNode audio = (AudioNode) this.getChild("audio");
-        //audio.playInstance();
+        AudioNode audio = (AudioNode) this.getChild("audio");
+        audio.playInstance();
     }
     
 }
