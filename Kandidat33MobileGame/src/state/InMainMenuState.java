@@ -1,7 +1,6 @@
 package state;
 
 import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
@@ -63,11 +62,13 @@ public class InMainMenuState extends AbstractAppState {
         if (enabled) {
             //Initiate the things that are needed when the state is active
             System.out.println("InMainMenuState is now active");
+            nifty.setIgnoreMouseEvents(false);
             nifty.gotoScreen("gameOverScreen");
         } else {
             //Remove the things not needed when the state is inactive
             System.out.println("InMainMenuState is now inactive");
-            //cleanup();
+            nifty.setIgnoreMouseEvents(true); // needed to prevent nullpointer from releasing the click too quickly when closing nifty
+            nifty.exit();
         }
     }
 
@@ -89,7 +90,6 @@ public class InMainMenuState extends AbstractAppState {
     //Might need to move these methods to the controllers
     @NiftyEventSubscriber(id = "playButton")
     public void onPlayClick(String id, NiftyMousePrimaryClickedEvent event) {
-        nifty.exit();
         this.app.gameStart();
     }
 
