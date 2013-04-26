@@ -26,7 +26,7 @@ public class P {
     public static final float deathTreshold = -20.0f;  
         
     //lighting variables
-    public static final Vector3f windowLightDirection = new Vector3f(0f,-10f,20f);
+    public static final Vector3f windowLightDirection = new Vector3f(0f,-20f,0f);
     
     public static final float minLeftDistance = 100;
     public static final float minRightDistance = 150;
