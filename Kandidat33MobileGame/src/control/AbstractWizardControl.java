@@ -1,4 +1,4 @@
-package control.wizard;
+package control;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.CollisionShape;

@@ -1,8 +1,9 @@
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
+import control.AbstractWizardControl;
 import control.PlayerInteractorControl;
-import control.wizard.SingleShotWizardControl;
+import spatial.Player;
 
 /**
  * A class for a Wizard, using a
@@ -11,6 +12,7 @@ import control.wizard.SingleShotWizardControl;
  * @author jonatankilhamn
  */
 public class SingleShotWizard extends AbstractWizard {
+
     private final AssetManager assetManager;
 
     public SingleShotWizard(AssetManager assetManager) {
@@ -21,9 +23,15 @@ public class SingleShotWizard extends AbstractWizard {
 
     @Override
     protected PlayerInteractorControl createControl() {
-        SingleShotWizardControl wizardControl = new SingleShotWizardControl(assetManager);
-        return wizardControl;
+        return new AbstractWizardControl(assetManager) {
+            protected static final float fireballCoolDown = 5.0f;
+
+            @Override
+            protected void shootAtPlayerAndReload(Player player) {
+                this.shootFireballAt(player.getLocalTranslation());
+                readyToShoot = false;
+                reloadTimer -= fireballCoolDown;
+            }
+        };
     }
-    
-    
 }
