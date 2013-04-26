@@ -248,6 +248,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         if (initiateJumpInNextTick) {
             initiateJumpInNextTick = false;
             designatedUpwardsVelocity = jumpSpeed;
+            ((Player)this.spatial).updateModelAfterJump();
         }
 
         if (abortJumpInNextTick) {

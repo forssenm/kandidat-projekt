@@ -5,6 +5,7 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
@@ -24,7 +25,6 @@ import variables.P;
  */
 public class Player extends Node implements AnimEventListener {
 
-    private static final int BATMODE = 0;
     private PlayerControl playerControl;
     private Node playerModel;
 
@@ -58,19 +58,11 @@ public class Player extends Node implements AnimEventListener {
         this.addControl(playerControl);
 
         //Sets the model of the player
-        if (BATMODE == 1) {
-            playerModel = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim2fix.j3o"); 
-            playerModel.rotate(1.0f, 0.7f, 0);  //bat special 
-            control = playerModel.getChild("Sphere").getControl(AnimControl.class); //for the bat
-            channel = control.createChannel();
-            
-        }
-        else{
-             playerModel = (Node) assetManager.loadModel ("Models/ghost/ghost2-moreanim-nolightcam-shadeless.j3o"); 
-             control = playerModel.getChild("Plane").getControl(AnimControl.class);
-             channel = control.createChannel();
-        }
-        
+
+        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam-shadeless.j3o");
+        control = playerModel.getChild("Plane").getControl(AnimControl.class);
+        channel = control.createChannel();
+
         playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
@@ -83,11 +75,13 @@ public class Player extends Node implements AnimEventListener {
         
         channel.setAnim("ArmatureAction");
         channel.setLoopMode(LoopMode.Loop);
-        if (BATMODE == 1) {
-            channel.setSpeed(3f);
-        }
-      //End of animation code
 
+      //End of animation code
+        
+        // sound
+        /*AudioNode jumpSoundNode = new AudioNode(assetManager, "Sound/Effects/Gun.wav", false);
+        jumpSoundNode.setName("jumpsound");
+        this.attachChild(jumpSoundNode);*/
     }
 
     /**
@@ -130,6 +124,10 @@ public class Player extends Node implements AnimEventListener {
                 break;
                 
         }
+    }
+    
+    public void updateModelAfterJump() {
+        //((AudioNode)this.getChild("jumpsound")).playInstance();
     }
     
     /**

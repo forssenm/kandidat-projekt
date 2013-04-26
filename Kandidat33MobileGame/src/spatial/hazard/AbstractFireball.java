@@ -2,6 +2,7 @@ package spatial.hazard;
 
 import spatial.PlayerInteractor;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
@@ -54,6 +55,11 @@ public abstract class AbstractFireball extends PlayerInteractor {
         
         fire = getFireballParticleEmitter(assetManager);
         fireball.attachChild(fire);
+        
+        /*AudioNode audio = new AudioNode(assetManager, "fire-sound-effect", false);
+        audio.setName("audio");
+        
+        fireball.attachChild(audio);*/
 
         return fireball;
     }
@@ -85,6 +91,8 @@ public abstract class AbstractFireball extends PlayerInteractor {
         this.setName("");
         fire.setHighLife(0f);
         fire.setLowLife(0f);
+        //AudioNode audio = (AudioNode) this.getChild("audio");
+        //audio.playInstance();
     }
     
 }
