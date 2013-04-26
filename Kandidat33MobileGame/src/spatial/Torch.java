@@ -28,7 +28,7 @@ public class Torch extends Node {
         super("Torch");
         
         if (modelForTorch == null) {
-            modelForTorch = (Node)assetManager.loadModel("Models/torch/Torch-nolightcam-unshaded.j3o");
+            modelForTorch = (Node)assetManager.loadModel("Models/torch/Torch-nolightcam.j3o");
         }
         
         Node model = (Node)modelForTorch.clone();

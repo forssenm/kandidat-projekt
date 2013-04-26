@@ -59,7 +59,7 @@ public class Player extends Node implements AnimEventListener {
 
         //Sets the model of the player
 
-        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam-shadeless.j3o");
+        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
         control = playerModel.getChild("Plane").getControl(AnimControl.class);
         channel = control.createChannel();
 
