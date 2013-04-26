@@ -69,7 +69,7 @@ public class RomanNumber {
                 countDown -= fivesNumbers[j];
             } 
             // Checks for the case of fours which yields IV, XL or DM
-            else if (countDown == fivesNumbers[j] - onesNumbers[j + 1]) 
+            else if (countDown >= fivesNumbers[j] - onesNumbers[j + 1]) 
             {
                 romanNumberBuilder.append(onesChars[j + 1]);
                 romanNumberBuilder.append(fivesChars[j]);

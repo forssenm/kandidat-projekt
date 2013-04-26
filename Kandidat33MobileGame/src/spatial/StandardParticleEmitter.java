@@ -6,13 +6,14 @@ import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.texture.Texture;
 /**
  *
  * @author natwei
  */
-public class StandardParticleEmitter extends ParticleEmitter {
+public class StandardParticleEmitter {
     
-    //private static Material materialForParticles;
+    private static Texture textureForParticles;
     
     public StandardParticleEmitter () {}
     
@@ -21,8 +22,11 @@ public class StandardParticleEmitter extends ParticleEmitter {
             new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
             Material materialForParticles = new Material(assetManager, 
             "Common/MatDefs/Misc/Particle.j3md");
-            materialForParticles.setTexture("Texture", assetManager.loadTexture(
-            "Textures/Explosion/flame.png"));
+            if (textureForParticles == null) {
+                textureForParticles = assetManager.loadTexture(
+            "Textures/Explosion/flame.png");
+            }
+            materialForParticles.setTexture("Texture", textureForParticles);
         
 
             fire.setMaterial(materialForParticles.clone());
