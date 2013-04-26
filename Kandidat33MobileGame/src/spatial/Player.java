@@ -24,7 +24,7 @@ import variables.P;
  */
 public class Player extends Node implements AnimEventListener {
 
-    private static final int BATMODE = 1;
+    private static final int BATMODE = 0;
     private PlayerControl playerControl;
     private Node playerModel;
 

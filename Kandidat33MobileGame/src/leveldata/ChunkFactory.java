@@ -20,6 +20,7 @@ import spatial.WindowFrame;
 import spatial.hazard.BurstWizard;
 import spatial.hazard.CalculatingWizard;
 import spatial.PlayerInteractor;
+import spatial.hazard.LinearBat;
 import spatial.hazard.LinearFireball;
 import spatial.hazard.SingleShotWizard;
 import spatial.hazard.SpinningFireball;
@@ -216,24 +217,24 @@ public class ChunkFactory {
             case (3):
             case (4):
                 // single fireball
-                spatials.add(createLinearFireball(d, height + 1 + random.nextFloat() * 2));
+                spatials.add(createLinearBat(d, height + 1 + random.nextFloat() * 2));
                 break;
             case (5):
             case (6):
                 // three fireballs
                 int temp1 = (random.nextInt(5)-1) * 10; // 1st fireball distance
-                spatials.add(createLinearFireball(d + temp1, height + 2));
+                spatials.add(createLinearBat(d + temp1, height + 2));
 
                 int temp2 = temp1;
                 while (temp2 == temp1) {
                     temp2 = (random.nextInt(5)-1) * 10; // 2nd fireball distance
                 }
-                spatials.add(createLinearFireball(d + temp2, height + 7));
+                spatials.add(createLinearBat(d + temp2, height + 7));
                 temp1 = temp2;
                 while (temp2 == temp1) {
                     temp1 = (random.nextInt(5)-1) * 10; // 3rd fireball distance
                 }
-                spatials.add(createLinearFireball(d + temp1, height + 12));
+                spatials.add(createLinearBat(d + temp1, height + 12));
                 break;
             case (7):
                 // a wizard in the foreground shooting fireballs at where the player's going
@@ -350,8 +351,8 @@ public class ChunkFactory {
     }
 
     /* Creates a fireball hazard flying in a straight line.*/
-    private PlayerInteractor createLinearFireball(float positionX, float positionY) {
-        PlayerInteractor hazard = new LinearFireball(assetManager, new Vector3f(-15, 0, 0));
+    private PlayerInteractor createLinearBat(float positionX, float positionY) {
+        PlayerInteractor hazard = new LinearBat(assetManager, new Vector3f(-15, 0, 0));
         hazard.move(positionX + P.chunkLength, positionY, 0f);
         return hazard;
     }
