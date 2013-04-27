@@ -112,4 +112,9 @@ public class InMainMenuState extends AbstractAppState {
     public void onBackClick(String id, NiftyMousePrimaryClickedEvent event) {
         nifty.gotoScreen("mainMenuScreen");
     }
+    
+    @NiftyEventSubscriber(id = "tutorialButton")
+    public void onTutorialClick(String id, NiftyMousePrimaryClickedEvent event) {
+        nifty.gotoScreen("tutorialScreen");
+    }
 }

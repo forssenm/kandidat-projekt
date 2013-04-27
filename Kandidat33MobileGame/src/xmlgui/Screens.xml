@@ -25,12 +25,20 @@
                 <control id="playButton" name="button" label="Play" margin="15px" focusable="false"/>
                 <control id="settingsButton" name="button" label="Settings" margin="15px" focusable="false"/>
                 <control id="highscoreButton" name="button" label="Highscore" margin="15px" focusable="false"/>
-                <control id="exitButton" name="button" label="Exit" margin="15px" focusable="false"/> 
+                <control id="tutorialButton" name="button" label="Tutorial" margin="15px" focusable="false"/> 
             </panel>
         </layer>
     </screen>
     
-    
+    <screen id="tutorialScreen" controller="niftyController.MainMenuScreenController">
+        <layer childLayout="center" backgroundColor="#000F">
+            <image id="imageId" filename="Textures/TitleScreen.jpg" />
+            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom">
+                <control id="backButton" name="button" label="Back" margin="15px" focusable="false"/> 
+            </panel>
+        </layer>
+    </screen>
+        
     <screen id="gameOverScreen" controller="niftyController.MainMenuScreenController">
         <layer childLayout="horizontal">
             <panel id="gameOverPanelLeft" childLayout="center" valign="bottom" height = "20%" width="50%">
