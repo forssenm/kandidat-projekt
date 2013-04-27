@@ -19,6 +19,7 @@ public class SingleShotWizard extends AbstractWizard {
         this.assetManager = assetManager;
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
+        this.getChild(0).scale(1.2f);
     }
 
     @Override
