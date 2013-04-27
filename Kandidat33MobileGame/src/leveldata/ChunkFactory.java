@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import spatial.MileStone;
+import spatial.Plant;
 import spatial.Platform;
 import spatial.Torch;
 import spatial.Wall;
@@ -87,12 +88,15 @@ public class ChunkFactory {
         Torch torch = createTorch (30, wHeight + 15);
         lights.add(this.createTorchLight(30f, wHeight + 15f));
 
+        Plant plant = createPlant (20, wHeight + 2);
+        
         if (level > 4) {
             staticObjects.attachChild(createMileStone((int)(level-4),30f,wHeight + 20f));
         }
         
         staticObjects.attachChild(window);
         staticObjects.attachChild(torch);
+        staticObjects.attachChild(plant);
         spatials.add(staticObjects);
 
 
@@ -314,6 +318,13 @@ public class ChunkFactory {
         Torch window = new Torch(this.assetManager, windowPos);
         return window;
     }
+    
+    private Plant createPlant (float positionX, float positionY) {
+        Vector3f windowPos = new Vector3f(positionX, positionY, 0f); //beware the Z is  not used
+        Plant window = new Plant(this.assetManager, windowPos);
+        return window;
+    }
+    
 
     /* Creates a spotlight shining through a window at a given position */
     private Light createWindowLight(float positionX, float positionY) {
