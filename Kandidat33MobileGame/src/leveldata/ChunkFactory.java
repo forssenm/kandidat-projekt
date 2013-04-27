@@ -88,7 +88,7 @@ public class ChunkFactory {
         Torch torch = createTorch (30, wHeight + 15);
         lights.add(this.createTorchLight(30f, wHeight + 15f));
 
-        Plant plant = createPlant (20, wHeight + 2);
+        
         
         if (level > 4) {
             staticObjects.attachChild(createMileStone((int)(level-4),30f,wHeight + 20f));
@@ -96,7 +96,12 @@ public class ChunkFactory {
         
         staticObjects.attachChild(window);
         staticObjects.attachChild(torch);
+        
+        if (true) { //PLANT SWITCH
+        Plant plant = createPlant (20, wHeight + 2);
         staticObjects.attachChild(plant);
+        }
+        
         spatials.add(staticObjects);
 
 
