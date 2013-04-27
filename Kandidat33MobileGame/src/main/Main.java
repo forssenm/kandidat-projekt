@@ -34,6 +34,7 @@ public class Main extends SimpleApplication {
     public Main(){
         /* This call to super makes sure to not load the flyCam. */
         super(new StatsAppState(), new DebugKeysAppState());
+        //super(new DebugKeysAppState()); // use this to remove the stats in lower-left corner
         Logger.getLogger("").setLevel(Level.SEVERE);
         Logger.getLogger("Kandidat").setLevel(Level.FINE);
     }

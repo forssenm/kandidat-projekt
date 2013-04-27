@@ -90,8 +90,8 @@ public class ChunkFactory {
 
         
         
-        if (level > 4) {
-            staticObjects.attachChild(createMileStone((int)(level-4),30f,wHeight + 20f));
+        if (level > 4 && level%3 == 2) {
+            staticObjects.attachChild(createMileStone((int)(level-4)/3+1,30f,wHeight + 20f));
         }
         
         staticObjects.attachChild(window);
@@ -276,18 +276,6 @@ public class ChunkFactory {
         }
 
 
-        // the lights:
-        /*
-         * This code creates a spotlight for each window. Slow on the phone.
-         // a light shining out the window:
-         staticObjects.addLight(createWindowLight(5f,5f));
-         */
-
-        /*
-         * This code creates a light of random colour. Slow on the phone.
-         // generate a point light source of a random colour
-         staticObjects.addLight(createColouredLight());
-         */
 
         LinkedList<Object> list = new LinkedList<Object>();
         list.addAll(spatials);

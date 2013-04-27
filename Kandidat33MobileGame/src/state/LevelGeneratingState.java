@@ -129,7 +129,6 @@ public class LevelGeneratingState extends AbstractAppState {
                  */
                 if (spatial.getName().equals("background")) {
                     generateNextChunk();
-                    showLevelProgress();
                 }
             }
         }
@@ -322,7 +321,8 @@ public class LevelGeneratingState extends AbstractAppState {
     public void read(JmeImporter im) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    
+    @Deprecated
     private void showLevelProgress() {
         Node guiNode = app.getGuiNode();
         guiNode.detachAllChildren();
