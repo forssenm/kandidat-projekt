@@ -18,6 +18,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.math.Vector4f;
 import com.jme3.post.Filter;
 import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -109,7 +110,7 @@ public class InGameState extends AbstractAppState {
 
         initAudio();
         
-        //initAO();
+        initAO();
     }
     /**
      * This method creates a node for the player. Also the default player model
@@ -154,7 +155,8 @@ public class InGameState extends AbstractAppState {
         aof = new AmbientOcclusionFilter();
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         //Filter testFilter = new SSAOFilter(4, 3, 0.2f, 0.1f);
-        Filter testFilter = aof;
+        Filter testFilter = new SSAOFilter(2, 5, 0.4f, 0.02f);
+        //Filter testFilter = aof;
         fpp.addFilter(testFilter);
         viewPort.addProcessor(fpp);
     }
@@ -164,23 +166,27 @@ public class InGameState extends AbstractAppState {
      * see LevelControl for current structure
      */
     private void updateAOIntervals() {
-        /*
         Vector3f playerCenter = viewPort.getCamera().getScreenCoordinates(player.getWorldTranslation());
         List<Spatial> movingObjects = new LinkedList<Spatial>();
-        for (Spatial s : ((Node) gameNode.getChild(LEVEL_NODE)).getChildren()) {
-            if (s.getName().equals("hazard") && s.getClass() != LinearFireball.class) {
-                movingObjects.add(s);
-            }
-        }
         int margin = 42;
+        
+        try {
+            Node levelNode = (Node)gameNode.getChild("Level Node");
+            movingObjects = ((Node)levelNode.getChild("wizards")).getChildren();
+        } catch (NullPointerException e) {
+            System.out.println(e);
+        }
+        
         Vector4f[] values = new Vector4f[1 + movingObjects.size()];
         values[0] = new Vector4f(playerCenter.x - margin, playerCenter.x + margin, playerCenter.y - margin / 2, playerCenter.y + margin * 2);
+
         for (int i = 1; i < values.length; i++) {
             Vector3f center = viewPort.getCamera().getScreenCoordinates(movingObjects.get(i - 1).getWorldTranslation());
             values[i] = new Vector4f(center.x - margin, center.x + margin, center.y - margin, center.y + margin);
         }
+        
         aof.updateIntervals(values);
-        */
+        
     }
     
     private float gameTime;
