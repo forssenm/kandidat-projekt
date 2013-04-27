@@ -31,6 +31,9 @@ public class RomanNumber {
      * @return Roman numeral
      */
     public static String romanNumberString(int number){
+        if(number <= 0 ){
+            return "";
+        }
         int countDown = number;
         StringBuilder romanNumberBuilder = new StringBuilder();
         int[] onesNumbers = {1000,100,10,1};
@@ -66,7 +69,7 @@ public class RomanNumber {
                 countDown -= fivesNumbers[j];
             } 
             // Checks for the case of fours which yields IV, XL or DM
-            else if (countDown == fivesNumbers[j] - onesNumbers[j + 1]) 
+            else if (countDown >= fivesNumbers[j] - onesNumbers[j + 1]) 
             {
                 romanNumberBuilder.append(onesChars[j + 1]);
                 romanNumberBuilder.append(fivesChars[j]);

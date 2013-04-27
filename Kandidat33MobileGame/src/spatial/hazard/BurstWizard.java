@@ -1,8 +1,9 @@
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
+import control.AbstractWizardControl;
 import control.PlayerInteractorControl;
-import control.wizard.BurstWizardControl;
+import spatial.Player;
 
 /**
  * A class for a Wizard, using a
@@ -11,19 +12,37 @@ import control.wizard.BurstWizardControl;
  * @author jonatankilhamn
  */
 public class BurstWizard extends AbstractWizard {
+
     private final AssetManager assetManager;
 
     public BurstWizard(AssetManager assetManager) {
         this.assetManager = assetManager;
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
+        this.getChild(0).scale(0.8f);
     }
 
     @Override
     protected PlayerInteractorControl createControl() {
-        BurstWizardControl wizardControl = new BurstWizardControl(assetManager);
-        return wizardControl;
+        return new AbstractWizardControl(assetManager) {
+            protected static final float burstCoolDown = 5.0f;
+            protected static final float fireballCoolDown = 0.5f;
+            protected int shotsFired;
+
+            @Override
+            protected void shootAtPlayerAndReload(Player player) {
+                this.shootFireballAt(player.getLocalTranslation());
+
+                readyToShoot = false;
+                shotsFired++;
+                if (shotsFired < 3) {
+                    reloadTimer -= fireballCoolDown;
+                } else {
+                    shotsFired = 0;
+                    reloadTimer -= burstCoolDown;
+
+                }
+            }
+        };
     }
-    
-    
 }

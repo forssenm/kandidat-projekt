@@ -5,6 +5,7 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
@@ -57,20 +58,30 @@ public class Player extends Node implements AnimEventListener {
         this.addControl(playerControl);
 
         //Sets the model of the player
-        playerModel = (Node) assetManager.loadModel ("Models/ghostbody202mca02/002apa1slrs.j3o"); 
+
+        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
+        control = playerModel.getChild("Plane").getControl(AnimControl.class);
+        channel = control.createChannel();
+
         playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
         dust.move(0.6f, -2.0f, 0f);
         this.attachChild(playerModel);
         //All the code below is for animation of the model
-        control = playerModel.getChild("Plane").getControl(AnimControl.class);
+        
+        
         control.addListener(this);
-        channel = control.createChannel();
+        
         channel.setAnim("ArmatureAction");
         channel.setLoopMode(LoopMode.Loop);
-        channel.setSpeed(1f);  //End of animation code
 
+      //End of animation code
+        
+        // sound
+        AudioNode jumpSoundNode = new AudioNode(assetManager, "Sound/Effects/Gun.wav", false);
+        jumpSoundNode.setName("jumpsound");
+        this.attachChild(jumpSoundNode);
     }
 
     /**
@@ -79,6 +90,44 @@ public class Player extends Node implements AnimEventListener {
      */
     public Node getPlayerModel() {
         return this.playerModel;
+    }
+    
+    public enum Powerup {
+        SPEED, INVULN, DOUBLEJUMP
+    }
+    
+    public void updateModelAfterPowerup(Powerup powerup, boolean setting) {
+        ParticleEmitter dust = (ParticleEmitter)this.playerModel.getChild("Emitter");
+        switch(powerup) {
+            case SPEED:
+                if (setting) {
+                    dust.setHighLife(4f);
+                } else {
+                    dust.setHighLife(0.2f);
+                }
+                break;
+            case INVULN:
+                if (setting) {
+                    dust.setGravity(0f,20f,0f);
+                    dust.setEndSize(3.5f);
+                } else {
+                    dust.setGravity(0f,0f,0f);
+                    dust.setEndSize(0.1f);
+                }
+                break;
+            case DOUBLEJUMP:
+                if (setting) {
+                    dust.setEndColor(ColorRGBA.Green);
+                } else {
+                    dust.setEndColor(new ColorRGBA(0.05f, 0.05f, 0.05f, 0.5f));
+                }
+                break;
+                
+        }
+    }
+    
+    public void updateModelAfterJump() {
+        ((AudioNode)this.getChild("jumpsound")).playInstance();
     }
     
     /**
@@ -96,16 +145,8 @@ public class Player extends Node implements AnimEventListener {
     }
     
     private ParticleEmitter getDustParticleEmitter (AssetManager assetManager) {
-             ParticleEmitter fire = 
-            new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
-    Material mat_red = new Material(assetManager, 
-            "Common/MatDefs/Misc/Particle.j3md");
-    mat_red.setTexture("Texture", assetManager.loadTexture(
-            "Textures/Explosion/flame.png"));
-   // mat_red.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); för att kunna göra svarta partiklar
-    fire.setMaterial(mat_red);
-    fire.setImagesX(2); 
-    fire.setImagesY(2); // 2x2 texture animation
+             ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
+            
     fire.setStartColor(  new ColorRGBA(.40f, 0.40f, 0.40f, 1f));   // bluish grey
     fire.setEndColor(new ColorRGBA(0.05f, 0.05f, 0.05f, 0.5f)); // grey
     fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, -1, 0));

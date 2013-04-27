@@ -1,6 +1,6 @@
 package leveldata;
 
-import control.LevelControl;
+import state.LevelGeneratingState;
 
 /**
  *
@@ -8,6 +8,6 @@ import control.LevelControl;
  */
 public interface LevelContentGenerator {
     
-    public void setLevelControl(LevelControl levelControl);
+    public void setLevelControl(LevelGeneratingState levelControl);
     
 }

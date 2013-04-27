@@ -88,24 +88,28 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     private final Vector3f velocity = new Vector3f();
     private static final float defaultRunSpeed = 14f;
     private static final float defaultPushbackSpeed = -10f;
-    private static final float defaultJumpSpeed = 25f;
+    private static final float defaultJumpSpeed = 27f;
     private static float defaultGravity = -40f;
     private static final float defaultMass = 20f;
     private final Vector3f walkVelocity = new Vector3f(defaultRunSpeed, 0, 0);
     private float jumpSpeed = defaultJumpSpeed;
     private float gravity = defaultGravity;
     private float pushbackSpeed = defaultPushbackSpeed;
-    private boolean initiateJumpInNextTick = false;
-    private boolean onGround = false;
-    private boolean abortJumpInNextTick = false;
-    private boolean pushBackInNextTick;
-    private boolean willRespawn = false;
-    private float speedUpTimer;
     private float speedFactor = 1;
     private boolean paused;
     private int noOfJumps;
     private int maxNoOfJumps = 1;
+    private boolean initiateJumpInNextTick = false;
+    private boolean onGround = false;
+    private boolean walking;
+    private boolean abortJumpInNextTick = false;
+    private boolean pushBackInNextTick;
+    private boolean willRespawn = false;
+    private float speedUpTimer;
+    private float invulnTimer;
 
+
+    
     /**
      * Only used for serialization, do not use this constructor.
      */
@@ -136,32 +140,52 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         if (paused) {
             return;
         }
-        if (speedUpTimer > 0) { // speed boost power up goes off over time
+        if (speedUpTimer > 0) { // speed boost powerup goes off over time
             speedUpTimer -= tpf;
             if (speedUpTimer <= 0) {
                 undoSpeedBoostPowerup();
             }
         }
+        if (invulnTimer > 0) { // invulnerability powerup goes off over time
+            invulnTimer -= tpf;
+            if (invulnTimer <= 0) {
+                ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.INVULN, false);
+            }
+        }
+    }
+    
+    
+    public void invulnerabilityPowerup() {
+        invulnTimer += 5f;
+        ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.INVULN, true);
     }
 
     public void speedBoostPowerup() {
         speedUpTimer += 5;
-        setSpeedFactor(P.speedFactor);        
+        setSpeedFactor(P.speedFactor);
+        ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.SPEED, true);
     }
-    
-
 
     private void undoSpeedBoostPowerup() {
         speedUpTimer = 0;
         setSpeedFactor(P.speedFactor);
+        ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.SPEED, false);
+    }
+    
+    public void slowDownPowerup() {
+        P.speedFactor = Math.max(P.speedFactor - 0.4f, P.minSpeedFactor);
+        undoSpeedBoostPowerup();
     }
     
     public void doubleJumpPowerup() {
         maxNoOfJumps = 2;
+        ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.DOUBLEJUMP, true);
     }
     
-    public void undoDoubleJumpPowerup() {
+    
+    private void undoDoubleJumpPowerup() {
         maxNoOfJumps = 1;
+        ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.DOUBLEJUMP, false);
     }
     
     public void setSpeedFactor(float factor) {
@@ -199,7 +223,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         // running
         checkOnGround();
 
-        if (onGround) {
+        if (walking) {
             float designatedVelocity = walkVelocity.length();
 
             if (designatedVelocity > 0) {
@@ -224,6 +248,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         if (initiateJumpInNextTick) {
             initiateJumpInNextTick = false;
             designatedUpwardsVelocity = jumpSpeed;
+            ((Player)this.spatial).updateModelAfterJump();
         }
 
         if (abortJumpInNextTick) {
@@ -242,6 +267,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
             pushBackInNextTick = false;
             velocity.setX(pushbackSpeed);
             velocity.setY(jumpSpeed);
+            walking = false;
         }
 
         // make sure the player never moves sideways
@@ -307,6 +333,9 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
      * Makes the character fly backwards and lose powerups.
      */
     public void damage() {
+        if (invulnTimer > 0) {
+            return;
+        }
         pushBackInNextTick = true;
         undoSpeedBoostPowerup();
         undoDoubleJumpPowerup();
@@ -373,9 +402,11 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     private void setOnGround(boolean onGround) {
         if (this.onGround && !onGround) {
             noOfJumps++; //we just took off
+            walking = false;
         }
         if (!this.onGround && onGround) {
             noOfJumps = 0; //we just landed
+            walking = true;
         }
         this.onGround = onGround; // update status regardless;
     }
@@ -385,6 +416,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         undoDoubleJumpPowerup();
         willRespawn = true;
         warp(position);
+        update(0f);
     }
 
     /**
@@ -513,4 +545,5 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
         rigidBody = new PhysicsRigidBody(getShape(), mass);
         rigidBody.setAngularFactor(0);
     }
+
 }

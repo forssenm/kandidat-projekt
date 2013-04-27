@@ -10,10 +10,12 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import control.AbstractPlayerInteractorControl;
+import control.AbstractPowerupControl;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
 import spatial.Player;
 import spatial.PlayerInteractor;
+import spatial.StandardParticleEmitter;
 
 /**
  * An powerup that gives the player a boost to run and jump speed.
@@ -29,42 +31,29 @@ public class SpeedPowerup extends PlayerInteractor {
 
     @Override
     protected Spatial createModel(AssetManager assetManager) {
-        Node fireball = new Node();
-        /*Sphere model =
-         new Sphere(5,5,0.1f);
+        Node modelNode = new Node("modelnode");
         
-         Geometry geometry = new Geometry("", model);
-         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-         material.setColor("Color", ColorRGBA.Red);
-         geometry.setMaterial(material);
-        
-         fireball.attachChild(geometry);*/
+        Node model = (Node)assetManager.loadModel("Models/icosphere/ico001.j3o");
+        model.setName("model");
         ParticleEmitter glow = getPowerupParticleEmitter(assetManager);
-        fireball.attachChild(glow);
+        modelNode.attachChild(glow);
+        modelNode.attachChild(model);
 
-        return fireball;
+        return modelNode;
     }
 
     private ParticleEmitter getPowerupParticleEmitter(AssetManager assetManager) {
-        ParticleEmitter glow =
-                new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
-        Material mat_red = new Material(assetManager,
-                "Common/MatDefs/Misc/Particle.j3md");
-        mat_red.setTexture("Texture", assetManager.loadTexture(
-                "Textures/Explosion/flame.png"));
-        glow.setMaterial(mat_red);
-        glow.setImagesX(2);
-        glow.setImagesY(2); // 2x2 texture animation
-
+        ParticleEmitter glow = StandardParticleEmitter.make(assetManager);
+                
         glow.setStartColor(ColorRGBA.Cyan);
         glow.setEndColor(ColorRGBA.White);
         glow.getParticleInfluencer().setInitialVelocity(Vector3f.ZERO);
-        glow.setStartSize(3.5f);
+        glow.setStartSize(3.0f);
         glow.setEndSize(0.1f);
-        glow.setGravity(0, -20, 0);
+        glow.setGravity(0, 0, 0);
         glow.setLowLife(0.4f);
         glow.setHighLife(1f);
-        glow.getParticleInfluencer().setVelocityVariation(0.3f);
+        glow.getParticleInfluencer().setVelocityVariation(3f);
         return glow;
     }
     
@@ -73,17 +62,14 @@ public class SpeedPowerup extends PlayerInteractor {
         ParticleEmitter pe = (ParticleEmitter) this.getChild("Emitter");
         pe.setLowLife(0f);
         pe.setHighLife(0f);
+        ((Node)this.getChild("modelnode")).detachChild(this.getChild("model"));
     }
 
     @Override
     protected PlayerInteractorControl createControl() {
-        return new AbstractPlayerInteractorControl(new SphereCollisionShape(1f)) {
+        return new AbstractPowerupControl() {
             private boolean hasHit;
-
-            @Override
-            protected void positionUpdate(float tpf) {
-                // do not move
-            }
+            private float time;
 
             public void collideWithPlayer(Player player) {
                 if (!hasHit) {
@@ -92,13 +78,20 @@ public class SpeedPowerup extends PlayerInteractor {
                     hasHit = true;
                     SpeedPowerup.this.destroy();
                 }
-            }            
-
-            /**
-             * Do nothing.
-             */
-            public void collideWithStatic() {
             }
+            
+            @Override
+            protected void positionUpdate(float tpf) {
+                time += tpf;
+                Spatial model = ((Node)this.spatial).getChild("model");
+                if (model != null) {
+                model.setLocalTranslation(
+                        (float)Math.cos(time*10)*2f,
+                        (float)Math.sin(time*12)*2f,
+                        (float)Math.sin(2+time*14)*2f);
+                }
+            }
+
         };
     }
 }

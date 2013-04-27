@@ -20,42 +20,40 @@ import com.jme3.post.Filter;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
-import control.LevelControl;
-import control.PlayerControl;
-import control.PlayerInteractorControl;
 import com.jme3.scene.Spatial;
-import com.jme3.shadow.PssmShadowRenderer;
-import com.jme3.system.Timer;
-import control.PlayerInteractorControl;
-import control.LevelControl;
 import control.PlayerControl;
+import control.PlayerInteractorControl;
 import filters.AmbientOcclusionFilter;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import main.Main;
 import spatial.Player;
 import spatial.hazard.LinearFireball;
 import variables.P;
 
 /**
- * This state is activated to start the game. The class sets up the different
- * <code>Node</code>s and attaches relevant controls to them.
- *
- * The level/scene is setup using a
- * <code>LevelControl</code> to continously generate scene-chunks when the
- * player moves. <br/><br/> The player is setup with a
- * <code>PlayerControl</code> which keeps the player moving to the right and
- * handles jump-events. <br/><br/> Background music is set to play. <br/><br/>
- * Lights are added <br/><br/> The camera is set to follow the player with a
- * <code>ChaseCam</code>
- *
+ * This state is activated to start the game. The class sets up  
+ * the different <code>Node</code>s and attaches relevant controls to them.
+ * 
+ * The level/scene is setup using a <code>LevelGeneratingState</code> to continously 
+ * generate scene-chunks whene the player moves. 
+ * <br/><br/>
+ * The player is setup with a
+ * <code>PlayerControl</code> which keeps the player moving to the right and 
+ * handles jump-events.
+ * <br/><br/>
+ * Background music is set to play.
+ * <br/><br/>
+ * Lights are added.
+ * <br/><br/>
+ * The camera is set to follow the player with a <code>ChaseCam</code>
  * @author forssenm, dagson
  */
 public class InGameState extends AbstractAppState {
 
     public static final String GAME_NODE = "Game Node";
-    public static final String LEVEL_NODE = "Level Node";
-    private SimpleApplication app;
+
+    private Main app;
     private Node gameNode;
     private AssetManager assetManager;
     private AppStateManager stateManager;
@@ -67,8 +65,9 @@ public class InGameState extends AbstractAppState {
     private boolean gameOver = false;
     private float respawnDelay = 1.0f; // seconds
     private float respawnTimer = 0.0f; // seconds
-    AmbientOcclusionFilter aof;
-
+    private LevelGeneratingState level;
+    private AmbientOcclusionFilter aof;
+    
     /**
      * This method initializes the the InGameState and thus gets the game ready
      * for playing. That implies setting up the level, player, camera and music
@@ -83,7 +82,7 @@ public class InGameState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        this.app = (SimpleApplication) app;
+        this.app = (Main) app;
         this.gameNode = new Node(GAME_NODE);
         this.app.getRootNode().attachChild(this.gameNode);
         this.assetManager = this.app.getAssetManager();
@@ -91,41 +90,27 @@ public class InGameState extends AbstractAppState {
         this.inputManager = this.app.getInputManager();
         this.viewPort = this.app.getViewPort();
         this.physics = new BulletAppState();
-
+        
+        this.level = new LevelGeneratingState();
+        this.stateManager.attach(level);
         this.stateManager.attach(physics);
         this.stateManager.attach(new RunningState());
 
         initPlayer();
-        initLevel();
         initCollisions();
         initCamera();
         initInputs();
 
         DirectionalLight sun = new DirectionalLight();
-        sun.setColor(ColorRGBA.White);
+        sun.setColor(new ColorRGBA(0.5f,0.5f,0.5f,0f));
+        //sun.setColor(ColorRGBA.White);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
         gameNode.addLight(sun);
 
         initAudio();
-
+        
         //initAO();
     }
-
-    /**
-     * This method creates a node with an attached
-     * <code>LevelControl</code> which will generate platforms as the player
-     * moves.
-     *
-     * @see LevelControl
-     */
-    private void initLevel() {
-        LevelControl levelControl = new LevelControl(
-                assetManager, physics.getPhysicsSpace(), player);
-        Node levelNode = new Node(LEVEL_NODE);
-        gameNode.attachChild(levelNode);
-        levelNode.addControl(levelControl);
-    }
-
     /**
      * This method creates a node for the player. Also the default player model
      * is loaded and attached. A
@@ -164,10 +149,7 @@ public class InGameState extends AbstractAppState {
         super.cleanup();
         this.app.getRootNode().detachChild(this.gameNode);
     }
-
-    /**
-     * {inheritDoc}
-     */
+    
     private void initAO() {
         aof = new AmbientOcclusionFilter();
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
@@ -182,6 +164,7 @@ public class InGameState extends AbstractAppState {
      * see LevelControl for current structure
      */
     private void updateAOIntervals() {
+        /*
         Vector3f playerCenter = viewPort.getCamera().getScreenCoordinates(player.getWorldTranslation());
         List<Spatial> movingObjects = new LinkedList<Spatial>();
         for (Spatial s : ((Node) gameNode.getChild(LEVEL_NODE)).getChildren()) {
@@ -197,68 +180,75 @@ public class InGameState extends AbstractAppState {
             values[i] = new Vector4f(center.x - margin, center.x + margin, center.y - margin, center.y + margin);
         }
         aof.updateIntervals(values);
+        */
     }
+    
     private float gameTime;
     private int difficultyLevel;
-
+    
     /**
      * {inheritDoc}
      */
     @Override
-    public void update(float tpf) {
-
+    public void update(float tpf) {    
+        //this.updateAOIntervals();
         if (!gameOver) {
+            // check for game over
             if (player.getWorldTranslation().getY() < P.deathTreshold) {
-                this.chaseCam.setEnabled(false);
-                this.gameOver = true;
+                this.gameOver();// = true;
             }
-
+            // check for difficulty increase
             gameTime += tpf;
-            if (gameTime > difficultyLevel * 3f) {
+            if (gameTime > difficultyLevel*3f) {
                 difficultyLevel++;
                 if (P.speedFactor < P.maxSpeedFactor) {
-                    P.speedFactor = P.minSpeedFactor + difficultyLevel * 0.05f;
+                    P.speedFactor += 0.05f;
                     player.getControl(PlayerControl.class).setSpeedFactor(P.speedFactor);
                 }
             }
-
+            
         } else { // gameOver
-            //this.updateAOIntervals();
-            respawnTimer += tpf;
-            if (!player.checkCulling(this.app.getCamera())) {
-                // staps the player from moving if outside the camera
-                player.setEnabled(false);
-            }
-            if (respawnTimer > respawnDelay) {
-                restartLevel();
-                gameOver = false;
-                respawnTimer = 0.0f;
+            // wait until player has fallen down
+            if (player.getWorldTranslation().getY() < P.deathTreshold - 30) {
+                this.setEnabled(false);
             }
         }
     }
+    
+    private void gameOver() {
+        gameOver = true;
+        this.app.gameOver();
+        this.chaseCam.setEnabled(false);
+    }
+        
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        player.setEnabled(enabled);
+        physics.setEnabled(enabled);
+        gameOver = false;
+    }
 
-    /*
-     * When implementing a gameover-menu and a restart-button, just remove the
-     * respawn-timer behaviour from update, keep the rest of the
-     * if(!gameOver)-else statement, and make sure to call this method when
-     * "restart" is pressed.
+
+    /**
+     * Restarts the level after a game over. Respawns the player, resets the
+     * level and difficulty.
      */
-    private void restartLevel() {
-        player.setEnabled(true);
+    public void restartLevel() {
+        gameOver = false;
         gameTime = 0;
         difficultyLevel = 0;
         P.speedFactor = P.minSpeedFactor;
-
+        
         Vector3f spawnPosition = player.getLocalTranslation();
         spawnPosition.x = 0.0f;
         spawnPosition.y = 20.0f;
         PlayerControl pc = player.getControl(PlayerControl.class);
         pc.respawn(spawnPosition);
-
-        LevelControl levelControl = gameNode.getChild(LEVEL_NODE).getControl(LevelControl.class);
+        
+        level.cleanup();
         // Try again
-        levelControl.cleanup();
-        levelControl.initiateLevel();
+        level.resetLevel();
 
         this.chaseCam.setEnabled(true);
     }
@@ -272,7 +262,7 @@ public class InGameState extends AbstractAppState {
         //this.chaseCam.setSmoothMotion(true);
         this.chaseCam.setTrailingEnabled(false);
         this.chaseCam.setDefaultHorizontalRotation(-FastMath.DEG_TO_RAD * 270);
-        this.chaseCam.setDefaultVerticalRotation(FastMath.DEG_TO_RAD * 20);
+        this.chaseCam.setDefaultVerticalRotation(FastMath.DEG_TO_RAD * 30);
         //Depth (z) distance from camera to target (player)
         this.chaseCam.setDefaultDistance(50);
         //Offset in x direction so that the target (player) is on the left half 
@@ -287,7 +277,7 @@ public class InGameState extends AbstractAppState {
     private void initInputs() {
         inputManager.addListener(player.getControl(PlayerControl.class), "jump");
         inputManager.addListener(player.getControl(PlayerControl.class), "pause");
-
+        
     }
 
     private void initCollisions() {

@@ -3,16 +3,8 @@ package main;
 import com.jme3.app.DebugKeysAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
-import com.jme3.math.Vector2f;
-import com.jme3.math.Vector3f;
-import com.jme3.post.Filter;
-import com.jme3.post.FilterPostProcessor;
-import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
-import filters.AmbientOcclusionFilter;
-import filters.MosaicFilter;
-import filters.RedOverlayFilter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import state.InGameState;
@@ -26,10 +18,14 @@ import variables.P;
  */
 public class Main extends SimpleApplication {
     
+    private InMainMenuState inMainMenuState;
+    private InGameState inGameState;
+    
     public static void main(String[] args) {
         AppSettings appSettings = new AppSettings(true);
         appSettings.setSamples(2);
         appSettings.setVSync(true);
+        //appSettings.setFrameRate(30);
         Main app = new Main();
         app.setSettings(appSettings); 
         app.start();
@@ -42,13 +38,14 @@ public class Main extends SimpleApplication {
         Logger.getLogger("Kandidat").setLevel(Level.FINE);
     }
     
-    
-    
     @Override
-    public void simpleInitApp() { 
+    public void simpleInitApp() {
         P.screenWidth = settings.getWidth();
         P.screenHeight = settings.getHeight();
-        stateManager.attach(new InGameState());
+        inGameState = new InGameState();
+        inMainMenuState = new InMainMenuState();
+        stateManager.attach(inMainMenuState);
+        
         //stateManager.attach(new InMainMenuState());
         
         //FilterPostProcessor processor = (FilterPostProcessor) assetManager.loadAsset("Filters/PostFilter.j3f");
@@ -62,19 +59,29 @@ public class Main extends SimpleApplication {
         fpp.addFilter(testFilter);
         viewPort.addProcessor(fpp);
         */
-        
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-            //System.out.println(viewPort.getCamera().getScreenCoordinates(viewPort.getCamera().getWorldCoordinates(new Vector2f(10, 10), 0)));
-            
+    }
+    
+    public void gameStart() {
+        this.inMainMenuState.setEnabled(false);
+        if (!inGameState.isInitialized()) {
+            this.stateManager.attach(inGameState);
+        } else {
+            inGameState.setEnabled(true);
+            inGameState.restartLevel();
+        }
+    }
+    
+    public void gameOver() {
+        //this.inGameState.setEnabled(false);
+        this.inMainMenuState.setEnabled(true);
     }
 
     @Override
     public void simpleRender(RenderManager rm) {
-        //TODO: add render code
     }
     
-    // BAra skriver en kommentar för att testa push
 }

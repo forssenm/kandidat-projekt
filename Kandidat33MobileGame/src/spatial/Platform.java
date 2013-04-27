@@ -1,6 +1,7 @@
 package spatial;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
@@ -14,6 +15,9 @@ import variables.P;
  * @author dagen
  */
 public class Platform extends Geometry {
+    
+    private static Material materialForPlatforms;
+    
     /**
      * This constructor creates a <code>Platform</code> represented by a 
      * <code>Geometry</code> loaded internally. A <code>RigidBodyControl</code> 
@@ -30,11 +34,14 @@ public class Platform extends Geometry {
         this.mesh = model;
         this.setLocalTranslation(length/2 + position.x, position.y, -P.playerZOffset);
         
-        Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        material.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
-        this.setMaterial(material);
+        if (materialForPlatforms == null) {
+            materialForPlatforms = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+            materialForPlatforms.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
+        }
+        this.setMaterial(materialForPlatforms);
 
-        RigidBodyControl rigidBodyControl = new RigidBodyControl(0.0f);
+        RigidBodyControl rigidBodyControl = new RigidBodyControl(
+                new BoxCollisionShape(new Vector3f(length/2, height/2, width/2)),0.0f);
         this.addControl(rigidBodyControl);
 
         this.setShadowMode(ShadowMode.CastAndReceive);

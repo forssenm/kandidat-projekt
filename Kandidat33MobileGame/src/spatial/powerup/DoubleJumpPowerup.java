@@ -1,7 +1,6 @@
 package spatial.powerup;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
@@ -9,11 +8,12 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import control.AbstractPlayerInteractorControl;
+import control.AbstractPowerupControl;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
 import spatial.Player;
 import spatial.PlayerInteractor;
+import spatial.StandardParticleEmitter;
 
 /**
  * An powerup that gives the player the ability to double jump.
@@ -46,15 +46,8 @@ public class DoubleJumpPowerup extends PlayerInteractor {
     }
 
     private ParticleEmitter getPowerupParticleEmitter(AssetManager assetManager) {
-        ParticleEmitter glow =
-                new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
-        Material mat_red = new Material(assetManager,
-                "Common/MatDefs/Misc/Particle.j3md");
-        mat_red.setTexture("Texture", assetManager.loadTexture(
-                "Textures/Explosion/flame.png"));
-        glow.setMaterial(mat_red);
-        glow.setImagesX(2);
-        glow.setImagesY(2); // 2x2 texture animation
+        ParticleEmitter glow = StandardParticleEmitter.make(assetManager);
+           
 
         glow.setStartColor(ColorRGBA.Green);
         glow.setEndColor(ColorRGBA.DarkGray);
@@ -77,13 +70,8 @@ public class DoubleJumpPowerup extends PlayerInteractor {
 
     @Override
     protected PlayerInteractorControl createControl() {
-        return new AbstractPlayerInteractorControl(new SphereCollisionShape(1f)) {
+        return new AbstractPowerupControl() {
             private boolean hasHit;
-
-            @Override
-            protected void positionUpdate(float tpf) {
-                // do not move
-            }
 
             public void collideWithPlayer(Player player) {
                 if (!hasHit) {
@@ -94,11 +82,6 @@ public class DoubleJumpPowerup extends PlayerInteractor {
                 }
             }
 
-            /**
-             * Do nothing.
-             */
-            public void collideWithStatic() {
-            }
         };
     }
 }

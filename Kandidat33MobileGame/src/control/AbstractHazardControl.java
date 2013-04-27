@@ -1,4 +1,4 @@
-package control.fireball;
+package control;
 
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import control.AbstractPlayerInteractorControl;
@@ -10,28 +10,27 @@ import spatial.hazard.AbstractFireball;
  * A generall fireball, just hanging in the air.
  * @author jonatankilhamn
  */
-public class FireballControl extends AbstractPlayerInteractorControl {
+public abstract class AbstractHazardControl extends AbstractPlayerInteractorControl {
     protected boolean hasHit;
     
-    public FireballControl() {
-        super(new SphereCollisionShape(1f));
+    public AbstractHazardControl(float size) {
+        super(new SphereCollisionShape(size));
     }
     
     public void collideWithPlayer(Player player) {
         if (!hasHit) {
         player.getControl(PlayerControl.class).damage();
-        hasHit = false;
-        ((AbstractFireball)spatial).destroy();
+        hasHit = true;
+        afterPlayerCollision();
         }
     }
-        
+    
     @Override
     protected void positionUpdate(float tpf) {
         // do not move
     }
 
-    public void collideWithStatic() {
-        ((AbstractFireball)spatial).destroy();
-    }
+    public abstract void collideWithStatic();
     
+    public abstract void afterPlayerCollision();
 }

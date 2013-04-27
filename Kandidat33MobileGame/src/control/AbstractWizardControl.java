@@ -1,4 +1,4 @@
-package control.wizard;
+package control;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.CollisionShape;
@@ -7,11 +7,10 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import control.AbstractPlayerInteractorControl;
-import control.LevelControl;
 import leveldata.LevelContentGenerator;
 import spatial.Player;
-import spatial.hazard.AbstractWizard;
 import spatial.hazard.LinearFireball;
+import state.LevelGeneratingState;
 
 /**
  * A class for a wizard who shoots fireballs when the player is within a certain
@@ -22,7 +21,7 @@ import spatial.hazard.LinearFireball;
 public abstract class AbstractWizardControl extends AbstractPlayerInteractorControl implements LevelContentGenerator {
 
     protected boolean readyToShoot = true;
-    protected LevelControl levelControl;
+    protected LevelGeneratingState levelControl;
     protected float reloadTimer;
     protected float fireballSpeed = 15f;
     protected AssetManager assetManager;
@@ -60,7 +59,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
      * Wizards do not move.
      */
     protected void positionUpdate(float tpf) {
-        spatial.getLocalTranslation().addLocal(tpf*speed,0f,0f);
+        spatial.setLocalTranslation(spatial.getLocalTranslation().add(tpf*speed,0f,0f));
     }
 
     @Override
@@ -99,7 +98,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
         this.spatial.setLocalRotation(rotation);
     }
 
-    public void setLevelControl(LevelControl levelControl) {
+    public void setLevelControl(LevelGeneratingState levelControl) {
         this.levelControl = levelControl;
     }
     

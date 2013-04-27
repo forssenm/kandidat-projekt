@@ -2,28 +2,24 @@ package spatial;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.effect.ParticleEmitter;
-import com.jme3.effect.ParticleMesh;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.RenderQueue.ShadowMode;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import com.jme3.scene.shape.Box;
 import java.util.Random;
 import variables.P;
 
 /**
- * A class for a non-physical window frame, purely for decoration.
+ * A class for a non-physical torch, purely for decoration.
  * @author jonatankilhamn
  */
 public class Torch extends Node {
 
+    private static Node modelForTorch;
+    
     /**
      * This constructor creates a
      * <code>Torch</code> represented by a
-     * <code>Geometry</code> loaded internaly.
+     * <code>Geometry</code> loaded internally.
      *
      * @param assetManager is used to load the geometry and texture of
      * the <code>Window</code>.
@@ -31,11 +27,15 @@ public class Torch extends Node {
     public Torch(AssetManager assetManager, Vector3f position) {
         super("Torch");
         
-        Node window = (Node)assetManager.loadModel("Models/torch/Torch.j3o");
+        if (modelForTorch == null) {
+            modelForTorch = (Node)assetManager.loadModel("Models/torch/Torch-nolightcam.j3o");
+        }
+        
+        Node model = (Node)modelForTorch.clone();
        // window.scale(4);
        // window.rotate(90*FastMath.DEG_TO_RAD, 0f, 0f);
-        window.attachChild (getTorchParticleEmitter(assetManager));
-        this.attachChild(window);
+        model.attachChild (getTorchParticleEmitter(assetManager));
+        this.attachChild(model);
         
        // this.setLocalTranslation(position.x, position.y, -P.platformWidth*2+0.5f);
         this.setLocalTranslation(position.x, position.y, -P.platformWidth/2-P.playerZOffset+0.6f);
@@ -44,17 +44,8 @@ public class Torch extends Node {
     }
     
     private ParticleEmitter getTorchParticleEmitter (AssetManager assetManager) {
-             ParticleEmitter fire = 
-            new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
-    Material mat_red = new Material(assetManager, 
-            "Common/MatDefs/Misc/Particle.j3md");
-    mat_red.setTexture("Texture", assetManager.loadTexture(
-            "Textures/Explosion/flame.png"));
-   // mat_red.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); för att kunna göra svarta partiklar
-    fire.setMaterial(mat_red);
-    fire.setImagesX(2); 
-    fire.setImagesY(2); // 2x2 texture animation
-    
+        
+        ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
     //Default values for a standard Torch
     ColorRGBA startColor = new ColorRGBA (0.9f, 0.3f, 0.1f, 0.8f);
     ColorRGBA endColor = new ColorRGBA (0.45f, 0.4f, 0f, 0.5f);

@@ -2,6 +2,7 @@ package spatial.hazard;
 
 import spatial.PlayerInteractor;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
@@ -12,6 +13,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import java.util.Random;
+import spatial.StandardParticleEmitter;
 
 /**
  * An abstract AbstractFireball. Any class extending this one will make a PlayerInteractor
@@ -53,20 +55,20 @@ public abstract class AbstractFireball extends PlayerInteractor {
         
         fire = getFireballParticleEmitter(assetManager);
         fireball.attachChild(fire);
+        
+        //AudioNode audio = new AudioNode(assetManager, "fire-sound-effect", false);
+        AudioNode audio = new AudioNode(assetManager, "Sound/Effects/Bang.wav", false);
+        
+        audio.setName("audio");
+        
+        fireball.attachChild(audio);
 
         return fireball;
     }
 
     private ParticleEmitter getFireballParticleEmitter(AssetManager assetManager) {
-        ParticleEmitter fire =
-                new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
-        Material mat_red = new Material(assetManager,
-                "Common/MatDefs/Misc/Particle.j3md");
-        mat_red.setTexture("Texture", assetManager.loadTexture(
-                "Textures/Explosion/flame.png"));
-        fire.setMaterial(mat_red);
-        fire.setImagesX(2);
-        fire.setImagesY(2); // 2x2 texture animation
+        ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
+                
         
         Random r = new Random();
         int i = r.nextInt(9);
@@ -78,11 +80,11 @@ public abstract class AbstractFireball extends PlayerInteractor {
         fire.setStartColor(colorArray[i]);
         fire.setEndColor(colorArray[j]);
         fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 2, 0));
-        fire.setStartSize(3.5f);
+        fire.setStartSize(2.5f);
         fire.setEndSize(0.1f);
         fire.setGravity(0, 0, 0);
         fire.setLowLife(0.4f);
-        fire.setHighLife(1f);
+        fire.setHighLife(0.6f);
         fire.getParticleInfluencer().setVelocityVariation(0.3f);
         return fire;
     }
@@ -91,6 +93,8 @@ public abstract class AbstractFireball extends PlayerInteractor {
         this.setName("");
         fire.setHighLife(0f);
         fire.setLowLife(0f);
+        AudioNode audio = (AudioNode) this.getChild("audio");
+        audio.playInstance();
     }
     
 }

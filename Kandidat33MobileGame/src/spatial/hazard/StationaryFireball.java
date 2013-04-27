@@ -2,11 +2,11 @@ package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
 import control.PlayerInteractorControl;
-import control.fireball.FireballControl;
+import control.AbstractHazardControl;
 
 /**
  * * A fireball using
- * <code>FireballControl</code> to control its behaviour.
+ * <code>AbstractHazardControl</code> to control its behaviour.
  * 
  * @author jonatankilhamn
  */
@@ -19,7 +19,18 @@ public class StationaryFireball extends AbstractFireball {
     
     @Override
     protected PlayerInteractorControl createControl() {
-        return new FireballControl();
+        return new AbstractHazardControl(1f) {
+
+            @Override
+            public void collideWithStatic() {
+                StationaryFireball.this.destroy();
+            }
+
+            @Override
+            public void afterPlayerCollision() {
+                StationaryFireball.this.destroy();
+            }
+        };
     }
     
 }

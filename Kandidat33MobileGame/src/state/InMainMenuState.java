@@ -1,7 +1,6 @@
 package state;
 
 import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
@@ -13,6 +12,8 @@ import com.jme3.scene.Node;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
+import main.Main;
+import niftyController.MainMenuScreenController;
 
 /**
  * This class handles all the menu things
@@ -21,7 +22,7 @@ import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
  */
 public class InMainMenuState extends AbstractAppState {
 
-    private SimpleApplication app;
+    private Main app;
     private Node rootNode;
     private AssetManager assetManager;
     private AppStateManager stateManager;
@@ -39,7 +40,7 @@ public class InMainMenuState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        this.app = (SimpleApplication) app;
+        this.app = (Main) app;
         this.rootNode = this.app.getRootNode();
         this.assetManager = this.app.getAssetManager();
         this.stateManager = this.app.getStateManager();
@@ -61,10 +62,13 @@ public class InMainMenuState extends AbstractAppState {
         if (enabled) {
             //Initiate the things that are needed when the state is active
             System.out.println("InMainMenuState is now active");
+            //nifty.setIgnoreMouseEvents(false);
+            nifty.gotoScreen("gameOverScreen");
         } else {
             //Remove the things not needed when the state is inactive
             System.out.println("InMainMenuState is now inactive");
-            cleanup();
+            //nifty.setIgnoreMouseEvents(true); // needed to prevent nullpointer from releasing the click too quickly when closing nifty
+            nifty.exit();
         }
     }
 
@@ -78,7 +82,7 @@ public class InMainMenuState extends AbstractAppState {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, app.getAudioRenderer(), app.getGuiViewPort());
         nifty = niftyDisplay.getNifty();
         nifty.subscribeAnnotations(this);
-        nifty.fromXml("/xmlgui/Screens.xml", "splashScreen");
+        nifty.fromXml("/xmlgui/Screens.xml", "splashScreen",new MainMenuScreenController());
         //nifty.fromXml("/xmlgui/SplashScreen.xml", "splashScreen");
         app.getGuiViewPort().addProcessor(niftyDisplay);
     }
@@ -86,9 +90,7 @@ public class InMainMenuState extends AbstractAppState {
     //Might need to move these methods to the controllers
     @NiftyEventSubscriber(id = "playButton")
     public void onPlayClick(String id, NiftyMousePrimaryClickedEvent event) {
-        nifty.exit();
-        this.setEnabled(false);
-        stateManager.attach(new InGameState());
+        this.app.gameStart();
     }
 
     @NiftyEventSubscriber(id = "settingsButton")
