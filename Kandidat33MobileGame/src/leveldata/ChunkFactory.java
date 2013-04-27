@@ -89,18 +89,21 @@ public class ChunkFactory {
         lights.add(this.createTorchLight(30f, wHeight + 15f));
 
         
-        
+        /*
         if (level > 4) {
             staticObjects.attachChild(createMileStone((int)(level-4),30f,wHeight + 20f));
         }
+        */
         
         staticObjects.attachChild(window);
         staticObjects.attachChild(torch);
         
+        /*
         if (true) { //PLANT SWITCH
         Plant plant = createPlant (20, wHeight + 2);
         staticObjects.attachChild(plant);
         }
+        */
         
         spatials.add(staticObjects);
 
@@ -118,11 +121,11 @@ public class ChunkFactory {
 
         int platformLayoutType;
         int enemyType;
-        int powerupType;
+        //int powerupType;
         if (level < 5) { //nothing special on the first few chunks
             platformLayoutType = -1;
             enemyType = -1;
-            powerupType = -1;
+            //powerupType = -1;
             if (level == 4) {
                 d += dist; // distance after the "starting strip" is over
             }
@@ -131,7 +134,7 @@ public class ChunkFactory {
              * will give nothing */
             enemyType = random.nextInt(12);
             /* results 0-3 are powerups; 4 or higher gives nothing */
-            powerupType = random.nextInt(8);
+            //powerupType = random.nextInt(8);
 
             // get back to normal height if we're too low or too high
             if (height < -2) {
@@ -256,7 +259,7 @@ public class ChunkFactory {
         
         
         // generate powerups:
-        switch (powerupType) {
+        /*switch (powerupType) {
             case (-1): // nothing
                 break;
             case (0): // speed boost
@@ -274,7 +277,7 @@ public class ChunkFactory {
             default:
                 break;
         }
-
+        */
 
         // the lights:
         /*

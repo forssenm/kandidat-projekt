@@ -59,14 +59,14 @@ public class Player extends Node implements AnimEventListener {
 
         //Sets the model of the player
 
-        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
+        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam-shadeless.j3o");
         control = playerModel.getChild("Plane").getControl(AnimControl.class);
         channel = control.createChannel();
 
         playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
-        ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
-        playerModel.attachChild(dust);
-        dust.move(0.6f, -2.0f, 0f);
+        //ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
+        //playerModel.attachChild(dust);
+        //dust.move(0.6f, -2.0f, 0f);
         this.attachChild(playerModel);
         //All the code below is for animation of the model
         

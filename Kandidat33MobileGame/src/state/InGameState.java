@@ -102,8 +102,8 @@ public class InGameState extends AbstractAppState {
         initInputs();
 
         DirectionalLight sun = new DirectionalLight();
-        sun.setColor(new ColorRGBA(0.5f,0.5f,0.5f,0f));
-        //sun.setColor(ColorRGBA.White);
+        //sun.setColor(new ColorRGBA(0.5f,0.5f,0.5f,0f));
+        sun.setColor(ColorRGBA.White);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
         gameNode.addLight(sun);
 

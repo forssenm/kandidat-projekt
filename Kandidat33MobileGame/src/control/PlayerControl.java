@@ -337,8 +337,8 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
             return;
         }
         pushBackInNextTick = true;
-        undoSpeedBoostPowerup();
-        undoDoubleJumpPowerup();
+        //undoSpeedBoostPowerup();
+        //undoDoubleJumpPowerup();
     }
     
     /**

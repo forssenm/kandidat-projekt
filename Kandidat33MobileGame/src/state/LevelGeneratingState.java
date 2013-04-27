@@ -195,11 +195,11 @@ public class LevelGeneratingState extends AbstractAppState {
                 Spatial spatial = (Spatial) object;
                 addToLevel(spatial, spatial.getLocalTranslation().add(newChunkPosition));
             } else if (object instanceof SpotLight) {
-                SpotLight light = (SpotLight) object;
-                addToLevel(light, light.getPosition().add(newChunkPosition));
+                //SpotLight light = (SpotLight) object;
+                //addToLevel(light, light.getPosition().add(newChunkPosition));
             } else if (object instanceof PointLight) {
-                PointLight light = (PointLight) object;
-                addToLevel(light, light.getPosition().add(newChunkPosition));   
+                //PointLight light = (PointLight) object;
+                //addToLevel(light, light.getPosition().add(newChunkPosition));   
             }
         }
 
@@ -335,4 +335,5 @@ public class LevelGeneratingState extends AbstractAppState {
         helloText.setLocalTranslation(xPos, helloText.getLineHeight(), 0);
         guiNode.attachChild(helloText);
     }
+    
 }
