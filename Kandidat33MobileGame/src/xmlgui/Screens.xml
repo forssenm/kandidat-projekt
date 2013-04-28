@@ -9,7 +9,7 @@
     <screen id="splashScreen"
                 controller="niftyController.SplashScreenController">
         <layer childLayout="center">
-            <image id="splashImage" filename="/Textures/bluefire.jpg">
+            <image id="splashImage" filename="/Textures/splashImage.jpg">
                 <effect>
                     <onCustom customKey="fadeIn" name="fade" start="#0" end="#f" length="2500" />
                     <onCustom customKey="fadeOut" name="fade" start="#f" end="#0" length="2500" neverStopRendering="true" />
