@@ -26,6 +26,7 @@ import control.PlayerControl;
 import control.PlayerInteractorControl;
 import filters.AmbientOcclusionFilter;
 import filters.BuiltInSSAO;
+import filters.BuiltInSSAO_intervals;
 import java.util.LinkedList;
 import java.util.List;
 import main.Main;
@@ -69,6 +70,7 @@ public class InGameState extends AbstractAppState {
     private float respawnTimer = 0.0f; // seconds
     private LevelGeneratingState level;
     private AmbientOcclusionFilter aof;
+    private BuiltInSSAO_intervals builtInSSAO;
     
     /**
      * This method initializes the the InGameState and thus gets the game ready
@@ -154,11 +156,13 @@ public class InGameState extends AbstractAppState {
     
     private void initAO() {
         aof = new AmbientOcclusionFilter();
+        builtInSSAO = new BuiltInSSAO_intervals(2, 5, 0.4f, 0.02f);
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         //Filter testFilter = new SSAOFilter(4, 3, 0.2f, 0.1f);
         //Filter testFilter = new SSAOFilter(2, 5, 0.4f, 0.02f);
         //Filter testFilter = new BuiltInSSAO(2, 5, 0.4f, 0.02f);
-        Filter testFilter = aof;
+        //Filter testFilter = aof;
+        Filter testFilter = builtInSSAO;
         fpp.addFilter(testFilter);
         viewPort.addProcessor(fpp);
     }
@@ -188,6 +192,7 @@ public class InGameState extends AbstractAppState {
         }
         
         aof.updateIntervals(values);
+        builtInSSAO.updateIntervals(values);
         
     }
     
