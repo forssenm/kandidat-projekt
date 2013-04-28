@@ -25,6 +25,7 @@ import com.jme3.scene.Spatial;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
 import filters.AmbientOcclusionFilter;
+import filters.BuiltInSSAO;
 import java.util.LinkedList;
 import java.util.List;
 import main.Main;
@@ -155,8 +156,9 @@ public class InGameState extends AbstractAppState {
         aof = new AmbientOcclusionFilter();
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         //Filter testFilter = new SSAOFilter(4, 3, 0.2f, 0.1f);
-        Filter testFilter = new SSAOFilter(2, 5, 0.4f, 0.02f);
-        //Filter testFilter = aof;
+        //Filter testFilter = new SSAOFilter(2, 5, 0.4f, 0.02f);
+        //Filter testFilter = new BuiltInSSAO(2, 5, 0.4f, 0.02f);
+        Filter testFilter = aof;
         fpp.addFilter(testFilter);
         viewPort.addProcessor(fpp);
     }
@@ -168,7 +170,7 @@ public class InGameState extends AbstractAppState {
     private void updateAOIntervals() {
         Vector3f playerCenter = viewPort.getCamera().getScreenCoordinates(player.getWorldTranslation());
         List<Spatial> movingObjects = new LinkedList<Spatial>();
-        int margin = 42;
+        int margin = 50;
         
         try {
             Node levelNode = (Node)gameNode.getChild("Level Node");
@@ -178,7 +180,7 @@ public class InGameState extends AbstractAppState {
         }
         
         Vector4f[] values = new Vector4f[1 + movingObjects.size()];
-        values[0] = new Vector4f(playerCenter.x - margin, playerCenter.x + margin, playerCenter.y - margin / 2, playerCenter.y + margin * 2);
+        values[0] = new Vector4f(playerCenter.x - margin, playerCenter.x + margin, playerCenter.y - margin / 2, playerCenter.y + margin * 1.5f);
 
         for (int i = 1; i < values.length; i++) {
             Vector3f center = viewPort.getCamera().getScreenCoordinates(movingObjects.get(i - 1).getWorldTranslation());
@@ -197,7 +199,7 @@ public class InGameState extends AbstractAppState {
      */
     @Override
     public void update(float tpf) {    
-        //this.updateAOIntervals();
+        this.updateAOIntervals();
         if (!gameOver) {
             // check for game over
             if (player.getWorldTranslation().getY() < P.deathTreshold) {

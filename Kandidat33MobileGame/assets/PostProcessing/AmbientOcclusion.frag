@@ -2,9 +2,12 @@
 
 uniform COLORTEXTURE m_Texture;
 uniform DEPTHTEXTURE m_DepthTexture;
+uniform vec4 g_ViewPort;
 
 uniform int m_numMoving;
 uniform vec4 m_intervals[10];
+
+float radius = 5;
 
 in vec2 texCoord;
 
@@ -21,10 +24,16 @@ void main() {
     vec4 texVal = getColor(m_Texture, texCoord);
     
     if (isInInterval()) {
-        gl_FragColor = texVal * 0.8;
+        gl_FragColor = texVal * 0.6 + 
+            0.1 * getColor(m_Texture, vec2((gl_FragCoord.x-radius)/g_ViewPort.z, (gl_FragCoord.y-radius)/g_ViewPort.w)) +
+            0.1 * getColor(m_Texture, vec2((gl_FragCoord.x-radius)/g_ViewPort.z, (gl_FragCoord.y+radius)/g_ViewPort.w)) +
+            0.1 * getColor(m_Texture, vec2((gl_FragCoord.x+radius)/g_ViewPort.z, (gl_FragCoord.y-radius)/g_ViewPort.w)) +
+            0.1 * getColor(m_Texture, vec2((gl_FragCoord.x+radius)/g_ViewPort.z, (gl_FragCoord.y+radius)/g_ViewPort.w));
+        //gl_FragColor = texVal * 0.8;
     } else {
         gl_FragColor = texVal;
     }
  
-    //gl_FragColor = texVal;
+    //gl_FragColor = getColor(m_DepthTexture, texCoord);
+     
 }

@@ -10,8 +10,18 @@ MaterialDef My MaterialDef {
     }
 
     Technique {
-        VertexShader GLSL100:   PostProcessing/AmbientOcclusion.vert
-        FragmentShader GLSL100: PostProcessing/AmbientOcclusion.frag
+        VertexShader GLSL150:   PostProcessing/BuiltInSSAO/Post15.vert
+        FragmentShader GLSL150: PostProcessing/AmbientOcclusion.frag
+
+        WorldParameters {
+            WorldViewProjectionMatrix
+            ViewPort
+        }
+    }
+
+    Technique {
+        VertexShader GLSL120:   PostProcessing/BuiltInSSAO/Post.vert
+        FragmentShader GLSL120: PostProcessing/AmbientOcclusion.frag
 
         WorldParameters {
             WorldViewProjectionMatrix
