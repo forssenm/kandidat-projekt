@@ -162,9 +162,9 @@ public class InGameState extends AbstractAppState {
         //Filter testFilter = new SSAOFilter(2, 5, 0.4f, 0.02f);
         //Filter testFilter = new BuiltInSSAO(2, 5, 0.4f, 0.02f);
         //Filter testFilter = aof;
-        Filter testFilter = builtInSSAO;
-        fpp.addFilter(testFilter);
-        viewPort.addProcessor(fpp);
+        //Filter testFilter = builtInSSAO;
+        //fpp.addFilter(testFilter);
+        //viewPort.addProcessor(fpp);
     }
 
     /*

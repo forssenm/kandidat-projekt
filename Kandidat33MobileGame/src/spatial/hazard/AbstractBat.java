@@ -26,9 +26,9 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
     
     @Override
     protected Spatial createModel(AssetManager assetManager) {
-        Node batModel = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim2fix_shadeless.j3o");
+        Node batModel = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim2fix_ao.j3o");
         
-        batModel.setMaterial(getRandomColorMaterial(assetManager));
+        //batModel.setMaterial(getRandomColorMaterial(assetManager));
         batModel.rotate (+1.6f,+1.4f,0); //flying towards player, slightly tilted up
         control = batModel.getChild("Sphere").getControl(AnimControl.class);
         channel = control.createChannel();
