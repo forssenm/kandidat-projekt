@@ -12,7 +12,6 @@ import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.light.DirectionalLight;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
@@ -58,6 +57,9 @@ public class InGameState extends AbstractAppState {
     private float respawnDelay = 1.0f; // seconds
     private float respawnTimer = 0.0f; // seconds
     private LevelGeneratingState level;
+    private DirectionalLight sun;
+    private boolean startInvulnerable;
+    private boolean stopInvulnerable;
     
     /**
      * This method initializes the the InGameState and thus gets the game ready
@@ -92,8 +94,8 @@ public class InGameState extends AbstractAppState {
         initCamera();
         initInputs();
 
-        DirectionalLight sun = new DirectionalLight();
-        sun.setColor(new ColorRGBA(0.5f,0.5f,0.5f,0f));
+        sun = new DirectionalLight();
+        sun.setColor(P.sunColor);
         //sun.setColor(ColorRGBA.White);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
         gameNode.addLight(sun);
@@ -107,7 +109,7 @@ public class InGameState extends AbstractAppState {
      * player.
      */
     private void initPlayer() {
-        player = new Player(assetManager);
+        player = new Player(assetManager, this);
         gameNode.attachChild(player);
 
         this.physics.getPhysicsSpace().addAll(player);
@@ -142,12 +144,29 @@ public class InGameState extends AbstractAppState {
     
     private float gameTime;
     private int difficultyLevel;
+    private float lightShiftTime;
     
     /**
      * {inheritDoc}
      */
     @Override
-    public void update(float tpf) {        
+    public void update(float tpf) {
+        
+        if (startInvulnerable || stopInvulnerable) {
+            if (startInvulnerable) {
+                lightShiftTime += tpf;
+                if (lightShiftTime > 0.5f) {
+                    startInvulnerable = false;
+                }
+            } else {
+                lightShiftTime -= tpf;
+                if (lightShiftTime < 0f) {
+                    stopInvulnerable = false;
+                }
+            }
+            sun.setColor(P.sunColor.mult(1 + (lightShiftTime / 0.5f)));
+        }
+        
         if (!gameOver) {
             // check for game over
             if (player.getWorldTranslation().getY() < P.deathTreshold) {
@@ -250,5 +269,12 @@ public class InGameState extends AbstractAppState {
             }
         };
         this.physics.getPhysicsSpace().addCollisionListener(physicsCollisionListener);
+    }
+
+    public void setInvulnerable(boolean setting) {
+        startInvulnerable = setting;
+        stopInvulnerable = !setting;
+        
+        
     }
 }

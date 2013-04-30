@@ -85,12 +85,16 @@ public class ChunkFactory {
         // the decorations:
         float wHeight = Math.max(0, 5 * Math.round(height / 5));
 
+        if (random.nextFloat() < P.windowFreq) {
             WindowFrame window = createWindowFrame(5f, wHeight + 23f);
             staticObjects.attachChild(window);
             lights.add(this.createWindowLight(5f, wHeight + 23f));
+        }
+        if (random.nextFloat() < P.torchFreq) {
             Torch torch = createTorch(30, wHeight + 15);
             staticObjects.attachChild(torch);
             lights.add(this.createTorchLight(30f, wHeight + 15f));
+        }
         
         
         if (level > 4 && level%3 == 2) {

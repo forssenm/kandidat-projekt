@@ -8,12 +8,16 @@ import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
+import com.jme3.light.DirectionalLight;
+import com.jme3.light.Light;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import control.PlayerControl;
+import java.util.Iterator;
+import state.InGameState;
 import variables.P;
 
 /**
@@ -27,6 +31,7 @@ public class Player extends Node implements AnimEventListener {
 
     private PlayerControl playerControl;
     private Node playerModel;
+    private InGameState game;
 
     //animation
     private AnimChannel channel;
@@ -41,8 +46,9 @@ public class Player extends Node implements AnimEventListener {
      * @param assetManager is used for loading the players assets i.e. 3D-model
      * and textures.
      */
-    public Player(AssetManager assetManager) {
+    public Player(AssetManager assetManager, InGameState game) {
         super("player");
+        this.game = game;
         
         // the player casts shadows
         this.setShadowMode(RenderQueue.ShadowMode.Cast);
@@ -82,6 +88,7 @@ public class Player extends Node implements AnimEventListener {
         AudioNode jumpSoundNode = new AudioNode(assetManager, "Sound/Effects/Gun.wav", false);
         jumpSoundNode.setName("jumpsound");
         this.attachChild(jumpSoundNode);
+
     }
 
     /**
@@ -97,6 +104,8 @@ public class Player extends Node implements AnimEventListener {
     }
     
     public void updateModelAfterPowerup(Powerup powerup, boolean setting) {
+        
+        
         ParticleEmitter dust = (ParticleEmitter)this.playerModel.getChild("Emitter");
         switch(powerup) {
             case SPEED:
@@ -107,6 +116,7 @@ public class Player extends Node implements AnimEventListener {
                 }
                 break;
             case INVULN:
+                game.setInvulnerable(setting);
                 if (setting) {
                     dust.setGravity(0f,20f,0f);
                     dust.setEndSize(3.5f);
