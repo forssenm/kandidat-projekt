@@ -316,6 +316,7 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
             initiateJumpInNextTick = true;
         } else if (noOfJumps < maxNoOfJumps) {
             initiateJumpInNextTick = true;
+            walking = true; //to start moving ahead when double-jumping
             noOfJumps++;
         }
         
@@ -414,14 +415,15 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     public void respawn(Vector3f position) {
         undoSpeedBoostPowerup();
         undoDoubleJumpPowerup();
+        walking = false;
         willRespawn = true;
         warp(position);
         update(0f);
     }
 
     /**
-     * Responds to the action "initiateJump" by making the player initiateJump.
-     * Currently have the same initiateJump behaviour as
+     * Responds to the actions "jump" and "pause".
+     * Currently have the same jump behaviour as
      * <code>CharacterControl</code>.
      */
     public void onAction(String name, boolean isPressed, float tpf) {

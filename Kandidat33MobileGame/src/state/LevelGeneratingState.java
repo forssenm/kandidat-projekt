@@ -162,11 +162,10 @@ public class LevelGeneratingState extends AbstractAppState {
     }
 
     public void initiateLevel() {
-        this.nextChunkX = -P.minLeftDistance;
+        this.nextChunkX = -P.minLeftDistance+P.chunkLength;
         chunkNumber = 0;
         // generate starting chunks
-        int nbrOfChunks = (int) Math.round((P.minRightDistance + P.minLeftDistance) / P.chunkLength) - 2;
-        for (int i = 0; i < nbrOfChunks; i++) {
+        for (int i = 0; i < P.noOfStartingChunks; i++) {
             generateNextChunk();
         }
         gameProgress = -1;
