@@ -104,8 +104,8 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
 
     public void lookAt(Vector3f position) {
         Vector3f direction = position.subtract(spatial.getLocalTranslation());
-        float theta = FastMath.atan2(direction.z - 5, direction.x) - FastMath.PI / 2;
-        float[] angles = {-0.2f, theta, 0.0f};
+        float theta = FastMath.atan2(direction.x,direction.z + 3f)/2 + FastMath.PI + 0.3f;
+        float[] angles = {0f, theta, 0.0f};
         Quaternion rotation = new Quaternion(angles);
         this.spatial.setLocalRotation(rotation);
         this.spotlight.setDirection(direction.subtractLocal(wizardLightOffset));

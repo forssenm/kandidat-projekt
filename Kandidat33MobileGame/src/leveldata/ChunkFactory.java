@@ -163,9 +163,14 @@ public class ChunkFactory {
         float nDist;
 
         switch (platformLayoutType) {
-            case (-1): // one long platform (boring)
-                spatials.add(createPlatform(d, height, 3));
+            case (-1): // starting platform
+                d = 0;
+                while (d < totalLength) {
+                spatials.add(createPlatform(totalLength-d-P.longPlatformLength, height, 3));
                 d += P.longPlatformLength;
+                }
+                height -= 3;
+                d = totalLength + dist;
                 break;
             case (0): // standard platforms
                 while (d < totalLength) {
@@ -218,10 +223,12 @@ public class ChunkFactory {
                 spatials.add(createPlatform(d, height, 1));
                 d += getPlatformLength(1) + 5;
                 height = -1;
-                if (d + getPlatformLength(2) < totalLength) {
+                if (d < totalLength) {
                     spatials.add(createPlatform(d, height, 2));
                     d += getPlatformLength(2) + dist;
                 }
+                powerupType = -1;
+                break;
             default:
                 break;
         }
@@ -236,8 +243,8 @@ public class ChunkFactory {
         distanceOverFlow = d - totalLength;
 
         // generate enemies:
-        switch (enemyType) {
         SpotLight spotlight;
+        switch (enemyType) {
             case (-1):
                 // no enemies;
                 break;
