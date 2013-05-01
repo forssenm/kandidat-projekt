@@ -8,7 +8,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
-import com.jme3.shadow.PssmShadowRenderer;
 import java.io.IOException;
 
 /**
@@ -18,18 +17,21 @@ import java.io.IOException;
  * 
  * @author jonatankilhamn
  */
-public class ShadowedSpotlightControl implements Control {
+public class SpotlightControl implements Control {
     
     
     Spatial spatial;
     SpotLight spotlight;
-    PssmShadowRenderer shadowRenderer;
-    Vector3f defaultPositionOffset = new Vector3f(0,50,0);
+    Vector3f defaultPositionOffset = new Vector3f(0,20,30);
+    Vector3f directionOffset = new Vector3f();
+    Vector3f positionOffset = new Vector3f();
+    Vector3f spatialPosition = new Vector3f();
+    Vector3f lightPosition = new Vector3f();
     
     /**
      * @param spotlight The spotlight to keep aimed at a spatial.
      */
-    public ShadowedSpotlightControl(SpotLight spotlight) {
+    public SpotlightControl(SpotLight spotlight) {
         super();
         this.spotlight = spotlight;
     }
@@ -38,7 +40,7 @@ public class ShadowedSpotlightControl implements Control {
      * @Inheritdoc
      */
     public Control cloneForSpatial(Spatial spatial) {
-        ShadowedSpotlightControl newSSC = new ShadowedSpotlightControl((SpotLight)spotlight.clone());
+        SpotlightControl newSSC = new SpotlightControl((SpotLight)spotlight.clone());
         newSSC.setSpatial(spatial);
         return newSSC;
     }
@@ -50,17 +52,7 @@ public class ShadowedSpotlightControl implements Control {
         this.spatial = spatial;
         update(0f);
     }
-    
-    /**
-     * Sets the shadowrenderer to follow this light.
-     * More than one shadowrenderers can be active in a scene, and could
-     * then follow one light each.
-     * @param shadowRenderer 
-     */
-    public void setShadowRenderer(PssmShadowRenderer shadowRenderer) {
-        this.shadowRenderer = shadowRenderer;
-    }
-    
+
     /**
      * Sets the default relative position between the spotlight
      * and the spatial it is shining on.
@@ -74,23 +66,18 @@ public class ShadowedSpotlightControl implements Control {
     
     public void update(float tpf) {
         time += tpf;
-        Vector3f positionOffset = defaultPositionOffset.
-                add(Vector3f.ZERO);/*
+        positionOffset.set(defaultPositionOffset).
+                addLocal(
                 (float)(20*Math.sin(time)),
                 (float)(10*(-1-2*Math.sin(2*time))),
-                (float)(10*Math.sin(1.4*time)));*/
-        Vector3f directionOffset = new Vector3f(0f,0f,0f);
+                /*(float)(10*Math.sin(1.4*time))*/0f);       
         
+        spatialPosition.set(spatial.getLocalTranslation());
+        lightPosition.set(spatialPosition).addLocal(positionOffset);
         
-        Vector3f spatialPosition = spatial.getLocalTranslation();
-        Vector3f lightPos = spatialPosition.add(positionOffset);
-        
-        spotlight.setPosition(lightPos);
-        spotlight.setDirection((spatialPosition.subtract(lightPos)).add(directionOffset));
+        spotlight.setPosition(lightPosition);
+        spotlight.setDirection((spatialPosition.subtract(lightPosition)).addLocal(directionOffset));
 
-        if (shadowRenderer != null) {
-            shadowRenderer.setDirection(spotlight.getDirection());
-        }
     }
 
     public void render(RenderManager rm, ViewPort vp) {

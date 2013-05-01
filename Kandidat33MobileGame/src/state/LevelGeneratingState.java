@@ -138,7 +138,7 @@ public class LevelGeneratingState extends AbstractAppState {
                     this.gameNode.removeLight(light);
                 }
             } else if (light instanceof SpotLight) {
-                if (isOutsideLevelBounds(((SpotLight)light).getPosition())) {
+                if (isOutsideLevelBounds(((SpotLight)light).getPosition()) && !P.playerSpot.equals(light.getName())) {
                     this.gameNode.removeLight(light);
                 }
             }

@@ -12,12 +12,15 @@ import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.light.DirectionalLight;
+import com.jme3.light.SpotLight;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
+import control.SpotlightControl;
 import main.Main;
 import spatial.Player;
 import variables.P;
@@ -114,6 +117,17 @@ public class InGameState extends AbstractAppState {
         gameNode.attachChild(player);
 
         this.physics.getPhysicsSpace().addAll(player);
+        
+        SpotLight playerSpot = new SpotLight();
+        playerSpot.setColor(ColorRGBA.DarkGray);
+        playerSpot.setSpotRange(100);
+        playerSpot.setSpotOuterAngle(FastMath.DEG_TO_RAD * 25f);
+        playerSpot.setSpotInnerAngle(FastMath.DEG_TO_RAD * 10f);
+        playerSpot.setName("playerspot");
+        gameNode.addLight(playerSpot);
+        SpotlightControl playerSpotControl = new SpotlightControl(playerSpot);
+        player.addControl(playerSpotControl);
+        
     }
 
     /**
