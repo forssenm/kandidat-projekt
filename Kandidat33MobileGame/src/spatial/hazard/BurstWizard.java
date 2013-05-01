@@ -1,6 +1,7 @@
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.light.SpotLight;
 import control.AbstractWizardControl;
 import control.PlayerInteractorControl;
 import spatial.Player;
@@ -15,7 +16,8 @@ public class BurstWizard extends AbstractWizard {
 
     private final AssetManager assetManager;
 
-    public BurstWizard(AssetManager assetManager) {
+    public BurstWizard(AssetManager assetManager, SpotLight spotlight) {
+        super(spotlight);
         this.assetManager = assetManager;
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
@@ -24,7 +26,7 @@ public class BurstWizard extends AbstractWizard {
 
     @Override
     protected PlayerInteractorControl createControl() {
-        return new AbstractWizardControl(assetManager) {
+        return new AbstractWizardControl(assetManager, spotlight) {
             protected static final float burstCoolDown = 5.0f;
             protected static final float fireballCoolDown = 0.5f;
             protected int shotsFired;

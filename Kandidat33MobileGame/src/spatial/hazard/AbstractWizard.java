@@ -4,12 +4,14 @@ import spatial.PlayerInteractor;
 import com.jme3.asset.AssetManager;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
+import com.jme3.light.SpotLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import spatial.StandardParticleEmitter;
+import variables.P;
 
 /**
  * A class for a general Wizard. Any class extending this will have the wizard
@@ -20,6 +22,12 @@ import spatial.StandardParticleEmitter;
 public abstract class AbstractWizard extends PlayerInteractor {
     
     private static Node modelForWizard;
+    protected SpotLight spotlight;
+    
+    public AbstractWizard(SpotLight spotlight) {
+        super();
+        this.spotlight = spotlight;
+    }
     
     @Override
     protected Spatial createModel(AssetManager assetManager) {

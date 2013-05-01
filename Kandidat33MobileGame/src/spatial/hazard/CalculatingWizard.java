@@ -2,6 +2,7 @@ package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.light.SpotLight;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import control.AbstractWizardControl;
@@ -19,7 +20,8 @@ public class CalculatingWizard extends AbstractWizard {
 
     private final AssetManager assetManager;
 
-    public CalculatingWizard(AssetManager assetManager) {
+    public CalculatingWizard(AssetManager assetManager, SpotLight spotlight) {
+        super(spotlight);
         this.assetManager = assetManager;
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
@@ -31,7 +33,7 @@ public class CalculatingWizard extends AbstractWizard {
     protected PlayerInteractorControl createControl() {
         return new AbstractWizardControl(new BoxCollisionShape(
                 new Vector3f(aggroBoxSide, aggroBoxSide, aggroBoxDepth)),
-                assetManager) {
+                assetManager, spotlight) {
             protected static final float fireballCoolDown = 5.0f;
             private float time = 0;
             private final float radius = 5.0f;

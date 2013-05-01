@@ -233,6 +233,7 @@ public class ChunkFactory {
 
         // generate enemies:
         switch (enemyType) {
+        SpotLight spotlight;
             case (-1):
                 // no enemies;
                 break;
@@ -243,7 +244,9 @@ public class ChunkFactory {
                         + 15;
                 float wizardPosY = spatials.getLast().getLocalTranslation().getY()
                         + 18;
-                spatials.add(createWizard(wizardPosX, wizardPosY));
+                spotlight = new SpotLight();
+                    lights.add(spotlight);
+                spatials.add(createWizard(wizardPosX, wizardPosY, spotlight));
                 break;
             case (2):
                 // burst wizard
@@ -251,7 +254,9 @@ public class ChunkFactory {
                         + 15;
                 wizardPosY = spatials.getLast().getLocalTranslation().getY()
                         + 18;
-                spatials.add(createBurstWizard(wizardPosX, wizardPosY));
+                spotlight = new SpotLight();
+                    lights.add(spotlight);
+                spatials.add(createBurstWizard(wizardPosX, wizardPosY, spotlight));
                 break;
             case (3):
             case (4):
@@ -277,7 +282,9 @@ public class ChunkFactory {
                 break;
             case (7):
                 // a wizard in the foreground shooting fireballs at where the player's going
-                spatials.add(createCalculatingWizard(d, height));
+                spotlight = new SpotLight();
+                    lights.add(spotlight);
+                spatials.add(createCalculatingWizard(d, height, spotlight));
             default:
                 // no enemies
                 break;
@@ -403,22 +410,22 @@ public class ChunkFactory {
     }
 
     /* Creates a wizard shooting fireballs at the player.*/
-    private PlayerInteractor createWizard(float positionX, float positionY) {
-        PlayerInteractor wizard = new SingleShotWizard(assetManager);
+    private PlayerInteractor createWizard(float positionX, float positionY, SpotLight spotlight) {
+        PlayerInteractor wizard = new SingleShotWizard(assetManager, spotlight);
         wizard.move(positionX, positionY, 0f);
         return wizard;
     }
 
     /* Creates a wizard shooting multiple fireballs at the player.*/
-    private PlayerInteractor createBurstWizard(float positionX, float positionY) {
-        PlayerInteractor wizard = new BurstWizard(assetManager);
+    private PlayerInteractor createBurstWizard(float positionX, float positionY, SpotLight spotlight) {
+        PlayerInteractor wizard = new BurstWizard(assetManager, spotlight);
         wizard.move(positionX, positionY, 0f);
         return wizard;
     }
 
     /* Creates a wizard in the foreground, shooting fireballs ahead of the player.*/
-    private PlayerInteractor createCalculatingWizard(float positionX, float positionY) {
-        PlayerInteractor wizard = new CalculatingWizard(assetManager);
+    private PlayerInteractor createCalculatingWizard(float positionX, float positionY, SpotLight spotlight) {
+        PlayerInteractor wizard = new CalculatingWizard(assetManager, spotlight);
         wizard.move(positionX, positionY, 15f);
         return wizard;
     }

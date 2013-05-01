@@ -3,10 +3,11 @@ package control;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.light.SpotLight;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import control.AbstractPlayerInteractorControl;
 import leveldata.LevelContentGenerator;
 import spatial.Player;
 import spatial.hazard.LinearFireball;
@@ -26,6 +27,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
     protected float fireballSpeed = 15f;
     protected AssetManager assetManager;
     protected float speed = 3f;
+    protected SpotLight spotlight;
 
     /**
      * Creates a new wizard with an aggro radius of 50. The assetManager is
@@ -33,14 +35,19 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
      *
      * @param assetManager
      */
-    public AbstractWizardControl(AssetManager assetManager) {
-        super(new SphereCollisionShape(50f));
-        this.assetManager = assetManager;
+    public AbstractWizardControl(AssetManager assetManager, SpotLight spotlight) {
+        this(new SphereCollisionShape(50f), assetManager, spotlight);
     }
     
-    public AbstractWizardControl(CollisionShape s, AssetManager assetManager) {
+    public AbstractWizardControl(CollisionShape s, AssetManager assetManager, SpotLight spotlight) {
         super(s);
         this.assetManager = assetManager;
+        this.spotlight = spotlight;
+        this.spotlight.setColor(ColorRGBA.Green);
+        this.spotlight.setSpotOuterAngle(FastMath.DEG_TO_RAD * 90);
+        this.spotlight.setSpotInnerAngle(FastMath.DEG_TO_RAD * 20);
+        this.spotlight.setSpotRange(70f);
+
     }
 
     @Override
@@ -53,6 +60,8 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
             }
         }
     }
+    
+    protected Vector3f wizardLightOffset = new Vector3f(0f,15f,0f);
 
     @Override
     /**
@@ -60,6 +69,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
      */
     protected void positionUpdate(float tpf) {
         spatial.setLocalTranslation(spatial.getLocalTranslation().add(tpf*speed,0f,0f));
+        this.spotlight.getPosition().set(this.spatial.getLocalTranslation()).addLocal(wizardLightOffset);
     }
 
     @Override
@@ -79,6 +89,9 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
      */
     protected abstract void shootAtPlayerAndReload(Player player);
 
+    /**
+     * Shoots a fireball from the wizard towards the given position.
+     */
     protected void shootFireballAt(Vector3f targetPosition) {
         Vector3f direction = targetPosition.
                 subtract((this.spatial).getWorldTranslation());
@@ -86,7 +99,6 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
         direction.normalizeLocal();
         LinearFireball fireball = new LinearFireball(assetManager, direction.mult(fireballSpeed));
         this.levelControl.addToLevel(fireball,
-                //shoot from the wand:
                 this.spatial.getWorldTranslation().add(direction));
     }
 
@@ -96,6 +108,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
         float[] angles = {-0.2f, theta, 0.0f};
         Quaternion rotation = new Quaternion(angles);
         this.spatial.setLocalRotation(rotation);
+        this.spotlight.setDirection(direction.subtractLocal(wizardLightOffset));
     }
 
     public void setLevelControl(LevelGeneratingState levelControl) {
