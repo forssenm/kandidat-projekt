@@ -31,7 +31,7 @@ public class P {
     public static final int noOfStartingChunks = 3;    
 
 
-    public static final float minLeftDistance = 100;
+    public static final float minLeftDistance = 130;
     public static final float minRightDistance = 250;
     public static final float minDownDistance = 50;
     

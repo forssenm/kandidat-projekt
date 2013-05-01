@@ -16,14 +16,13 @@ import spatial.MileStone;
 import spatial.Plant;
 import spatial.Platform;
 import spatial.Platform.PlatformLength;
+import spatial.PlayerInteractor;
 import spatial.Torch;
 import spatial.Wall;
 import spatial.WindowFrame;
 import spatial.hazard.BurstWizard;
 import spatial.hazard.CalculatingWizard;
-import spatial.PlayerInteractor;
 import spatial.hazard.LinearBat;
-import spatial.hazard.LinearFireball;
 import spatial.hazard.SingleShotWizard;
 import spatial.hazard.SpinningFireball;
 import spatial.hazard.StationaryFireball;
@@ -31,7 +30,6 @@ import spatial.powerup.DoubleJumpPowerup;
 import spatial.powerup.InvulnerabilityPowerup;
 import spatial.powerup.SlowDownPowerup;
 import spatial.powerup.SpeedPowerup;
-import util.RomanNumber;
 import variables.P;
 
 /**
@@ -58,14 +56,15 @@ public class ChunkFactory {
     /**
      * Generates a new chunk of the level. The generated content is delivered in
      * a list of
-     * <code>Spatial</code>s. One of the spatials must have the name
-     * "background".
+     * <code>Object</code>s. All such objects are either
+     * <code>Spatial</code>s or
+     * <code>Light</code>s. One of the spatials must have the name "background".
      *
-     * @return A list of <code>Spatial</code>s.
+     * @return A list of <code>Spatial</code>s and <code>Light</code>s.
      *
      */
     public List<Object> generateChunk(int level) {
-        
+
         if (level == 1) {
             this.reset();
         }
@@ -85,30 +84,36 @@ public class ChunkFactory {
         // the decorations:
         float wHeight = Math.max(0, 5 * Math.round(height / 5));
 
-        if (random.nextFloat() < P.windowFreq) {
-            WindowFrame window = createWindowFrame(5f, wHeight + 23f);
-            staticObjects.attachChild(window);
-            lights.add(this.createWindowLight(5f, wHeight + 23f));
+        int decorationType = random.nextInt(7);
+
+        switch (decorationType) {
+            case (0): // window
+            case (1):
+                WindowFrame window = createWindowFrame(5f, wHeight + 23f);
+                staticObjects.attachChild(window);
+                lights.add(this.createWindowLight(5f, wHeight + 23f));
+                break;
+            case (2):
+                Plant plant = createPlant(20, wHeight + 2);
+                staticObjects.attachChild(plant);
+                break;
+            case (3): // torch
+            case (4):
+            case (5):
+                Torch torch = createTorch(30, wHeight + 15);
+                staticObjects.attachChild(torch);
+                lights.add(this.createTorchLight(30f, wHeight + 15f));
+                break;
+            default:
+                break;
         }
-        if (random.nextFloat() < P.torchFreq) {
-            Torch torch = createTorch(30, wHeight + 15);
-            staticObjects.attachChild(torch);
-            lights.add(this.createTorchLight(30f, wHeight + 15f));
+
+
+        if (level > 4 && level % 3 == 2) {
+            staticObjects.attachChild(createMileStone((int) (level - 4) / 3 + 1, 30f, wHeight + 20f));
         }
-        
-        
-        if (level > 4 && level%3 == 2) {
-            staticObjects.attachChild(createMileStone((int)(level-4)/3+1,30f,wHeight + 20f));
-        }
-        
-        
-        
-        
-        if (true) { //PLANT SWITCH
-        Plant plant = createPlant (20, wHeight + 2);
-        staticObjects.attachChild(plant);
-        }
-        
+
+
         spatials.add(staticObjects);
 
 
@@ -120,7 +125,7 @@ public class ChunkFactory {
         float d = distanceOverFlow;
         distanceOverFlow = 0;
 
-        
+
 
         int platformLayoutType;
         int enemyType;
@@ -166,7 +171,7 @@ public class ChunkFactory {
                 break;
             case (1): // differentlength platforms
                 while (d < totalLength) {
-                    pType = random.nextInt(2)+1;
+                    pType = random.nextInt(2) + 1;
                     nDist = dist * (1f + random.nextFloat());
 
                     spatials.add(createPlatform(d, height + random.nextFloat() * 3, pType));
@@ -175,8 +180,8 @@ public class ChunkFactory {
                 break;
             case (2): // climbing platforms
                 while (d < totalLength) {
-                    pType = random.nextInt(2)+1;
-                    nDist = dist * (0.6f + 0.5f*random.nextFloat());
+                    pType = random.nextInt(2) + 1;
+                    nDist = dist * (0.6f + 0.5f * random.nextFloat());
                     height += 1 + 4 * random.nextFloat();
                     spatials.add(createPlatform(d, height + random.nextFloat() * 2, pType));
                     d += getPlatformLength(pType) + nDist;
@@ -185,7 +190,7 @@ public class ChunkFactory {
             case (3): // descending platforms
                 float descent;
                 while (d < totalLength) {
-                    pType = random.nextInt(2)+1;
+                    pType = random.nextInt(2) + 1;
                     nDist = dist * (1f + random.nextFloat());
                     descent = 2 + 8 * random.nextFloat();
                     if (height - descent > P.deathTreshold + 2) {
@@ -199,19 +204,19 @@ public class ChunkFactory {
                 height = -1;
                 spatials.add(createPlatform(d, height, 3));
                 d += getPlatformLength(3) + dist;
-                float nHeight = 5 + 3*random.nextFloat();
-                spatials.add(createPlatform(d, height+nHeight, 1));
-                spatials.add(createPlatform(d, height+nHeight-13, 1));
+                float nHeight = 5 + 3 * random.nextFloat();
+                spatials.add(createPlatform(d, height + nHeight, 1));
+                spatials.add(createPlatform(d, height + nHeight - 13, 1));
                 height += nHeight;
                 d += getPlatformLength(1) + dist;
-                spatials.add(createInvulnerabilityPowerup(d+5, height-6));
-                height += 2+5*random.nextFloat();
+                spatials.add(createInvulnerabilityPowerup(d + 5, height - 6));
+                height += 2 + 5 * random.nextFloat();
                 spatials.add(createPlatform(d, height, 1));
-                d += getPlatformLength(1)+5;
+                d += getPlatformLength(1) + 5;
                 height = -1;
-                if (d+getPlatformLength(2) < totalLength) {
-                spatials.add(createPlatform(d, height, 2));
-                d += getPlatformLength(2)+dist;
+                if (d + getPlatformLength(2) < totalLength) {
+                    spatials.add(createPlatform(d, height, 2));
+                    d += getPlatformLength(2) + dist;
                 }
             default:
                 break;
@@ -256,17 +261,17 @@ public class ChunkFactory {
             case (5):
             case (6):
                 // three bats
-                int temp1 = (random.nextInt(5)-5) * 10; // 1st bat distance
+                int temp1 = (random.nextInt(5) - 5) * 10; // 1st bat distance
                 spatials.add(createLinearBat(d + temp1, height + 7));
 
                 int temp2 = temp1;
                 while (temp2 == temp1) {
-                    temp2 = (random.nextInt(5)-5) * 10; // 2nd bat distance
+                    temp2 = (random.nextInt(5) - 5) * 10; // 2nd bat distance
                 }
                 spatials.add(createLinearBat(d + temp2, height + 13));
                 temp1 = temp2;
                 while (temp2 == temp1) {
-                    temp1 = (random.nextInt(5)-5) * 10; // 3rd bat distance
+                    temp1 = (random.nextInt(5) - 5) * 10; // 3rd bat distance
                 }
                 spatials.add(createLinearBat(d + temp1, height + 19));
                 break;
@@ -277,24 +282,24 @@ public class ChunkFactory {
                 // no enemies
                 break;
         }
-        
-        
+
+
         // generate powerups:
         switch (powerupType) {
             case (-1): // nothing
                 break;
             case (0): // speed boost
-                spatials.add(createSpeedPowerup(d-8,height+5));
+                spatials.add(createSpeedPowerup(d - 8, height + 5));
                 break;
             case (1): // double jump
             case (2):
-                spatials.add(createDoubleJumpPowerup(d-3,height+10));
+                spatials.add(createDoubleJumpPowerup(d - 3, height + 10));
                 break;
             case (3):
-                spatials.add(createSlowDownPowerup(d-15, height + 7));
+                spatials.add(createSlowDownPowerup(d - 15, height + 7));
                 break;
             case (4):
-                spatials.add(createInvulnerabilityPowerup(d-10, height + 6));
+                spatials.add(createInvulnerabilityPowerup(d - 10, height + 6));
             default:
                 break;
         }
@@ -304,7 +309,7 @@ public class ChunkFactory {
         LinkedList<Object> list = new LinkedList<Object>();
         list.addAll(spatials);
         list.addAll(lights);
-        
+
         return list;
 
     }
@@ -317,11 +322,12 @@ public class ChunkFactory {
 
     /**
      * Creates a platform at a given 2d position.
+     *
      * @param i: must be 1,2 or 3
      */
     private Platform createPlatform(float positionX, float positionY, int i) {
         Vector3f platformPos = new Vector3f(positionX, positionY, 0f);
-                switch (i) {
+        switch (i) {
             case (1):
                 return new Platform(this.assetManager, platformPos, PlatformLength.SHORT);
             case (2):
@@ -338,28 +344,28 @@ public class ChunkFactory {
         WindowFrame window = new WindowFrame(this.assetManager, windowPos);
         return window;
     }
-    
+
     /* Creates a torch on the wall at a given psition */
-    private Torch createTorch (float positionX, float positionY) {
+    private Torch createTorch(float positionX, float positionY) {
         Vector3f windowPos = new Vector3f(positionX, positionY, 0f); //beware the Z is  not used
         Torch window = new Torch(this.assetManager, windowPos);
         return window;
     }
-    
-    private Plant createPlant (float positionX, float positionY) {
+
+    private Plant createPlant(float positionX, float positionY) {
         Vector3f windowPos = new Vector3f(positionX, positionY, 0f); //beware the Z is  not used
         Plant window = new Plant(this.assetManager, windowPos);
         return window;
     }
-    
+
 
     /* Creates a spotlight shining through a window at a given position */
     private Light createWindowLight(float positionX, float positionY) {
         SpotLight windowLight = new SpotLight();
-        windowLight.setColor(new ColorRGBA(99/255f,184/255f,1f,0f));
+        windowLight.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
         windowLight.setSpotOuterAngle(45f * FastMath.DEG_TO_RAD);
         windowLight.setSpotInnerAngle(12f * FastMath.DEG_TO_RAD);
-        Vector3f windowPosition = new Vector3f(positionX, positionY+8f, -P.platformWidth/2 + 0.2f);
+        Vector3f windowPosition = new Vector3f(positionX, positionY + 8f, -P.platformWidth / 2 + 0.2f);
         windowLight.setPosition(windowPosition);
         windowLight.setDirection(P.windowLightDirection);
         windowLight.setSpotRange(100f);
@@ -370,8 +376,8 @@ public class ChunkFactory {
     private Light createTorchLight(float positionX, float positionY) {
         PointLight light = new PointLight();
         light.setRadius(50);
-        light.setPosition(new Vector3f(positionX, positionY, -P.platformWidth/2 + 0.2f));
-        light.setColor(new ColorRGBA(1f,0.3f,0f,0f));
+        light.setPosition(new Vector3f(positionX, positionY, -P.platformWidth / 2 + 0.2f));
+        light.setColor(new ColorRGBA(1f, 0.3f, 0f, 0f));
         return light;
     }
 
@@ -422,7 +428,7 @@ public class ChunkFactory {
         speedPowerup.move(positionX, positionY, 0f);
         return speedPowerup;
     }
-    
+
     private PlayerInteractor createDoubleJumpPowerup(float positionX, float positionY) {
         DoubleJumpPowerup doubleJumpPowerup = new DoubleJumpPowerup(assetManager);
         doubleJumpPowerup.move(positionX, positionY, 0f);
@@ -434,14 +440,14 @@ public class ChunkFactory {
         slowDownPowerup.move(positionX, positionY, 0f);
         return slowDownPowerup;
     }
-    
+
     private Spatial createInvulnerabilityPowerup(float positionX, float positionY) {
         InvulnerabilityPowerup invulnerabilityPowerup =
                 new InvulnerabilityPowerup(assetManager);
         invulnerabilityPowerup.move(positionX, positionY, 0f);
         return invulnerabilityPowerup;
     }
-    
+
     private Spatial createMileStone(int progress, float positionX, float positionY) {
         MileStone mileStone = new MileStone(assetManager, progress);
         mileStone.setLocalTranslation(positionX, positionY, 0f);
