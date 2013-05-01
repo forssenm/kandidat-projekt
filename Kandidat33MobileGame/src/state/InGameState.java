@@ -118,6 +118,7 @@ public class InGameState extends AbstractAppState {
 
         this.physics.getPhysicsSpace().addAll(player);
         
+        if (P.usePlayerSpot) {
         SpotLight playerSpot = new SpotLight();
         playerSpot.setColor(ColorRGBA.DarkGray);
         playerSpot.setSpotRange(100);
@@ -127,6 +128,7 @@ public class InGameState extends AbstractAppState {
         gameNode.addLight(playerSpot);
         SpotlightControl playerSpotControl = new SpotlightControl(playerSpot);
         player.addControl(playerSpotControl);
+        }
         
     }
 

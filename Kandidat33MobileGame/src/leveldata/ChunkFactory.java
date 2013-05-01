@@ -91,7 +91,9 @@ public class ChunkFactory {
             case (1):
                 WindowFrame window = createWindowFrame(5f, wHeight + 23f);
                 staticObjects.attachChild(window);
-                lights.add(this.createWindowLight(5f, wHeight + 23f));
+                if (P.useWindowLights) {
+                    lights.add(this.createWindowLight(5f, wHeight + 23f));
+                }
                 break;
             case (2):
                 Plant plant = createPlant(20, wHeight + 15);
@@ -102,7 +104,9 @@ public class ChunkFactory {
             case (5):
                 Torch torch = createTorch(30, wHeight + 15);
                 staticObjects.attachChild(torch);
-                lights.add(this.createTorchLight(30f, wHeight + 15f));
+                if (P.useTorchLights) {
+                    lights.add(this.createTorchLight(30f, wHeight + 15f));
+                }
                 break;
             default:
                 break;
@@ -245,7 +249,9 @@ public class ChunkFactory {
                 float wizardPosY = spatials.getLast().getLocalTranslation().getY()
                         + 18;
                 spotlight = new SpotLight();
+                if (P.useWizardLights) {
                     lights.add(spotlight);
+                }
                 spatials.add(createWizard(wizardPosX, wizardPosY, spotlight));
                 break;
             case (2):
@@ -255,7 +261,9 @@ public class ChunkFactory {
                 wizardPosY = spatials.getLast().getLocalTranslation().getY()
                         + 18;
                 spotlight = new SpotLight();
+                if (P.useWizardLights) {
                     lights.add(spotlight);
+                }
                 spatials.add(createBurstWizard(wizardPosX, wizardPosY, spotlight));
                 break;
             case (3):
@@ -283,7 +291,9 @@ public class ChunkFactory {
             case (7):
                 // a wizard in the foreground shooting fireballs at where the player's going
                 spotlight = new SpotLight();
+                if (P.useWizardLights) {
                     lights.add(spotlight);
+                }
                 spatials.add(createCalculatingWizard(d, height, spotlight));
             default:
                 // no enemies
