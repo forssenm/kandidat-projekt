@@ -87,6 +87,7 @@ public class InGameState extends AbstractAppState {
         this.level = new LevelGeneratingState();
         this.stateManager.attach(level);
         this.stateManager.attach(physics);
+        //physics.setDebugEnabled(true); //
         this.stateManager.attach(new RunningState());
 
         initPlayer();
@@ -213,6 +214,7 @@ public class InGameState extends AbstractAppState {
         gameOver = false;
         gameTime = 0;
         difficultyLevel = 0;
+        stopInvulnerable = true;
         P.speedFactor = P.minSpeedFactor;
         
         Vector3f spawnPosition = player.getLocalTranslation();

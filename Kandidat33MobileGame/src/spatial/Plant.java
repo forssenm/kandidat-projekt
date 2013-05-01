@@ -5,15 +5,14 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
 import com.jme3.asset.AssetManager;
-import com.jme3.effect.ParticleEmitter;
-import com.jme3.math.ColorRGBA;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.collision.shapes.CylinderCollisionShape;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import control.AbstractPowerupControl;
+import control.AbstractPlayerInteractorControl;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
-import java.util.Random;
 import variables.P;
 
 /**
@@ -22,9 +21,12 @@ import variables.P;
  */
 public class Plant extends PlayerInteractor implements AnimEventListener {
 
-    private static Node modelForTorch;
+    private static Node modelForPlant;
     private AnimChannel channel;
     private AnimControl control;
+    private static final CollisionShape collisionShape =
+            new CylinderCollisionShape(new Vector3f(1,10,1),1);
+    private static final float modelHeight = 10;
     
     /**
      * This constructor creates a
@@ -37,14 +39,14 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
     public Plant(AssetManager assetManager, Vector3f position) {
         //super("Plant");
         
-        if (modelForTorch == null) {
-            modelForTorch = (Node)assetManager.loadModel("Models/plant/plant002arm007.j3o");
-        modelForTorch.scale(2.5f);
-        modelForTorch.rotate(0, -1.6f, 0);
+        if (modelForPlant == null) {
+            modelForPlant = (Node)assetManager.loadModel("Models/plant/plant002arm007.j3o");
+        modelForPlant.scale(2.5f);
+        modelForPlant.rotate(0, -2.05f, 0);
         
         }
         
-        Node model = (Node)modelForTorch.clone();
+        Node model = (Node)modelForPlant.clone();
         control = model.getChild("Sphere").getControl(AnimControl.class);
         channel = control.createChannel(); 
         control.addListener(this);
@@ -54,6 +56,7 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
         
         
         this.attachChild(model);
+        model.move(0f, modelHeight,-P.platformWidth/2-P.playerZOffset+0.7f);
         this.addControl(this.createControl());
         this.setLocalTranslation(position.x, position.y, 0);//-P.platformWidth/2-P.playerZOffset+0.6f);
         //this.setShadowMode(ShadowMode.Off);   
@@ -68,7 +71,7 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
   
     @Override
     protected PlayerInteractorControl createControl() {
-        return new AbstractPowerupControl() {
+        return new AbstractPlayerInteractorControl(collisionShape) {
             private boolean hasHit;
            
 
@@ -80,12 +83,15 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
                     
                     channel.setAnim("ArmatureAction");
                     channel.setLoopMode(LoopMode.Cycle);
-                    channel.setSpeed(2.0f);
-                  //  SpeedPowerup.this.destroy();
+                    channel.setSpeed(1.0f);
+
                 }
             }
-            
-            
+
+            @Override
+            protected void positionUpdate(float tpf) {/*do not move*/}
+
+            public void collideWithStatic() {/*do nothing*/}
 
         };
     }

@@ -94,7 +94,7 @@ public class ChunkFactory {
                 lights.add(this.createWindowLight(5f, wHeight + 23f));
                 break;
             case (2):
-                Plant plant = createPlant(20, wHeight + 2);
+                Plant plant = createPlant(20, wHeight + 15);
                 staticObjects.attachChild(plant);
                 break;
             case (3): // torch
