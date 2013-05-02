@@ -24,6 +24,6 @@ public class MusicNode extends AudioNode{
         super(assetManager,fileName, false);
         setLooping(true);
         setPositional(false); 
-        setVolume(3);
+        setVolume(0.2f);
     }
 }

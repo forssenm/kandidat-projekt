@@ -88,7 +88,14 @@ public class Player extends Node implements AnimEventListener {
         AudioNode jumpSoundNode = new AudioNode(assetManager, "Sound/Effects/Gun.wav", false);
         jumpSoundNode.setName("jumpsound");
         this.attachChild(jumpSoundNode);
+<<<<<<< HEAD
 
+=======
+        
+        AudioNode pickupPowerup = new AudioNode(assetManager, "Sound/Effects/sfx-powerup-pickup-2.ogg", false);
+        pickupPowerup.setName("pickupPowerup");
+        this.attachChild(pickupPowerup);
+>>>>>>> Adds powerup sound.
     }
 
     /**
@@ -107,6 +114,9 @@ public class Player extends Node implements AnimEventListener {
         
         
         ParticleEmitter dust = (ParticleEmitter)this.playerModel.getChild("Emitter");
+        if(setting){
+            ((AudioNode)this.getChild("pickupPowerup")).playInstance();
+        }
         switch(powerup) {
             case SPEED:
                 if (setting) {
@@ -137,7 +147,7 @@ public class Player extends Node implements AnimEventListener {
     }
     
     public void updateModelAfterJump() {
-        ((AudioNode)this.getChild("jumpsound")).playInstance();
+        //((AudioNode)this.getChild("jumpsound")).playInstance();
     }
     
     /**
