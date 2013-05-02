@@ -20,10 +20,15 @@ import variables.P;
 public class Platform extends Geometry {
 
     public enum PlatformLength {
-
-        SHORT,
-        MEDIUM,
-        LONG;
+        SHORT (P.shortPlatformLength),
+        MEDIUM (P.mediumPlatformLength),
+        LONG (P.longPlatformLength);
+        
+        public final float length;
+        
+        PlatformLength(float length) {
+            this.length = length;
+        }
     }
     private static Material materialForPlatforms;
 
@@ -41,19 +46,7 @@ public class Platform extends Geometry {
      */
     public Platform(AssetManager assetManager, Vector3f position, PlatformLength type) {
         super("platform");
-        float length = 0;
-        switch (type) {
-            case SHORT:
-                length = P.shortPlatformLength;
-                break;
-            case MEDIUM:
-                length = P.mediumPlatformLength;
-                break;
-            case LONG:
-                length = P.longPlatformLength;
-                break;
-
-        }
+        float length = type.length;
         Box model =
                 new Box(Vector3f.ZERO, length / 2, P.platformHeight / 2, P.platformWidth / 2);
         this.mesh = model;
