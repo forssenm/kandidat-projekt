@@ -20,7 +20,7 @@
     
     <screen id="mainMenuScreen" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center" backgroundColor="#000F">
-            <image id="imageId" filename="Textures/TitleScreen.jpg" />
+            <image id="imageId" filename="Textures/MainMenuScreen.jpg" align="right"/>
             <panel id="mainMenuPanel" childLayout="vertical" align="left">
                 <control id="playButton" name="button" label="Play" margin="15px" focusable="false"/>
                 <control id="settingsButton" name="button" label="Settings" margin="15px" focusable="false"/>
