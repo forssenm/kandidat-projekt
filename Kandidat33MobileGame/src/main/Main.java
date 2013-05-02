@@ -14,7 +14,9 @@ import variables.P;
 /**
  * The main application class. This sets up the relevant AppStates, starting
  * the game.
- * @author normenhansen
+ * @author Mathias Forssén
+ * @author David Dagson
+ * @author Jonatan Kilhamn
  */
 public class Main extends SimpleApplication {
     
