@@ -17,7 +17,7 @@ public class P {
     public static final float longPlatformLength = 40.0f;
     
     
-    public static final float platformWidth = 8f;
+    public static final float platformWidth = 7f;
     public static final float platformHeight = 1f;
     public static final float playerZOffset =2f;
     public static final float platformDistance = 7.0f;

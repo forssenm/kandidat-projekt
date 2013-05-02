@@ -4,10 +4,12 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import com.jme3.texture.Texture;
 import variables.P;
 
 /**
@@ -59,8 +61,11 @@ public class Platform extends Geometry {
 
         if (materialForPlatforms == null) {
             materialForPlatforms = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-            materialForPlatforms.setTexture("DiffuseMap", assetManager.loadTexture("Textures/BrickWall.jpg"));
+            Texture texture = assetManager.loadTexture("Textures/platform-bricks.jpg");
+            texture.setWrap(Texture.WrapMode.Repeat);
+            materialForPlatforms.setTexture("DiffuseMap", texture);
         }
+        this.mesh.scaleTextureCoordinates(new Vector2f(2, Math.round(length/4f)));
         this.setMaterial(materialForPlatforms);
 
         RigidBodyControl rigidBodyControl = new RigidBodyControl(
