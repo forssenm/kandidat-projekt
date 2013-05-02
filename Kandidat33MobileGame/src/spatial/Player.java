@@ -88,14 +88,10 @@ public class Player extends Node implements AnimEventListener {
         AudioNode jumpSoundNode = new AudioNode(assetManager, "Sound/Effects/Gun.wav", false);
         jumpSoundNode.setName("jumpsound");
         this.attachChild(jumpSoundNode);
-<<<<<<< HEAD
-
-=======
         
         AudioNode pickupPowerup = new AudioNode(assetManager, "Sound/Effects/sfx-powerup-pickup-2.ogg", false);
         pickupPowerup.setName("pickupPowerup");
         this.attachChild(pickupPowerup);
->>>>>>> Adds powerup sound.
     }
 
     /**
