@@ -4,6 +4,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
@@ -48,22 +49,23 @@ public class Platform extends Geometry {
         super("platform");
         float length = type.length;
         Box model =
-                new Box(Vector3f.ZERO, length / 2, P.platformHeight / 2, P.platformWidth / 2);
+                new Box(Vector3f.ZERO, P.platformWidth / 2, P.platformHeight / 2, length / 2);
         this.mesh = model;
+        this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         this.setLocalTranslation(length / 2 + position.x, position.y, -P.playerZOffset);
 
         if (materialForPlatforms == null) {
             materialForPlatforms = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-            Texture texture = assetManager.loadTexture("Textures/platform-bricks.jpg");
+            Texture texture = assetManager.loadTexture("Textures/tegel.png");
             texture.setWrap(Texture.WrapMode.Repeat);
             materialForPlatforms.setTexture("DiffuseMap", texture);
         }
-        this.mesh.scaleTextureCoordinates(new Vector2f(2, Math.round(length/4f)));
+        this.mesh.scaleTextureCoordinates(new Vector2f(Math.round(length/8f), 1.25f));
         this.setMaterial(materialForPlatforms);
 
         RigidBodyControl rigidBodyControl = new RigidBodyControl(
                 new BoxCollisionShape(new Vector3f(
-                length / 2, P.platformHeight / 2, P.platformWidth / 2)), 0.0f);
+                P.platformWidth / 2, P.platformHeight / 2, length / 2)), 0.0f);
         this.addControl(rigidBodyControl);
 
         this.setShadowMode(ShadowMode.CastAndReceive);

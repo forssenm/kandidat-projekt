@@ -50,10 +50,10 @@ public class Wall extends Node {
         //Loads the texture and repeats it over the chunk in its correct size 
         //(so that each brick will not be bigger in pixels, or stretched, if 
         //the resolution is higher is greater than 640x480)
-        Texture texture = assetManager.loadTexture("Textures/bricks.jpg");
+        Texture texture = assetManager.loadTexture("Textures/tegel.png");
         texture.setWrap(Texture.WrapMode.Repeat);
-        model1.scaleTextureCoordinates(new Vector2f(Math.round(18f*P.screenWidth/640), Math.round(20f*P.screenHeight/480)));
-        model2.scaleTextureCoordinates(new Vector2f(Math.round(18f*P.screenWidth/640), Math.round(20f*P.screenHeight/480)));
+        model1.scaleTextureCoordinates(new Vector2f(Math.round(10f*P.screenWidth/640), Math.round(10f*P.screenHeight/480)));
+        model2.scaleTextureCoordinates(new Vector2f(Math.round(10f*P.screenWidth/640), Math.round(10f*P.screenHeight/480)));
         
 
         Geometry geometry1 = new Geometry("",model1);
