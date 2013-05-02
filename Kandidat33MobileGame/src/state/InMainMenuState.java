@@ -82,7 +82,7 @@ public class InMainMenuState extends AbstractAppState {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, app.getAudioRenderer(), app.getGuiViewPort());
         nifty = niftyDisplay.getNifty();
         nifty.subscribeAnnotations(this);
-        nifty.fromXml("/xmlgui/Screens.xml", "splashScreen",new MainMenuScreenController());
+        nifty.fromXml("/xmlgui/Screens.xml", "splashScreen", new MainMenuScreenController());
         //nifty.fromXml("/xmlgui/SplashScreen.xml", "splashScreen");
         app.getGuiViewPort().addProcessor(niftyDisplay);
     }
@@ -108,13 +108,28 @@ public class InMainMenuState extends AbstractAppState {
         this.app.stop();
     }
 
-    @NiftyEventSubscriber(id = "backButton")
+    @NiftyEventSubscriber(id = "mainMenuButton")
     public void onBackClick(String id, NiftyMousePrimaryClickedEvent event) {
         nifty.gotoScreen("mainMenuScreen");
     }
-    
+
     @NiftyEventSubscriber(id = "tutorialButton")
     public void onTutorialClick(String id, NiftyMousePrimaryClickedEvent event) {
-        nifty.gotoScreen("tutorialScreen");
+        nifty.gotoScreen("tutorialScreenOne");
+    }
+
+    @NiftyEventSubscriber(id = "tutorialTwoButton")
+    public void onTutorialTwoClick(String id, NiftyMousePrimaryClickedEvent event) {
+        nifty.gotoScreen("tutorialScreenTwo");
+    }
+
+    @NiftyEventSubscriber(id = "tutorialThreeButton")
+    public void onTutorialThreeClick(String id, NiftyMousePrimaryClickedEvent event) {
+        nifty.gotoScreen("tutorialScreenThree");
+    }
+
+    @NiftyEventSubscriber(id = "tutorialFourButton")
+    public void onTutorialFourClick(String id, NiftyMousePrimaryClickedEvent event) {
+        nifty.gotoScreen("tutorialScreenFour");
     }
 }

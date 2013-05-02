@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
-    <!-- +++++++++++++++++++++++++++++++++++++++ -->
-    <!-- start screen -->
-    <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <useStyles filename="nifty-default-styles.xml"/>
     <useControls filename="nifty-default-controls.xml"/>
     
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- SplashScreen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <screen id="splashScreen"
-                controller="niftyController.SplashScreenController">
+            controller="niftyController.SplashScreenController">
         <layer childLayout="center">
             <image id="splashImage" filename="/Textures/splashImage.jpg">
                 <effect>
@@ -17,7 +17,10 @@
             </image>
         </layer>
     </screen>
-    
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- MainMenuScreen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->    
     <screen id="mainMenuScreen" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center" backgroundColor="#000F">
             <image id="imageId" filename="Textures/MainMenuScreen.jpg" align="right"/>
@@ -29,41 +32,86 @@
             </panel>
         </layer>
     </screen>
-    
-    <screen id="tutorialScreen" controller="niftyController.MainMenuScreenController">
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- TutorialScreens -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <screen id="tutorialScreenOne" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center" backgroundColor="#000F">
-            <image id="imageId" filename="Textures/TitleScreen.jpg" />
+            <image id="imageId" filename="Textures/Tutorial_Jump.jpg" />
             <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom">
-                <control id="backButton" name="button" label="Back" margin="15px" focusable="false"/> 
+                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" focusable="false"/> 
+                <control id="tutorialTwoButton" name="button" label="Next" margin="15px" focusable="false"/> 
             </panel>
         </layer>
     </screen>
-        
+    
+    <screen id="tutorialScreenTwo" controller="niftyController.MainMenuScreenController">
+        <layer childLayout="center" backgroundColor="#000F">
+            <image id="imageId" filename="Textures/Tutorial_Powerups.jpg" />
+            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom">
+                <control id="tutorialButton" name="button" label="Previous" margin="15px" focusable="false"/> 
+                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" focusable="false"/>
+                <control id="tutorialThreeButton" name="button" label="Next" margin="15px" focusable="false"/>  
+            </panel>
+        </layer>
+    </screen>
+    
+    <screen id="tutorialScreenThree" controller="niftyController.MainMenuScreenController">
+        <layer childLayout="center" backgroundColor="#000F">
+            <image id="imageId" filename="Textures/Tutorial_Hazards.jpg" />
+            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom">
+                <control id="tutorialTwoButton" name="button" label="Previous" margin="15px" focusable="false"/> 
+                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" focusable="false"/>
+                <control id="tutorialFourButton" name="button" label="Next" margin="15px" focusable="false"/>  
+            </panel>
+        </layer>
+    </screen>
+    
+    <screen id="tutorialScreenFour" controller="niftyController.MainMenuScreenController">
+        <layer childLayout="center" backgroundColor="#000F">
+            <image id="imageId" filename="Textures/Tutorial_Final.jpg" />
+            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom">
+                <control id="tutorialThreeButton" name="button" label="Previous" margin="15px" focusable="false"/>
+                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" focusable="false"/>  
+            </panel>
+        </layer>
+    </screen>
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- GameOverScreen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->    
     <screen id="gameOverScreen" controller="niftyController.MainMenuScreenController">
         <layer childLayout="horizontal">
             <panel id="gameOverPanelLeft" childLayout="center" valign="bottom" height = "20%" width="50%">
                 <control id="playButton" name="button" label="Play" focusable="false"
-                height="100%" width="90%"/>
+                         height="100%" width="90%"/>
             </panel>
             <panel id="gameOverPanelRight" childLayout="center" valign="bottom" height = "20%" width="50%">
-                <control id="backButton" name="button" label="Main Menu" focusable="false"
-                height="100%" width="90%" />
+                <control id="mainMenuButton" name="button" label="Main Menu" focusable="false"
+                         height="100%" width="90%" />
             </panel>
         </layer>
     </screen>
-    
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- SettingsScreen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <screen id="settingsScreen" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center">
             <panel id="settingsPanel" childLayout="vertical">
-                <control id="backButton" name="button" label="Back" margin="15px" focusable="false"/> 
+                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" focusable="false"/> 
             </panel>
         </layer>
     </screen>
-    
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- HighScoreScreen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <screen id="highscoreScreen" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center">
             <panel id="highscorePanel" childLayout="vertical">
-                <control id="backButton" name="button" label="Back" margin="15px" focusable="false"/> 
+                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" focusable="false"/> 
             </panel>
         </layer>
     </screen>
