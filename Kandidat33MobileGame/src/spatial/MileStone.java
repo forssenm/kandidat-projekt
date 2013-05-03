@@ -2,7 +2,6 @@ package spatial;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
-import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
@@ -17,17 +16,15 @@ import variables.P;
  * @author jonatankilhamn
  */
 public class MileStone extends Node {
-    private static final float LENGTH_OF_I = 1f;
-    private static final float LENGTH_OF_V = 2f;
-    private static final float LENGTH_OF_X = 2f;
-    private static final float LENGTH_OF_D = 2f;
-    private static final float LENGTH_OF_L = 1f;
+    private static final float LENGTH = 2f;
     
     private static Material materialForI;
     private static Material materialForV;
     private static Material materialForX;
     private static Material materialForL;
     private static Material materialForD;
+    
+    private static Geometry geometryForMilestone;
     
     
     
@@ -46,7 +43,7 @@ public class MileStone extends Node {
         }
         
         String mileStoneText = RomanNumber.romanNumberString(progress);
-        Geometry temp = new Geometry();
+        Geometry temp;
         float length = 0;
         for (int i = 0; i < mileStoneText.length(); i++) {
             temp = null;
@@ -54,33 +51,29 @@ public class MileStone extends Node {
                 case ('I'):
                     temp = romanIBox();
                     temp.setLocalTranslation(length, 0f, 0f);
-                    length += LENGTH_OF_I*2;
                     break;
                 case ('V'):
                     temp = romanVBox();
                     temp.setLocalTranslation(length, 0f, 0f);
-                    length += LENGTH_OF_V*2;
                     break;
                 case ('X'):
                     temp = romanXBox();
                     temp.setLocalTranslation(length, 0f, 0f);
-                    length += LENGTH_OF_X*2;
                     break;
                 case ('L'):
                     temp = romanLBox();
                     temp.setLocalTranslation(length, 0f, 0f);
-                    length += LENGTH_OF_L*2;
                     break;
                 case ('C'):
                     temp = romanDBox();
                     temp.setLocalTranslation(length, 0f, 0f);
-                    length += LENGTH_OF_D*2;
                     break;
                 default:
                     break;
             }
             if (temp != null) {
                 this.attachChild(temp);
+                length += LENGTH*2;
             }
         }
        
@@ -90,11 +83,11 @@ public class MileStone extends Node {
     }
     
     private static void initMaterials(AssetManager assetManager) {
-        Texture textureForI = assetManager.loadTexture("Textures/RomanNumerals/RomanItest.jpg");
-        Texture textureForV = assetManager.loadTexture("Textures/RomanNumerals/RomanVtest.jpg");
-        Texture textureForX = assetManager.loadTexture("Textures/RomanNumerals/RomanXtest.jpg");
-        Texture textureForL = assetManager.loadTexture("Textures/RomanNumerals/RomanLtest.jpg");
-        Texture textureForD = assetManager.loadTexture("Textures/RomanNumerals/RomanDtest.jpg");
+        Texture textureForI = assetManager.loadTexture("Textures/RomanNumerals/RomanI2.jpg");
+        Texture textureForV = assetManager.loadTexture("Textures/RomanNumerals/RomanV2.jpg");
+        Texture textureForX = assetManager.loadTexture("Textures/RomanNumerals/RomanX2.jpg");
+        Texture textureForL = assetManager.loadTexture("Textures/RomanNumerals/RomanL2.jpg");
+        Texture textureForD = assetManager.loadTexture("Textures/RomanNumerals/RomanD2.jpg");
         
         textureForI.setWrap(Texture.WrapMode.EdgeClamp);
         textureForV.setWrap(Texture.WrapMode.EdgeClamp);
@@ -112,44 +105,37 @@ public class MileStone extends Node {
         materialForL.setTexture("DiffuseMap", textureForL);
         materialForD = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         materialForD.setTexture("DiffuseMap", textureForD);
+        
+        Box model = new Box(new Vector3f(LENGTH,0,-P.platformWidth/2-P.playerZOffset), LENGTH, LENGTH, 0.1f);
+        geometryForMilestone = new Geometry("",model);
     }
     
     private Geometry romanIBox() {
-        Box model =
-            new Box(new Vector3f(LENGTH_OF_I,0,-P.platformWidth/2-P.playerZOffset), LENGTH_OF_I, 1f, 0.1f);
-        Geometry geometry = new Geometry("",model);
+        Geometry geometry = geometryForMilestone.clone();
         geometry.setMaterial(materialForI);
         return geometry;
     }
     
     private Geometry romanVBox() {
-        Box model =
-            new Box(new Vector3f(LENGTH_OF_V,0,-P.platformWidth/2-P.playerZOffset), LENGTH_OF_V, 1f, 0.1f);
-        Geometry geometry = new Geometry("",model);
+        Geometry geometry = geometryForMilestone.clone();
         geometry.setMaterial(materialForV);
         return geometry;
     }
     
     private Geometry romanXBox() {
-        Box model =
-            new Box(new Vector3f(LENGTH_OF_X,0,-P.platformWidth/2-P.playerZOffset), LENGTH_OF_X, 1f, 0.1f);
-        Geometry geometry = new Geometry("",model);
+        Geometry geometry = geometryForMilestone.clone();
         geometry.setMaterial(materialForX);
         return geometry;
     }
     
     private Geometry romanDBox() {
-        Box model =
-            new Box(new Vector3f(LENGTH_OF_D,0,-P.platformWidth/2-P.playerZOffset), LENGTH_OF_D, 1f, 0.1f);
-        Geometry geometry = new Geometry("",model);
+        Geometry geometry = geometryForMilestone.clone();
         geometry.setMaterial(materialForD);
         return geometry;
     }
     
     private Geometry romanLBox() {
-        Box model =
-            new Box(new Vector3f(LENGTH_OF_L,0,-P.platformWidth/2-P.playerZOffset), LENGTH_OF_L, 1f, 0.1f);
-        Geometry geometry = new Geometry("",model);
+        Geometry geometry = geometryForMilestone.clone();
         geometry.setMaterial(materialForL);
         return geometry;
     }
