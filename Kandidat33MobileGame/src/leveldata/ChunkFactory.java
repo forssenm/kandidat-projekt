@@ -74,53 +74,6 @@ public class ChunkFactory {
         LinkedList<Spatial> spatials = new LinkedList<Spatial>();
         LinkedList<Light> lights = new LinkedList<Light>();
 
-        // Generate the background:
-        Node staticObjects = new Node("background");
-
-        // the wall:
-        Wall wall = new Wall(this.assetManager);
-        staticObjects.attachChild(wall);
-
-        // the decorations:
-        float wHeight = Math.max(0, 5 * Math.round(height / 5));
-
-        int decorationType = random.nextInt(7);
-
-        switch (decorationType) {
-            case (0): // window
-            case (1):
-                WindowFrame window = createWindowFrame(5f, wHeight + 23f);
-                staticObjects.attachChild(window);
-                if (P.useWindowLights) {
-                    lights.add(this.createWindowLight(5f, wHeight + 23f));
-                }
-                break;
-            case (2):
-                Plant plant = createPlant(20, wHeight + 15);
-                staticObjects.attachChild(plant);
-                break;
-            case (3): // torch
-            case (4):
-            case (5):
-                Torch torch = createTorch(30, wHeight + 15);
-                staticObjects.attachChild(torch);
-                if (P.useTorchLights) {
-                    lights.add(this.createTorchLight(30f, wHeight + 15f));
-                }
-                break;
-            default:
-                break;
-        }
-
-
-        if (level > 4 && level % 3 == 2) {
-            staticObjects.attachChild(createMileStone((int) (level - 4) / 3 + 1, 30f, wHeight + 20f));
-        }
-
-
-        spatials.add(staticObjects);
-
-
         // Generate everything with a physical / game mechanical connection:
 
         // standard length and distance
@@ -129,15 +82,17 @@ public class ChunkFactory {
         float d = distanceOverFlow;
         distanceOverFlow = 0;
 
-
+        float windowHeight = Math.max(0, 5 * Math.round(height / 5));
 
         int platformLayoutType;
         int enemyType;
         int powerupType;
+        int decorationType;
         if (level < P.noOfStartingChunks) { //nothing special on the first few chunks
             platformLayoutType = -1;
             enemyType = -1;
             powerupType = -1;
+            decorationType = 4;
             if (level == 4) {
                 d += dist; // distance after the "starting strip" is over
             }
@@ -147,6 +102,8 @@ public class ChunkFactory {
             enemyType = random.nextInt(12);
             /* results 0-3 are powerups; 4 or higher gives nothing */
             powerupType = random.nextInt(8);
+            
+            decorationType = random.nextInt(7);
 
             // get back to normal height if we're too low or too high
             if (height < -2) {
@@ -154,7 +111,7 @@ public class ChunkFactory {
             } else if (height > 5) {
                 platformLayoutType = 3;
             } else {
-                platformLayoutType = random.nextInt(5);
+                platformLayoutType = random.nextInt(6);
             }
         }
 
@@ -166,11 +123,12 @@ public class ChunkFactory {
             case (-1): // starting platform
                 d = 0;
                 while (d < totalLength) {
-                spatials.add(createPlatform(totalLength-d-P.longPlatformLength, height, 3));
-                d += P.longPlatformLength;
+                    spatials.add(createPlatform(d, height, 1));
+                    d += getPlatformLength(1);
                 }
-                height -= 3;
-                d = totalLength + dist;
+                if (level == P.noOfStartingChunks-1) {
+                    d += dist;
+                }
                 break;
             case (0): // standard platforms
                 while (d < totalLength) {
@@ -229,6 +187,23 @@ public class ChunkFactory {
                 }
                 powerupType = -1;
                 break;
+            case (5): // long platform with short platforms above
+                float d2 = d + getPlatformLength(3)/2; // start higher platforms a bit in
+                while (d < totalLength) {
+                    spatials.add(createPlatform(d, height, 3));
+                    d += getPlatformLength(3);
+                }
+                d += dist;
+                height += 15;
+                windowHeight = height;
+                while (d2 < totalLength) {
+                    spatials.add(createPlatform(d2, height,1));
+                    spatials.add(createLinearBat(d2 + 40,height - 6));
+                    d2 += getPlatformLength(1) + 2*dist;
+                    height += 1 + random.nextFloat();
+                }
+                height -= 20;
+                enemyType = -1;
             default:
                 break;
         }
@@ -327,6 +302,47 @@ public class ChunkFactory {
             default:
                 break;
         }
+        
+        
+        // Generate the background:
+        Node staticObjects = new Node("background");
+
+        // the wall:
+        Wall wall = new Wall(this.assetManager);
+        staticObjects.attachChild(wall);
+
+        // the decorations:
+        switch (decorationType) {
+            case (0): // window
+            case (1):
+                WindowFrame window = createWindowFrame(5f, windowHeight + 23f);
+                staticObjects.attachChild(window);
+                if (P.useWindowLights) {
+                    lights.add(this.createWindowLight(5f, windowHeight + 23f));
+                }
+                break;
+            case (2): // plant
+                Plant plant = createPlant(20, windowHeight + 15);
+                staticObjects.attachChild(plant);
+                break;
+            case (3): // torch
+            case (4):
+            case (5):
+                Torch torch = createTorch(30, windowHeight + 15);
+                staticObjects.attachChild(torch);
+                if (P.useTorchLights) {
+                    lights.add(this.createTorchLight(30f, windowHeight + 15f));
+                }
+                break;
+            default:
+                break;
+        }
+
+        if (level > 4 && level % 3 == 2) {
+            staticObjects.attachChild(createMileStone((int) (level - 4) / 3 + 1, 30f, windowHeight + 20f));
+        }
+        
+        spatials.add(staticObjects);
 
 
 
