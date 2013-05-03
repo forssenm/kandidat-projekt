@@ -89,12 +89,16 @@ public abstract class AbstractFireball extends PlayerInteractor {
         return fire;
     }
     
+    public void hitTarget() {
+        this.destroy();
+        AudioNode audio = (AudioNode) this.getChild("audio");
+        audio.playInstance();
+    }
+    
     public void destroy() {
         this.setName("");
         fire.setHighLife(0f);
         fire.setLowLife(0f);
-        AudioNode audio = (AudioNode) this.getChild("audio");
-        audio.playInstance();
     }
     
 }
