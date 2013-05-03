@@ -38,7 +38,7 @@ public class LinearFireball extends AbstractFireball {
 
             @Override
             public void afterPlayerCollision() {
-                LinearFireball.this.destroy();
+                LinearFireball.this.hitTarget();
             }
         };
     }
