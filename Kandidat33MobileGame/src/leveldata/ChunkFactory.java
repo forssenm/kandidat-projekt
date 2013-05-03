@@ -15,7 +15,7 @@ import java.util.Random;
 import spatial.MileStone;
 import spatial.Plant;
 import spatial.Platform;
-import spatial.Platform.PlatformLength;
+import spatial.Platform.PType;
 import spatial.PlayerInteractor;
 import spatial.Torch;
 import spatial.Wall;
@@ -93,9 +93,6 @@ public class ChunkFactory {
             enemyType = -1;
             powerupType = -1;
             decorationType = 4;
-            if (level == 4) {
-                d += dist; // distance after the "starting strip" is over
-            }
         } else {
             /*results 0-7 are actual enemies; a 'roll' of 8 or higher
              * will give nothing */
@@ -116,15 +113,14 @@ public class ChunkFactory {
         }
 
 
-        int pType;
+        PType pType;
         float nDist;
 
         switch (platformLayoutType) {
             case (-1): // starting platform
-                d = 0;
                 while (d < totalLength) {
-                    spatials.add(createPlatform(d, height, 1));
-                    d += getPlatformLength(1);
+                    spatials.add(createPlatform(d, height, PType.LONG));
+                    d += PType.LONG.length;
                 }
                 if (level == P.noOfStartingChunks-1) {
                     d += dist;
@@ -132,74 +128,86 @@ public class ChunkFactory {
                 break;
             case (0): // standard platforms
                 while (d < totalLength) {
-                    spatials.add(createPlatform(d, height + random.nextFloat() * 3, 2));
-                    d += getPlatformLength(2) + dist;
+                    spatials.add(createPlatform(d, height + random.nextFloat() * 3, PType.MEDIUM));
+                    d += PType.MEDIUM.length + dist;
                 }
                 break;
             case (1): // differentlength platforms
                 while (d < totalLength) {
-                    pType = random.nextInt(2) + 1;
+                    if (random.nextBoolean()) {
+                        pType = PType.SHORT;
+                    } else {
+                        pType = PType.MEDIUM;
+                    }
                     nDist = dist * (1f + random.nextFloat());
 
                     spatials.add(createPlatform(d, height + random.nextFloat() * 3, pType));
-                    d += getPlatformLength(pType) + nDist;
+                    d += pType.length + nDist;
                 }
                 break;
             case (2): // climbing platforms
                 while (d < totalLength) {
-                    pType = random.nextInt(2) + 1;
+                    if (random.nextBoolean()) {
+                        pType = PType.SHORT;
+                    } else {
+                        pType = PType.MEDIUM;
+                    }
                     nDist = dist * (0.6f + 0.5f * random.nextFloat());
                     height += 1 + 4 * random.nextFloat();
                     spatials.add(createPlatform(d, height + random.nextFloat() * 2, pType));
-                    d += getPlatformLength(pType) + nDist;
+                    d += pType.length + nDist;
                 }
                 break;
             case (3): // descending platforms
                 float descent;
                 while (d < totalLength) {
-                    pType = random.nextInt(2) + 1;
+                    if (random.nextBoolean()) {
+                        pType = PType.SHORT;
+                    } else {
+                        pType = PType.MEDIUM;
+                    }
                     nDist = dist * (1f + random.nextFloat());
                     descent = 2 + 8 * random.nextFloat();
                     if (height - descent > P.deathTreshold + 2) {
                         height -= descent;
                     }
                     spatials.add(createPlatform(d, height + random.nextFloat() * 4, pType));
-                    d += getPlatformLength(pType) + nDist;
+                    d += pType.length + nDist;
                 }
                 break;
             case (4): // invulnerability only reachable with double-jump
                 height = -1;
-                spatials.add(createPlatform(d, height, 3));
-                d += getPlatformLength(3) + dist;
+                spatials.add(createPlatform(d, height, PType.LONG));
+                d += PType.LONG.length + dist;
                 float nHeight = 5 + 3 * random.nextFloat();
-                spatials.add(createPlatform(d, height + nHeight, 1));
-                spatials.add(createPlatform(d, height + nHeight - 13, 1));
+                spatials.add(createPlatform(d, height + nHeight, PType.SHORT));
+                spatials.add(createPlatform(d, height + nHeight - 13, PType.SHORT));
                 height += nHeight;
-                d += getPlatformLength(1) + dist;
+                d += PType.SHORT.length + dist;
                 spatials.add(createInvulnerabilityPowerup(d + 5, height - 6));
                 height += 2 + 5 * random.nextFloat();
-                spatials.add(createPlatform(d, height, 1));
-                d += getPlatformLength(1) + 5;
+                spatials.add(createPlatform(d, height, PType.SHORT));
+                d += PType.SHORT.length + 5;
                 height = -1;
                 if (d < totalLength) {
-                    spatials.add(createPlatform(d, height, 2));
-                    d += getPlatformLength(2) + dist;
+                    spatials.add(createPlatform(d, height, PType.MEDIUM));
+                    d += PType.MEDIUM.length + dist;
                 }
                 powerupType = -1;
                 break;
             case (5): // long platform with short platforms above
-                float d2 = d + getPlatformLength(3)/2; // start higher platforms a bit in
+                float d2 = d + PType.LONG.length/2; // start higher platforms a bit in
                 while (d < totalLength) {
-                    spatials.add(createPlatform(d, height, 3));
-                    d += getPlatformLength(3);
+                    spatials.add(createPlatform(d, height, PType.LONG));
+                    d += PType.LONG.length;
                 }
                 d += dist;
                 height += 15;
                 windowHeight = height;
                 while (d2 < totalLength) {
-                    spatials.add(createPlatform(d2, height,1));
+                    spatials.add(createPlatform(d2, height,PType.SHORT));
                     spatials.add(createLinearBat(d2 + 40,height - 6));
-                    d2 += getPlatformLength(1) + 2*dist;
+                    d2 += PType.SHORT.length + 2*dist;
                     height += 1 + random.nextFloat();
                 }
                 height -= 20;
@@ -210,9 +218,9 @@ public class ChunkFactory {
 
         // fill up with platforms if whatever was in the switch statement didn't already
         while (d < totalLength) {
-            spatials.add(createPlatform(d, height, 1));
+            spatials.add(createPlatform(d, height, PType.SHORT));
             height += random.nextInt(9) - 4;
-            d += getPlatformLength(1) + dist;
+            d += PType.SHORT.length + dist;
         }
         // record this number so that the next chunk doesn't overlap
         distanceOverFlow = d - totalLength;
@@ -362,20 +370,10 @@ public class ChunkFactory {
 
     /**
      * Creates a platform at a given 2d position.
-     *
-     * @param i: must be 1,2 or 3
      */
-    private Platform createPlatform(float positionX, float positionY, int i) {
+    private Platform createPlatform(float positionX, float positionY, PType type) {
         Vector3f platformPos = new Vector3f(positionX, positionY, 0f);
-        switch (i) {
-            case (1):
-                return new Platform(this.assetManager, platformPos, PlatformLength.SHORT);
-            case (2):
-                return new Platform(this.assetManager, platformPos, PlatformLength.MEDIUM);
-            case (3):
-                return new Platform(this.assetManager, platformPos, PlatformLength.LONG);
-        }
-        return null;
+        return new Platform(this.assetManager, platformPos, type);
     }
 
     /* Creates a windowframe on the wall at a given position */
@@ -494,15 +492,4 @@ public class ChunkFactory {
         return mileStone;
     }
 
-    private float getPlatformLength(int i) {
-        switch (i) {
-            case (1):
-                return P.shortPlatformLength;
-            case (2):
-                return P.mediumPlatformLength;
-            case (3):
-                return P.longPlatformLength;
-        }
-        return 0;
-    }
 }

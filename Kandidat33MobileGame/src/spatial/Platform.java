@@ -20,14 +20,14 @@ import variables.P;
  */
 public class Platform extends Geometry {
 
-    public enum PlatformLength {
+    public enum PType {
         SHORT (P.shortPlatformLength),
         MEDIUM (P.mediumPlatformLength),
         LONG (P.longPlatformLength);
         
         public final float length;
         
-        PlatformLength(float length) {
+        PType(float length) {
             this.length = length;
         }
     }
@@ -45,7 +45,7 @@ public class Platform extends Geometry {
      * @param assetManager is used to load the geometry and texture of
      * the <code>Platform</code>.
      */
-    public Platform(AssetManager assetManager, Vector3f position, PlatformLength type) {
+    public Platform(AssetManager assetManager, Vector3f position, PType type) {
         super("platform");
         float length = type.length;
         Box model =
