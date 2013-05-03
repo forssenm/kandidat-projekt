@@ -34,7 +34,7 @@ public class CalculatingWizard extends AbstractWizard {
         return new AbstractWizardControl(new BoxCollisionShape(
                 new Vector3f(aggroBoxSide, aggroBoxSide, aggroBoxDepth)),
                 assetManager, spotlight) {
-            protected static final float fireballCoolDown = 5.0f;
+            protected static final float fireballCoolDown = 2.5f;
             private float time = 0;
             private final float radius = 5.0f;
 

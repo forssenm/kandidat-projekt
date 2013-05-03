@@ -26,7 +26,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
     protected float reloadTimer;
     protected float fireballSpeed = 15f;
     protected AssetManager assetManager;
-    protected float speed = 3f;
+    protected float speed = 5f;
     protected SpotLight spotlight;
 
     /**
@@ -36,7 +36,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
      * @param assetManager
      */
     public AbstractWizardControl(AssetManager assetManager, SpotLight spotlight) {
-        this(new SphereCollisionShape(50f), assetManager, spotlight);
+        this(new SphereCollisionShape(30f), assetManager, spotlight);
     }
     
     public AbstractWizardControl(CollisionShape s, AssetManager assetManager, SpotLight spotlight) {

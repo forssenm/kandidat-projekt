@@ -27,7 +27,7 @@ public class SingleShotWizard extends AbstractWizard {
     @Override
     protected PlayerInteractorControl createControl() {
         return new AbstractWizardControl(assetManager, spotlight) {
-            protected static final float fireballCoolDown = 5.0f;
+            protected static final float fireballCoolDown = 2.5f;
 
             @Override
             protected void shootAtPlayerAndReload(Player player) {
