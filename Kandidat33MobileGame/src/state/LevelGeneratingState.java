@@ -55,7 +55,6 @@ public class LevelGeneratingState extends AbstractAppState {
     private Player player;
     private ChunkFactory chunkFactory;
     private int chunkNumber;
-    private int gameProgress;
     
     private SimpleApplication app;
     private AssetManager assetManager;
@@ -168,7 +167,6 @@ public class LevelGeneratingState extends AbstractAppState {
         for (int i = 0; i < P.noOfStartingChunks; i++) {
             generateNextChunk();
         }
-        gameProgress = -1;
     }
 
     /**
@@ -180,7 +178,6 @@ public class LevelGeneratingState extends AbstractAppState {
     private void generateNextChunk() {
         
         chunkNumber++;
-        gameProgress++;
         
         // generate a chunk filled with content
         List<Object> list = chunkFactory.generateChunk(chunkNumber);
@@ -321,17 +318,4 @@ public class LevelGeneratingState extends AbstractAppState {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    @Deprecated
-    private void showLevelProgress() {
-        Node guiNode = app.getGuiNode();
-        guiNode.detachAllChildren();
-        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
-        BitmapText helloText = new BitmapText(guiFont, false);
-        helloText.setSize(guiFont.getCharSet().getRenderedSize());
-        String romanNumber = RomanNumber.romanNumberString(gameProgress);
-        helloText.setText(romanNumber);
-        float xPos = P.screenWidth/2 - helloText.getLineWidth()/2;
-        helloText.setLocalTranslation(xPos, helloText.getLineHeight(), 0);
-        guiNode.attachChild(helloText);
-    }
 }
