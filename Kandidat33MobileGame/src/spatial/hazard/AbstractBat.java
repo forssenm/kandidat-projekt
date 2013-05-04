@@ -48,9 +48,9 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
         
         channel.setAnim("ArmatureAction");
         channel.setLoopMode(LoopMode.Loop);
-        Random r = new Random();
-        float mod = (float) (r.nextInt(5)-2) * 0.25f;
-        System.out.println(mod);
+        
+        float mod = (float) (new Random().nextInt(5)-2) * 0.25f;
+        
         channel.setSpeed(2f+mod);
         
         
