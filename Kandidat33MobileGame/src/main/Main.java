@@ -28,7 +28,10 @@ public class Main extends SimpleApplication {
         appSettings.setSamples(2);
         appSettings.setVSync(true);
         appSettings.setFrameRate(30);
+        appSettings.setResolution(640, 480);
+        appSettings.setBitsPerPixel(16);
         Main app = new Main();
+        app.setShowSettings(false);
         app.setSettings(appSettings); 
         app.start();
     }
@@ -48,6 +51,7 @@ public class Main extends SimpleApplication {
         inGameState = new InGameState();
         inMainMenuState = new InMainMenuState();
         stateManager.attach(inMainMenuState);
+       // stateManager.attach(inGameState);
     }
 
     @Override
