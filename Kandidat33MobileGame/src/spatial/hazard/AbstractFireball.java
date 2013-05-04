@@ -71,7 +71,7 @@ public abstract class AbstractFireball extends PlayerInteractor {
                 
         
         Random r = new Random();
-        int i = r.nextInt(9);
+        int i = r.nextInt(8)+1; //doesn't make White the primary color
         int j = i;
         while (j == i  || forbiddenColorPair (i,j)) {
             j = r.nextInt(9);
