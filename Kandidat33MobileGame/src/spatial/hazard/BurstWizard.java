@@ -21,7 +21,7 @@ public class BurstWizard extends AbstractWizard {
         this.assetManager = assetManager;
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
-        this.getChild(0).scale(0.8f);
+       
     }
 
     @Override
