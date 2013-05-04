@@ -10,6 +10,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import spatial.StandardParticleEmitter;
+import variables.EffectSettings;
+import variables.EffectSettings.AmbientOcclusion;
 
 /**
  * A class for a general Wizard. Any class extending this will have the wizard
@@ -25,7 +27,11 @@ public abstract class AbstractWizard extends PlayerInteractor {
     protected Spatial createModel(AssetManager assetManager) {
         
         if (modelForWizard == null) {
-            modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003-nolightcam-shadeless.j3o");
+            if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
+                modelForWizard = (Node) assetManager.loadModel("Models/wizard/AO/wizard-with-ao.j3o");
+            } else {
+                modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003-nolightcam.j3o");
+            }
             modelForWizard.scale(1.5f);
         }
         

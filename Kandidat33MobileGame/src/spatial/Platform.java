@@ -14,6 +14,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
+import variables.EffectSettings;
 import variables.P;
 
 /**
@@ -68,22 +69,53 @@ public class Platform extends Node {
                 P.platformWidth / 2, P.platformHeight / 2, length / 2)), 0.0f);
         this.addControl(rigidBodyControl);
         
-        this.attachChild(this.addWallOcclusion(assetManager, length));
+        if (EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE) {
+            this.attachChild(this.addWallOcclusion(assetManager, length));
+            this.attachChild(this.addPlatformOcclusion(assetManager, length));
+        }
 
         this.setShadowMode(ShadowMode.CastAndReceive);
     }
     
     private Geometry addWallOcclusion(AssetManager assetManager, float length) {
-        Box wallAO = new Box(15f, 0f, (length*1.52f)/2);
-        Geometry wall = new Geometry("floorOcclusion", wallAO);
-        wall.setLocalTranslation(P.platformWidth/2-0.15f, 0f, 0f);
+        Box wallAO = new Box(7f, 0f, (length*1.52f)/2);
+        Geometry wall = new Geometry("wallOcclusion", wallAO);
+        wall.setLocalTranslation(P.platformWidth/2-(float)(Math.random()*0.1f)-0.05f, 0f, 0f);
         wall.rotate(0f, 0f, -90*FastMath.DEG_TO_RAD);
         Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/platform/AO/wall-ao-transparant.png"));
+        wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/platform/AO/wall-ao-transparant-small.png"));
         wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
         wall.setMaterial(wallMaterial);
         //wall.setQueueBucket(RenderQueue.Bucket.Transparent);
         return wall;
+    }
+    
+    private Node addPlatformOcclusion(AssetManager assetManager, float length) {
+        Node platformOcclusion = new Node("platformOcclusion");
+        Box topAO = new Box(length/2-0.05f, 0f, P.platformWidth/2);
+        Geometry top = new Geometry("topOcclusion", topAO);
+        top.setLocalTranslation(-0.15f, P.platformHeight/2+0.10f, 0f);
+        top.rotate(0f, 90*FastMath.DEG_TO_RAD, 0f);
+        Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        material.setTexture("ColorMap", assetManager.loadTexture("Models/platform/AO/platform-top-ao-transparant-small-narrow.png"));
+        material.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
+        top.setMaterial(material);
+        //wall.setQueueBucket(RenderQueue.Bucket.Transparent);
+        
+        Box sideAO = new Box(0f, P.platformHeight/2, P.platformWidth/2);
+        Geometry right = new Geometry("rightOcclusion", sideAO);
+        right.setLocalTranslation(0f, 0f, length/2+0.1f);
+        right.rotate(180*FastMath.DEG_TO_RAD, -90*FastMath.DEG_TO_RAD, 0f);
+        right.setMaterial(material);
+        
+        Geometry left = new Geometry("leftOcclusion", sideAO);
+        right.setLocalTranslation(0f, 0f, -(length/2+0.1f));
+        right.rotate(0f, -90*FastMath.DEG_TO_RAD, 0f);
+        right.setMaterial(material);
+        
+        platformOcclusion.attachChild(right);
+        platformOcclusion.attachChild(top);
+        return platformOcclusion;
     }
     
     /**
