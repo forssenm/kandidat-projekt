@@ -11,6 +11,8 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.Random;
 import spatial.PlayerInteractor;
+import variables.EffectSettings;
+import variables.EffectSettings.AmbientOcclusion;
 
 /**
  * An abstract AbstractFireball. Any class extending this one will make a PlayerInteractor
@@ -26,7 +28,12 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
     
     @Override
     protected Spatial createModel(AssetManager assetManager) {
-        Node batModel = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim2fix_ao.j3o");
+        Node batModel = null;
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
+            batModel = (Node) assetManager.loadModel ("Models/bat/AO/bat-with-ao.j3o");
+        } else {
+            batModel = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim2fix.j3o");
+        }
         
         //batModel.setMaterial(getRandomColorMaterial(assetManager));
         batModel.rotate (+1.6f,+1.4f,0); //flying towards player, slightly tilted up

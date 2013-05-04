@@ -7,8 +7,10 @@ import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 import spatial.StandardParticleEmitter;
 import variables.EffectSettings;
 import variables.EffectSettings.AmbientOcclusion;
@@ -36,11 +38,24 @@ public abstract class AbstractWizard extends PlayerInteractor {
         }
         
         Node model = (Node) modelForWizard.clone();
+        model.setName("wizardSpatial");
         ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
         model.attachChild(sparkle);
         sparkle.move(0.8f, 1.5f, -1f);   //what should be z effectively is x. what should be x is positive into the picture. Y is as is should be.
 
         return model;
+    }
+    
+    protected Geometry addWallOcclusion(AssetManager assetManager, Vector3f localTranslation) {
+        Box wallAO = new Box(3.5f, 3.5f, 0f);
+        Geometry wall = new Geometry("wallOcclusion", wallAO);
+        wall.setLocalTranslation(localTranslation);
+        //wall.rotate(0f, 0f, -90*FastMath.DEG_TO_RAD);
+        Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        //wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/platform/AO/wall-ao-transparant-small.png"));
+        //wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
+        wall.setMaterial(wallMaterial);
+        return wall;
     }
     
     private ParticleEmitter getWandParticleEmitter (AssetManager assetManager) {

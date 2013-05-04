@@ -145,7 +145,7 @@ public class Torch extends Node {
     private Geometry addWallOcclusion(AssetManager assetManager) {
         Box wallAO = new Box(5f, 5f, 0f);
         Geometry wall = new Geometry("wallOcclusion", wallAO);
-        wall.setLocalTranslation(0f, -2f, -0.5f);
+        wall.setLocalTranslation(0f, -2.8f, -0.5f);
         Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/torch/AO/wall-ao-small.png"));
         wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency

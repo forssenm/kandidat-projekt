@@ -6,6 +6,7 @@ import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import control.AbstractPlayerInteractorControl;
 import leveldata.LevelContentGenerator;
 import spatial.Player;
@@ -95,7 +96,8 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
         float theta = FastMath.atan2(direction.z - 5, direction.x) - FastMath.PI / 2;
         float[] angles = {-0.2f, theta, 0.0f};
         Quaternion rotation = new Quaternion(angles);
-        this.spatial.setLocalRotation(rotation);
+        System.out.println(((Node)this.spatial).getChildren());
+        ((Node)this.spatial).getChild("wizardSpatial").setLocalRotation(rotation);
     }
 
     public void setLevelControl(LevelGeneratingState levelControl) {

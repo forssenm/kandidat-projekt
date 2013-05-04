@@ -1,9 +1,11 @@
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.math.Vector3f;
 import control.AbstractWizardControl;
 import control.PlayerInteractorControl;
 import spatial.Player;
+import variables.EffectSettings;
 
 /**
  * A class for a Wizard, using a
@@ -19,7 +21,11 @@ public class BurstWizard extends AbstractWizard {
         this.assetManager = assetManager;
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
-        this.getChild(0).scale(0.8f);
+        if(EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE) {
+            this.attachChild(this.addWallOcclusion(assetManager, new Vector3f(0f, 1f, -4f)));
+        }
+        this.scale(0.8f);
+        
     }
 
     @Override
