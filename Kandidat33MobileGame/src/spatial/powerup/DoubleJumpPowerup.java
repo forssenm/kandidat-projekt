@@ -8,6 +8,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Sphere;
 import control.AbstractPowerupControl;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
@@ -30,15 +31,17 @@ public class DoubleJumpPowerup extends PlayerInteractor {
     @Override
     protected Spatial createModel(AssetManager assetManager) {
         Node fireball = new Node();
-        /*Sphere model =
-         new Sphere(5,5,0.1f);
+        fireball.setName ("fireball");
         
-         Geometry geometry = new Geometry("", model);
-         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-         material.setColor("Color", ColorRGBA.Red);
-         geometry.setMaterial(material);
+       
+        Node model = (Node) assetManager.loadModel("Models/torus/torus002black.j3o");
+        model.setName("model");
+        model.move(-0.2f, 0.1f, 1.2f);
+        model.scale(0.9f);
+        fireball.attachChild(model);
+       
         
-         fireball.attachChild(geometry);*/
+        
         ParticleEmitter glow = getPowerupParticleEmitter(assetManager);
         fireball.attachChild(glow);
 
@@ -48,14 +51,14 @@ public class DoubleJumpPowerup extends PlayerInteractor {
     private ParticleEmitter getPowerupParticleEmitter(AssetManager assetManager) {
         ParticleEmitter glow = StandardParticleEmitter.make(assetManager);
            
-
+        glow.setNumParticles(5);
         glow.setStartColor(ColorRGBA.Green);
-        glow.setEndColor(ColorRGBA.DarkGray);
+        glow.setEndColor(ColorRGBA.White);
         glow.getParticleInfluencer().setInitialVelocity(Vector3f.ZERO);
         glow.setStartSize(3.5f);
         glow.setEndSize(0.1f);
-        glow.setGravity(0, 30, 0);
-        glow.setLowLife(0.4f);
+        glow.setGravity(0, 0, 2);
+        glow.setLowLife(1f);
         glow.setHighLife(1f);
         glow.getParticleInfluencer().setVelocityVariation(0.3f);
         return glow;
@@ -66,6 +69,7 @@ public class DoubleJumpPowerup extends PlayerInteractor {
         ParticleEmitter pe = (ParticleEmitter) this.getChild("Emitter");
         pe.setLowLife(0f);
         pe.setHighLife(0f);
+        ((Node)this.getChild("fireball")).detachChild(this.getChild("model"));
     }
 
     @Override
@@ -81,7 +85,18 @@ public class DoubleJumpPowerup extends PlayerInteractor {
                     DoubleJumpPowerup.this.destroy();
                 }
             }
-
+            @Override
+            protected void positionUpdate(float tpf) {
+                //time += tpf;
+                Spatial model = ((Node)this.spatial).getChild("model");
+                if (model != null) {
+                    model.rotate(0.24f, 0.12f, 0.02f);
+                //model.setLocalTranslation(
+                  //      (float)Math.cos(time*15)*2f,
+                    //    (float)Math.sin(time*18)*2f,
+                      //  (float)Math.sin(2+time*21)*2f);
+                }
+            }
         };
     }
 }
