@@ -45,8 +45,7 @@ public class Main extends SimpleApplication {
         inGameState = new InGameState();
         inMainMenuState = new InMainMenuState();
         stateManager.attach(inMainMenuState);
-        
-        //stateManager.attach(new InMainMenuState());
+        //stateManager.attach(inGameState);
         
         //FilterPostProcessor processor = (FilterPostProcessor) assetManager.loadAsset("Filters/PostFilter.j3f");
         //viewPort.addProcessor(processor);

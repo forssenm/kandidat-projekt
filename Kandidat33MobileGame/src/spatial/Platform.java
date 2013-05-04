@@ -4,11 +4,14 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import variables.P;
@@ -17,7 +20,7 @@ import variables.P;
  * A class for a physical platform of variable position and size.
  * @author dagen
  */
-public class Platform extends Geometry {
+public class Platform extends Node {
     
     public enum PlatformLength {
         SHORT (P.shortPlatformLength),
@@ -46,7 +49,7 @@ public class Platform extends Geometry {
         float length = type.length;
         Box model =
                 new Box(Vector3f.ZERO, P.platformWidth / 2, P.platformHeight / 2, length / 2);
-        this.mesh = model;
+        Geometry platform = new Geometry("platform", model);
         this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         this.setLocalTranslation(length / 2 + position.x, position.y, -P.playerZOffset);
 
@@ -56,15 +59,31 @@ public class Platform extends Geometry {
             texture.setWrap(Texture.WrapMode.Repeat);
             materialForPlatforms.setTexture("DiffuseMap", texture);
         }
-        this.mesh.scaleTextureCoordinates(new Vector2f(Math.round(length/8f), 1.25f));
-        this.setMaterial(materialForPlatforms);
+        model.scaleTextureCoordinates(new Vector2f(Math.round(length/8f), 1.25f));
+        platform.setMaterial(materialForPlatforms);
+        this.attachChild(platform);
 
         RigidBodyControl rigidBodyControl = new RigidBodyControl(
                 new BoxCollisionShape(new Vector3f(
                 P.platformWidth / 2, P.platformHeight / 2, length / 2)), 0.0f);
         this.addControl(rigidBodyControl);
+        
+        this.attachChild(this.addWallOcclusion(assetManager, length));
 
         this.setShadowMode(ShadowMode.CastAndReceive);
+    }
+    
+    private Geometry addWallOcclusion(AssetManager assetManager, float length) {
+        Box wallAO = new Box(15f, 0f, (length*1.52f)/2);
+        Geometry wall = new Geometry("floorOcclusion", wallAO);
+        wall.setLocalTranslation(P.platformWidth/2-0.15f, 0f, 0f);
+        wall.rotate(0f, 0f, -90*FastMath.DEG_TO_RAD);
+        Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/platform/AO/wall-ao-transparant.png"));
+        wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
+        wall.setMaterial(wallMaterial);
+        //wall.setQueueBucket(RenderQueue.Bucket.Transparent);
+        return wall;
     }
     
     /**

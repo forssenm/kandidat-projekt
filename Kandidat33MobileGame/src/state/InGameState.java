@@ -113,7 +113,7 @@ public class InGameState extends AbstractAppState {
 
         initAudio();
         
-        initAO();
+        //initAO();
     }
     /**
      * This method creates a node for the player. Also the default player model
@@ -204,7 +204,7 @@ public class InGameState extends AbstractAppState {
      */
     @Override
     public void update(float tpf) {    
-        this.updateAOIntervals();
+        //this.updateAOIntervals();
         if (!gameOver) {
             // check for game over
             if (player.getWorldTranslation().getY() < P.deathTreshold) {

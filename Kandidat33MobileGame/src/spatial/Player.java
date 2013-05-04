@@ -9,11 +9,20 @@ import com.jme3.audio.AudioNode;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Quad;
 import control.PlayerControl;
+import variables.EffectSettings;
+import variables.EffectSettings.AmbientOcclusion;
 import variables.P;
 
 /**
@@ -27,6 +36,8 @@ public class Player extends Node implements AnimEventListener {
 
     private PlayerControl playerControl;
     private Node playerModel;
+    
+    private Geometry floorOcclusion;
 
     //animation
     private AnimChannel channel;
@@ -58,11 +69,18 @@ public class Player extends Node implements AnimEventListener {
         this.addControl(playerControl);
 
         //Sets the model of the player
-
-        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam-ao.j3o");
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
+            playerModel = (Node) assetManager.loadModel("Models/ghost/AO/ghost-with-ao.j3o");
+            this.attachChild(this.addWallOcclusion(assetManager, hoverHeight));
+            floorOcclusion = this.addFloorOcclusion(assetManager, hoverHeight);
+            this.attachChild(floorOcclusion);
+        } else {
+            playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
+        }
         control = playerModel.getChild("Plane").getControl(AnimControl.class);
         channel = control.createChannel();
 
+        //playerModel.setMaterial(new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"));
         playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
         //ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         //playerModel.attachChild(dust);
@@ -90,6 +108,30 @@ public class Player extends Node implements AnimEventListener {
      */
     public Node getPlayerModel() {
         return this.playerModel;
+    }
+    
+    private Geometry addWallOcclusion(AssetManager assetManager, float hoverHeight) {
+        Quad wallAO = new Quad(13, 13);
+        Geometry wall = new Geometry("wallOcclusion", wallAO);
+        wall.setLocalTranslation(-wallAO.getWidth()/2, -wallAO.getHeight()/2+hoverHeight, -P.platformWidth/2-P.playerZOffset+0.2f);
+        Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/ghost/AO/wall-ao-transparent.png"));
+        wallMaterial.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); // activate transparency
+        wall.setMaterial(wallMaterial);
+        wall.setQueueBucket(Bucket.Transparent);
+        return wall;
+    }
+    
+    private Geometry addFloorOcclusion(AssetManager assetManager, float hoverHeight) {
+        Box floorAO = new Box(6.5f, 0f, 6.5f);
+        Geometry floor = new Geometry("floorOcclusion", floorAO);
+        floor.setLocalTranslation(0f, 0.25f, 0f);
+        Material floorMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        floorMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/ghost/AO/floor-ao-transparent.png"));
+        floorMaterial.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); // activate transparency
+        floor.setMaterial(floorMaterial);
+        floor.setQueueBucket(Bucket.Transparent);
+        return floor;
     }
     
     public enum Powerup {
@@ -171,4 +213,12 @@ public class Player extends Node implements AnimEventListener {
       channel.setSpeed(1f);
     }*/
   }
+      
+      public void enableFloorOcclusion() {
+          this.attachChild(this.floorOcclusion);
+      }
+      
+      public void disableFloorOcclusion() {
+          this.floorOcclusion.removeFromParent();
+      }
 }
