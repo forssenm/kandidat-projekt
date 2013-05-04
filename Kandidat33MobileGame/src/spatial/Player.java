@@ -65,11 +65,13 @@ public class Player extends Node implements AnimEventListener {
 
         //Sets the model of the player
 
-        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
-        control = playerModel.getChild("Plane").getControl(AnimControl.class);
+        //playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
+        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost04-014cloth003armature003UV001.j3o");
+        playerModel.rotate(0, -2.07f, 0);
+        control = playerModel.getChild("Sphere").getControl(AnimControl.class);
         channel = control.createChannel();
-
-        playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
+        playerModel.scale(1.4f);
+        playerModel.setLocalTranslation(0f,2.8f+hoverHeight,0f); 
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
         dust.move(0.6f, -2.0f, 0f);
@@ -79,7 +81,7 @@ public class Player extends Node implements AnimEventListener {
         
         control.addListener(this);
         
-        channel.setAnim("ArmatureAction");
+        channel.setAnim("ArmatureAction.001");
         channel.setLoopMode(LoopMode.Loop);
 
       //End of animation code
