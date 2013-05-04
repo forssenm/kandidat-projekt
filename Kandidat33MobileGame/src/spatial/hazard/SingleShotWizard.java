@@ -26,7 +26,7 @@ public class SingleShotWizard extends AbstractWizard {
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
         if(EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
-            this.attachChild(this.addWallOcclusion(assetManager, new Vector3f(0f, 1f, -4f)));
+            this.attachChild(this.addWallOcclusion(assetManager, new Vector3f(0f, -1f, -4f)));
         }
         this.scale(1.2f);
     }

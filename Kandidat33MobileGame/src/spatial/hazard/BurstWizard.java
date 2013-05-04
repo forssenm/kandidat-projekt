@@ -22,7 +22,7 @@ public class BurstWizard extends AbstractWizard {
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
         if(EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE) {
-            this.attachChild(this.addWallOcclusion(assetManager, new Vector3f(0f, 1f, -4f)));
+            this.attachChild(this.addWallOcclusion(assetManager, new Vector3f(0f, -1f, -4f)));
         }
         this.scale(0.8f);
         

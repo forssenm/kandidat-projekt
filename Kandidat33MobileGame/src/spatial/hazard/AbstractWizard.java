@@ -5,6 +5,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -50,10 +51,9 @@ public abstract class AbstractWizard extends PlayerInteractor {
         Box wallAO = new Box(3.5f, 3.5f, 0f);
         Geometry wall = new Geometry("wallOcclusion", wallAO);
         wall.setLocalTranslation(localTranslation);
-        //wall.rotate(0f, 0f, -90*FastMath.DEG_TO_RAD);
         Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        //wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/platform/AO/wall-ao-transparant-small.png"));
-        //wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
+        wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/wizard/AO/wall-ao-transparent-small.png"));
+        wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
         wall.setMaterial(wallMaterial);
         return wall;
     }
