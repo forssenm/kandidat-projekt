@@ -30,7 +30,7 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
     protected Spatial createModel(AssetManager assetManager) {
         
         if (modelForBat == null) {
-            modelForBat = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim2fix.j3o");
+            modelForBat = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim3fly.j3o");
             
             Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
             mat.setBoolean("UseMaterialColors",true);
@@ -48,7 +48,11 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
         
         channel.setAnim("ArmatureAction");
         channel.setLoopMode(LoopMode.Loop);
-        channel.setSpeed(3f);
+        Random r = new Random();
+        float mod = (float) (r.nextInt(5)-2) * 0.25f;
+        System.out.println(mod);
+        channel.setSpeed(2f+mod);
+        
         
         return model;
     }
