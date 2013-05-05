@@ -38,6 +38,7 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
 
             modelForBat.setMaterial(mat);
             modelForBat.rotate (+1.6f,+1.4f,0); //flying towards player, slightly tilted up
+            
         }
         Node model = (Node) modelForBat.clone();
 
@@ -49,9 +50,11 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
         channel.setAnim("ArmatureAction");
         channel.setLoopMode(LoopMode.Loop);
         
-        float mod = (float) (new Random().nextInt(5)-2) * 0.25f;
-        
-        channel.setSpeed(2f+mod);
+        int mod = (new Random().nextInt(8)-3); // from -3 to +4
+        float scalemod = 1f - 0.05f*mod;
+        System.out.println(scalemod);
+        model.scale(scalemod); //smaller flap faster
+        channel.setSpeed(2f+0.4f*mod);
         
         
         return model;
