@@ -32,6 +32,8 @@ import java.util.List;
 import main.Main;
 import spatial.Player;
 import spatial.hazard.LinearFireball;
+import variables.EffectSettings;
+import variables.EffectSettings.AmbientOcclusion;
 import variables.P;
 
 /**
@@ -113,7 +115,9 @@ public class InGameState extends AbstractAppState {
 
         initAudio();
         
-        //initAO();
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.FULL_POST_PROCESSING || EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
+            initAO();
+        }
     }
     /**
      * This method creates a node for the player. Also the default player model
@@ -155,9 +159,17 @@ public class InGameState extends AbstractAppState {
     }
     
     private void initAO() {
-        aof = new AmbientOcclusionFilter();
-        builtInSSAO = new BuiltInSSAO_intervals(2, 5, 0.4f, 0.02f);
+        //aof = new AmbientOcclusionFilter();
+        Filter testFilter = null;
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
+            builtInSSAO = new BuiltInSSAO_intervals(2, 5, 0.4f, 0.02f);
+            testFilter = builtInSSAO;
+        } else if (EffectSettings.ambientOcclusion == AmbientOcclusion.FULL_POST_PROCESSING) {
+            testFilter = new BuiltInSSAO(2, 5, 0.4f, 0.02f);
+        }
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        fpp.addFilter(testFilter);
+        viewPort.addProcessor(fpp);
         //Filter testFilter = new SSAOFilter(4, 3, 0.2f, 0.1f);
         //Filter testFilter = new SSAOFilter(2, 5, 0.4f, 0.02f);
         //Filter testFilter = new BuiltInSSAO(2, 5, 0.4f, 0.02f);
@@ -191,7 +203,7 @@ public class InGameState extends AbstractAppState {
             values[i] = new Vector4f(center.x - margin, center.x + margin, center.y - margin, center.y + margin);
         }
         
-        aof.updateIntervals(values);
+        //aof.updateIntervals(values);
         builtInSSAO.updateIntervals(values);
         
     }
@@ -204,7 +216,9 @@ public class InGameState extends AbstractAppState {
      */
     @Override
     public void update(float tpf) {    
-        //this.updateAOIntervals();
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
+            this.updateAOIntervals();
+        }
         if (!gameOver) {
             // check for game over
             if (player.getWorldTranslation().getY() < P.deathTreshold) {

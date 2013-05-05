@@ -35,7 +35,7 @@ public class Torch extends Node {
         super("Torch");
         
         if (modelForTorch == null) {
-            if (EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE) {
+            if (EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE  || EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.INTERVAL_POST_PROCESSING) {
                 modelForTorch = (Node)assetManager.loadModel("Models/torch/AO/torch-with-ao.j3o");
             } else {
                 modelForTorch = (Node)assetManager.loadModel("Models/torch/Torch-nolightcam.j3o");
@@ -51,7 +51,7 @@ public class Torch extends Node {
        // this.setLocalTranslation(position.x, position.y, -P.platformWidth*2+0.5f);
         this.setLocalTranslation(position.x, position.y, -P.platformWidth/2-P.playerZOffset+0.6f);
         //this.setShadowMode(ShadowMode.Off);   
-        if (EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE) {
+        if (EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE || EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.INTERVAL_POST_PROCESSING) {
             this.attachChild(this.addWallOcclusion(assetManager));
         }
 

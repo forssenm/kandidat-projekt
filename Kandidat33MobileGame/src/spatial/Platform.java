@@ -15,6 +15,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import variables.EffectSettings;
+import variables.EffectSettings.AmbientOcclusion;
 import variables.P;
 
 /**
@@ -69,7 +70,7 @@ public class Platform extends Node {
                 P.platformWidth / 2, P.platformHeight / 2, length / 2)), 0.0f);
         this.addControl(rigidBodyControl);
         
-        if (EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE) {
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE || EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
             this.attachChild(this.addWallOcclusion(assetManager, length));
             this.attachChild(this.addPlatformOcclusion(assetManager, length));
         }
