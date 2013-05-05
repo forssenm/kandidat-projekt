@@ -57,18 +57,11 @@ public class BurstWizard extends AbstractWizard {
         };
     }
     
-    private void redress() {
-        Spatial apa = (Spatial) this.getChild("Cylinder.0031");
-        //apa.getChild("Mesh").setMaterial(null);
-        
+    private void redress() { //Changes wizard to black clothes and red particle
         Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         mat.setBoolean("UseMaterialColors",true);
         mat.setColor("Diffuse", ColorRGBA.Black);
-        apa.setMaterial(mat);
-        
-        ParticleEmitter spark = (ParticleEmitter)this.getChild("spark");
-        spark.setStartColor(ColorRGBA.Red);
-        
-        
+        this.getChild("Cylinder.0031").setMaterial(mat);
+        ((ParticleEmitter)this.getChild("spark")).setStartColor(ColorRGBA.Red);
     }
 }
