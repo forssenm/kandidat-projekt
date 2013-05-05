@@ -1,9 +1,16 @@
 package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.effect.ParticleEmitter;
 import com.jme3.light.SpotLight;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import control.AbstractWizardControl;
 import control.PlayerInteractorControl;
+import java.util.Random;
 import spatial.Player;
 
 /**
@@ -21,6 +28,8 @@ public class BurstWizard extends AbstractWizard {
         this.assetManager = assetManager;
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
+       
+        this.redress();
        
     }
 
@@ -46,5 +55,20 @@ public class BurstWizard extends AbstractWizard {
                 }
             }
         };
+    }
+    
+    private void redress() {
+        Spatial apa = (Spatial) this.getChild("Cylinder.0031");
+        //apa.getChild("Mesh").setMaterial(null);
+        
+        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat.setBoolean("UseMaterialColors",true);
+        mat.setColor("Diffuse", ColorRGBA.Black);
+        apa.setMaterial(mat);
+        
+        ParticleEmitter spark = (ParticleEmitter)this.getChild("spark");
+        spark.setStartColor(ColorRGBA.Red);
+        
+        
     }
 }
