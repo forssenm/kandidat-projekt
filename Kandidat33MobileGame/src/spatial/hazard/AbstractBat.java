@@ -51,9 +51,7 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
         channel.setLoopMode(LoopMode.Loop);
         
         int mod = (new Random().nextInt(8)-3); // from -3 to +4
-        float scalemod = 1f - 0.05f*mod;
-        System.out.println(scalemod);
-        model.scale(scalemod); //smaller flap faster
+        model.scale(1f-0.05f*mod); //smaller flap faster
         channel.setSpeed(2f+0.4f*mod);
         
         
