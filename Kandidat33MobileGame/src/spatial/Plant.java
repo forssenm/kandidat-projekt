@@ -61,7 +61,7 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
         
         
         this.attachChild(model);
-        model.move(0,modelHeight/2,-4);
+        model.move(0,modelHeight/2,-2);
         model.rotate(-1.74f,0,0);
         //model.move(0f, modelHeight,-P.platformWidth/2-P.playerZOffset+0.7f);
         this.addControl(this.createControl());
@@ -85,14 +85,8 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
             public void collideWithPlayer(Player player) {
                 if (!hasHit) {
                     PlayerControl pc = player.getControl(PlayerControl.class);
-                    //pc.speedBoostPowerup();
                     hasHit = true;
-                    System.out.println("plant collide playet");
-                   // channel.setAnim("ArmatureAction");
-                     channel.setAnim("ArmatureAction.002");
-                  /*  channel.setLoopMode(LoopMode.Cycle);
-                    channel.setSpeed(2.0f);*/
-
+                    channel.setAnim("ArmatureAction.002");
                 }
             }
 
