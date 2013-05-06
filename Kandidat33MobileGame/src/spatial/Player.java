@@ -115,15 +115,17 @@ public class Player extends Node implements AnimEventListener {
         channel.setSpeed(1.5f);
         
         if (a < 20) {
-            channel.setAnim ("ArmatureAction.001");
+            channel.setAnim ("ArmatureAction.001"); //belly punch
+            channel.setSpeed (2f);
             return;
         }
         if (a > 40) {
-            channel.setAnim ("ArmatureAction.002");
+            channel.setAnim ("ArmatureAction.002"); //backflip
+            channel.setSpeed(2.4f);
             return;
         }
         
-        channel.setAnim("ArmatureAction.003");
+        channel.setAnim("ArmatureAction.003"); //shrink 
         
     }
     
