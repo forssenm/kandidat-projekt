@@ -127,10 +127,15 @@ public class Player extends Node implements AnimEventListener {
         
     }
     
-    private void animateFrenzy() {
+    private void setFrenzyAnimation(boolean frenzy) {
         //invulnerability also makes you tougher and raging!
-        channel.setAnim("frenzy");
-        channel.setSpeed(1.15f);
+        if (frenzy) {
+            channel.setAnim("frenzy");
+            channel.setSpeed(1.15f);
+        } else {
+            channel.setAnim("ArmatureAction.000");
+            channel.setSpeed(1.0f);
+        }
     }
     
     private void animateJump() {
@@ -157,7 +162,7 @@ public class Player extends Node implements AnimEventListener {
                 break;
             case INVULN:
                 game.setInvulnerable(setting);
-                this.animateFrenzy();
+                this.setFrenzyAnimation(setting);
                 if (setting) {
                     dust.setGravity(0f,20f,0f);
                     dust.setEndSize(3.5f);
