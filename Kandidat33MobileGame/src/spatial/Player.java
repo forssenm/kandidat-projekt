@@ -17,6 +17,7 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import control.PlayerControl;
 import java.util.Iterator;
+import java.util.Random;
 import state.InGameState;
 import variables.P;
 
@@ -32,7 +33,7 @@ public class Player extends Node implements AnimEventListener {
     private PlayerControl playerControl;
     private Node playerModel;
     private InGameState game;
-
+    private Random random;
     //animation
     private AnimChannel channel;
     private AnimControl control;
@@ -49,7 +50,7 @@ public class Player extends Node implements AnimEventListener {
     public Player(AssetManager assetManager, InGameState game) {
         super("player");
         this.game = game;
-        
+        this.random = new Random();
         // the player casts shadows
         this.setShadowMode(RenderQueue.ShadowMode.Cast);
 
@@ -81,7 +82,7 @@ public class Player extends Node implements AnimEventListener {
         
         control.addListener(this);
         
-        channel.setAnim("ArmatureAction.001");
+        channel.setAnim("ArmatureAction.000");
         channel.setLoopMode(LoopMode.Loop);
 
       //End of animation code
@@ -108,6 +109,36 @@ public class Player extends Node implements AnimEventListener {
         SPEED, INVULN, DOUBLEJUMP
     }
     
+    public void animateCollision () {
+        //chooses between 3 different get hit animations
+        int a = random.nextInt(60);
+        channel.setSpeed(1.5f);
+        
+        if (a < 20) {
+            channel.setAnim ("ArmatureAction.001");
+            return;
+        }
+        if (a > 40) {
+            channel.setAnim ("ArmatureAction.002");
+            return;
+        }
+        
+        channel.setAnim("ArmatureAction.003");
+        
+    }
+    
+    public void animateFrenzy() {
+        //invulnerability also makes you tougher and raging!
+        channel.setAnim("frenzy");
+        channel.setSpeed(1.15f);
+    }
+    public void animateJump() {
+        //does not allow switching from frenzy / get hit animation into jump
+        String s = channel.getAnimationName();
+        if (s.equals("ArmatureAction.000") || s.equals( "jump")) {
+            channel.setAnim ("jump");
+        }
+    }
     public void updateModelAfterPowerup(Powerup powerup, boolean setting) {
         
         
@@ -183,6 +214,8 @@ public class Player extends Node implements AnimEventListener {
   }
     //animation function that must be implemented even if unused 
       public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
+          channel.setAnim("ArmatureAction.000");
+          channel.setSpeed(1.0f);
     /*if (animName.equals("ArmatureAction")) {
       channel.setAnim("ArmatureAction", 0.50f);
       channel.setLoopMode(LoopMode.DontLoop);
