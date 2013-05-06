@@ -40,14 +40,16 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
         //super("Plant");
         
         if (modelForPlant == null) {
-            modelForPlant = (Node)assetManager.loadModel("Models/plant/plant002arm007.j3o");
-        modelForPlant.scale(2.5f);
-        modelForPlant.rotate(0, -2.05f, 0);
+          //  modelForPlant = (Node)assetManager.loadModel("Models/plant/plant002arm007.j3o");
+              modelForPlant = (Node)assetManager.loadModel("Models/plant/New Folder/untitled7.j3o");
+        modelForPlant.scale(1.8f);
+        //modelForPlant.rotate(0, 2f, 0);
         
         }
         
         Node model = (Node)modelForPlant.clone();
-        control = model.getChild("Sphere").getControl(AnimControl.class);
+       // control = model.getChild("Sphere").getControl(AnimControl.class);
+         control = model.getChild("Cone").getControl(AnimControl.class);
         channel = control.createChannel(); 
         control.addListener(this);
         
@@ -56,7 +58,8 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
         
         
         this.attachChild(model);
-        model.move(0f, modelHeight,-P.platformWidth/2-P.playerZOffset+0.7f);
+        model.move(0,modelHeight/2,-5);
+        //model.move(0f, modelHeight,-P.platformWidth/2-P.playerZOffset+0.7f);
         this.addControl(this.createControl());
         this.setLocalTranslation(position.x, position.y, 0);//-P.platformWidth/2-P.playerZOffset+0.6f);
         //this.setShadowMode(ShadowMode.Off);   
@@ -81,9 +84,10 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
                     //pc.speedBoostPowerup();
                     hasHit = true;
                     
-                    channel.setAnim("ArmatureAction");
+                   // channel.setAnim("ArmatureAction");
+                     channel.setAnim("ArmatureAction.002");
                     channel.setLoopMode(LoopMode.Cycle);
-                    channel.setSpeed(1.0f);
+                    channel.setSpeed(2.0f);
 
                 }
             }
