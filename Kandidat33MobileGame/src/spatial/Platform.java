@@ -9,6 +9,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import variables.P;
@@ -18,7 +19,7 @@ import variables.P;
  *
  * @author dagen
  */
-public class Platform extends Geometry {
+public class Platform extends Node {
 
     public enum PType {
         SHORT (P.shortPlatformLength),
@@ -32,6 +33,9 @@ public class Platform extends Geometry {
         }
     }
     private static Material materialForPlatforms;
+    private static Node modelForShortPlatform;
+    private static Node modelForMediumPlatform;
+    private static Node modelForLongPlatform;
 
     /**
      * This constructor creates a
@@ -47,28 +51,71 @@ public class Platform extends Geometry {
      */
     public Platform(AssetManager assetManager, Vector3f position, PType type) {
         super("platform");
+        
+        if (modelForShortPlatform == null) {
+            initModels(assetManager);
+        }
+        
+        switch(type) {
+            case SHORT:
+                this.attachChild(modelForShortPlatform.clone());
+                break;
+            case MEDIUM:
+                this.attachChild(modelForMediumPlatform.clone());
+                break;
+            case LONG:
+                this.attachChild(modelForLongPlatform.clone());
+                break;
+        }
+        
         float length = type.length;
-        Box model =
-                new Box(Vector3f.ZERO, P.platformWidth / 2, P.platformHeight / 2, length / 2);
-        this.mesh = model;
-        this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+
+        
         this.setLocalTranslation(length / 2 + position.x, position.y, -P.playerZOffset);
 
+        RigidBodyControl rigidBodyControl = new RigidBodyControl(
+                new BoxCollisionShape(new Vector3f(
+                length / 2, P.platformHeight / 2, P.platformWidth / 2)), 0.0f);
+        this.addControl(rigidBodyControl);
+
+        this.setShadowMode(ShadowMode.CastAndReceive);
+    }
+    
+    private static void initModels(AssetManager assetManager) {
+        modelForShortPlatform = (Node) assetManager.loadModel("Models/platform/untitled8.j3o");
+        //modelForMediumPlatform = ...
+        //modelForLongPlatform = ...
+        
+        // replace everything below with simply loading the other two models
         if (materialForPlatforms == null) {
             materialForPlatforms = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
             Texture texture = assetManager.loadTexture("Textures/tegel.png");
             texture.setWrap(Texture.WrapMode.Repeat);
             materialForPlatforms.setTexture("DiffuseMap", texture);
         }
-        this.mesh.scaleTextureCoordinates(new Vector2f(Math.round(length/8f), 1.25f));
-        this.setMaterial(materialForPlatforms);
-
-        RigidBodyControl rigidBodyControl = new RigidBodyControl(
-                new BoxCollisionShape(new Vector3f(
-                P.platformWidth / 2, P.platformHeight / 2, length / 2)), 0.0f);
-        this.addControl(rigidBodyControl);
-
-        this.setShadowMode(ShadowMode.CastAndReceive);
+        modelForMediumPlatform = new Node();
+        modelForLongPlatform = new Node();
+        
+        Box mediumBox =
+                new Box(Vector3f.ZERO, P.platformWidth / 2, P.platformHeight / 2, PType.MEDIUM.length / 2);
+        Box longBox = 
+                new Box(Vector3f.ZERO, P.platformWidth / 2, P.platformHeight / 2, PType.LONG.length / 2);
+        Geometry mediumGeometry = new Geometry("",mediumBox);
+        Geometry longGeometry = new Geometry("",longBox);
+        
+        modelForMediumPlatform.attachChild(mediumGeometry);
+        modelForLongPlatform.attachChild(longGeometry);
+        
+        mediumBox.scaleTextureCoordinates(new Vector2f(Math.round(PType.MEDIUM.length/8f), 1.25f));
+        mediumGeometry.setMaterial(materialForPlatforms);
+        
+        longBox.scaleTextureCoordinates(new Vector2f(Math.round(PType.LONG.length/8f), 1.25f));
+        longGeometry.setMaterial(materialForPlatforms);
+        
+        mediumGeometry.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+        longGeometry.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+    
+    
     }
 
     /**

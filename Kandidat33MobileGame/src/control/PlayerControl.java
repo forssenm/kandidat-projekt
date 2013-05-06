@@ -158,7 +158,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
     public void invulnerabilityPowerup() {
         invulnTimer += 5f;
         ((Player)this.spatial).updateModelAfterPowerup(Player.Powerup.INVULN, true);
-        ((Player)this.spatial).animateFrenzy();
     }
 
     public void speedBoostPowerup() {
@@ -433,9 +432,6 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
             if (isPressed) {
                 // Button down
                 initiateJump();
-                if (invulnTimer <= 0) {
-                    ((Player)this.spatial).animateJump();
-                }
                 
             } else {
                 // Button up
