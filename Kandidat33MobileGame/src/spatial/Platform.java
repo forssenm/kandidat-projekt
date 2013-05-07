@@ -83,19 +83,20 @@ public class Platform extends Node {
     
     private static void initModels(AssetManager assetManager) {
         modelForShortPlatform = (Node) assetManager.loadModel("Models/platform/untitled8.j3o");
-        //modelForMediumPlatform = ...
-        //modelForLongPlatform = ...
+        modelForMediumPlatform = (Node) assetManager.loadModel("Models/platform/untitled24.j3o");
+        modelForLongPlatform = (Node) assetManager.loadModel("Models/platform/untitled36.j3o");
         
         // replace everything below with simply loading the other two models
+        /*
         if (materialForPlatforms == null) {
             materialForPlatforms = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
             Texture texture = assetManager.loadTexture("Textures/tegel.png");
             texture.setWrap(Texture.WrapMode.Repeat);
             materialForPlatforms.setTexture("DiffuseMap", texture);
-        }
-        modelForMediumPlatform = new Node();
-        modelForLongPlatform = new Node();
-        
+        }*/
+        //modelForMediumPlatform = new Node();
+        //modelForLongPlatform = new Node();
+        /*
         Box mediumBox =
                 new Box(Vector3f.ZERO, P.platformWidth / 2, P.platformHeight / 2, PType.MEDIUM.length / 2);
         Box longBox = 
@@ -103,8 +104,8 @@ public class Platform extends Node {
         Geometry mediumGeometry = new Geometry("",mediumBox);
         Geometry longGeometry = new Geometry("",longBox);
         
-        modelForMediumPlatform.attachChild(mediumGeometry);
-        modelForLongPlatform.attachChild(longGeometry);
+        //modelForMediumPlatform.attachChild(mediumGeometry);
+        //modelForLongPlatform.attachChild(longGeometry);
         
         mediumBox.scaleTextureCoordinates(new Vector2f(Math.round(PType.MEDIUM.length/8f), 1.25f));
         mediumGeometry.setMaterial(materialForPlatforms);
@@ -114,7 +115,7 @@ public class Platform extends Node {
         
         mediumGeometry.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         longGeometry.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-    
+    */
     
     }
 
