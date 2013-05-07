@@ -41,7 +41,7 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
         if (modelForPlant == null) {
           //  modelForPlant = (Node)assetManager.loadModel("Models/plant/plant002arm007.j3o");
              // modelForPlant = (Node)assetManager.loadModel("Models/plant/New Folder/untitled7.j3o");
-              modelForPlant = (Node)assetManager.loadModel("Models/plant/untitled2.j3o");
+              modelForPlant = (Node)assetManager.loadModel("Models/plant/plant-new.j3o");
         modelForPlant.scale(6f);
         //modelForPlant.rotate(0, 2f, 0);
         
@@ -63,7 +63,7 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
         model.rotate(-1.74f,0,0);
         //model.move(0f, modelHeight,-P.platformWidth/2-P.playerZOffset+0.7f);
         this.addControl(this.createControl());
-        this.setLocalTranslation(position.x, position.y, 0);//-P.platformWidth/2-P.playerZOffset+0.6f);
+        this.setLocalTranslation(position.x, position.y, 1.5f);//-P.platformWidth/2-P.playerZOffset+0.6f);
         //this.setShadowMode(ShadowMode.Off);   
         
     }
