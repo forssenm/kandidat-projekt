@@ -171,6 +171,7 @@ public class ChunkFactory {
                     spatials.add(createPlatform(d, height + random.nextFloat() * 2, pType));
                     d += pType.length + nDist;
                 }
+                windowHeight = Math.max(0, 5 * Math.round(height / 5));
                 break;
             case (3): // descending platforms
                 float descent;
@@ -194,15 +195,18 @@ public class ChunkFactory {
                 height = -1;
                 spatials.add(createPlatform(d, height, PType.LONG));
                 d += PType.LONG.length + dist;
+                // one high, one low
                 float nHeight = 5 + 3 * random.nextFloat();
                 spatials.add(createPlatform(d, height + nHeight, PType.SHORT));
                 spatials.add(createPlatform(d, height + nHeight - 13, PType.SHORT));
                 height += nHeight;
                 d += PType.SHORT.length + dist;
                 spatials.add(createInvulnerabilityPowerup(d + 5, height - 6));
+                // one higher
                 height += 2 + 5 * random.nextFloat();
                 spatials.add(createPlatform(d, height, PType.SHORT));
                 d += PType.SHORT.length + 5;
+                windowHeight = Math.max(0, 5 * Math.round(height / 5));
                 height = -1;
                 if (d < totalLength) {
                     spatials.add(createPlatform(d, height, PType.MEDIUM));
@@ -338,27 +342,37 @@ public class ChunkFactory {
         switch (decorationType) {
             case (0): // window
             case (1):
-                WindowFrame window = createWindowFrame(5f, windowHeight + 23f);
+            case (2):
+                WindowFrame window = createWindowFrame(30f, windowHeight + 23f);
                 staticObjects.attachChild(window);
                 if (P.useWindowLights) {
-                    lights.add(this.createWindowLight(5f, windowHeight + 23f));
+                    lights.add(this.createWindowLight(30f, windowHeight + 23f));
                 }
-                break;
-            case (2): // plant
-                Plant plant = createPlant(20, windowHeight + 15);
-                staticObjects.attachChild(plant);
                 break;
             case (3): // torch
             case (4):
             case (5):
-                Torch torch = createTorch(30, windowHeight + 15);
+                Torch torch = createTorch(15, windowHeight + 15);
                 staticObjects.attachChild(torch);
                 if (P.useTorchLights) {
-                    lights.add(this.createTorchLight(30f, windowHeight + 15f));
+                    lights.add(this.createTorchLight(15f, windowHeight + 15f));
                 }
                 break;
             default:
                 break;
+        }
+        if (random.nextFloat() < 0.4f) {
+            float plantX = 0f;
+            float plantY = 0f;
+            for (Spatial s : spatials) {
+                if (s instanceof Platform) {
+                    Platform p = (Platform) s;
+                    plantX = p.getLocalTranslation().getX() + p.getType().length/2+0.2f;
+                    plantY = p.getLocalTranslation().getY() + 15;
+                }
+            }
+            Plant plant = createPlant(plantX, plantY);
+            staticObjects.attachChild(plant);
         }
 
         if (level > 4 && level % 3 == 2) {

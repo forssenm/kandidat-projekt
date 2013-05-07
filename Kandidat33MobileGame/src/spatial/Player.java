@@ -77,14 +77,6 @@ public class Player extends Node implements AnimEventListener {
         this.addControl(playerControl);
 
         //Sets the model of the player
-        //playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
-        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost04-014cloth003armature003UV002.j3o");
-        playerModel.rotate(0, -2.07f, 0);
-        control = playerModel.getChild("Sphere").getControl(AnimControl.class);
-        channel = control.createChannel();
-        playerModel.scale(1.4f);
-        playerModel.setLocalTranslation(0f,2.8f+hoverHeight,0f); 
-
         if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
             playerModel = (Node) assetManager.loadModel("Models/ghost/AO/ghost-with-ao.j3o");
             playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
@@ -99,7 +91,7 @@ public class Player extends Node implements AnimEventListener {
             
             playerModel = (Node) assetManager.loadModel("Models/ghost/ghost04-014cloth003armature003UV002.j3o");
             playerModel.rotate(0, -2.07f, 0);
-            playerModel.scale(1.4f);
+            playerModel.scale(1f);
             playerModel.setLocalTranslation(0f,2.8f+hoverHeight,0f); 
             control = playerModel.getChild("Sphere").getControl(AnimControl.class);
             channel = control.createChannel();

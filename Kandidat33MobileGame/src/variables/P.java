@@ -14,7 +14,7 @@ public class P {
     //level variables
     public static final float shortPlatformLength = 12.0f;
     public static final float mediumPlatformLength = 24.0f;
-    public static final float longPlatformLength = 40.0f;
+    public static final float longPlatformLength = 36.0f;
     
     
     public static final float platformWidth = 7f;

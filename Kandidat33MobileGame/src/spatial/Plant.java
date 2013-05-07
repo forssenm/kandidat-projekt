@@ -55,7 +55,6 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
         channel = control.createChannel(); 
         control.addListener(this);
         
-        channel.setAnim("ArmatureAction.002");
         channel.setLoopMode(LoopMode.DontLoop);
         
         

@@ -72,8 +72,6 @@ public class InGameState extends AbstractAppState {
     private Player player;
     private ChaseCamera chaseCam;
     private boolean gameOver = false;
-    private float respawnDelay = 1.0f; // seconds
-    private float respawnTimer = 0.0f; // seconds
     private LevelGeneratingState level;
     private DirectionalLight sun;
     private boolean startInvulnerable;

@@ -39,6 +39,7 @@ public class Platform extends Node {
     private static Node modelForShortPlatform;
     private static Node modelForMediumPlatform;
     private static Node modelForLongPlatform;
+    private PType type;
 
     /**
      * This constructor creates a
@@ -54,6 +55,7 @@ public class Platform extends Node {
      */
     public Platform(AssetManager assetManager, Vector3f position, PType type) {
         super("platform");
+        this.type = type;
         
         if (modelForShortPlatform == null) {
             initModels(assetManager);
@@ -98,37 +100,6 @@ public class Platform extends Node {
         modelForShortPlatform = (Node) assetManager.loadModel("Models/platform/untitled8.j3o");
         modelForMediumPlatform = (Node) assetManager.loadModel("Models/platform/untitled24.j3o");
         modelForLongPlatform = (Node) assetManager.loadModel("Models/platform/untitled36.j3o");
-        
-        // replace everything below with simply loading the other two models
-        /*
-        if (materialForPlatforms == null) {
-            materialForPlatforms = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-            Texture texture = assetManager.loadTexture("Textures/tegel.png");
-            texture.setWrap(Texture.WrapMode.Repeat);
-            materialForPlatforms.setTexture("DiffuseMap", texture);
-        }*/
-        //modelForMediumPlatform = new Node();
-        //modelForLongPlatform = new Node();
-        /*
-        Box mediumBox =
-                new Box(Vector3f.ZERO, P.platformWidth / 2, P.platformHeight / 2, PType.MEDIUM.length / 2);
-        Box longBox = 
-                new Box(Vector3f.ZERO, P.platformWidth / 2, P.platformHeight / 2, PType.LONG.length / 2);
-        Geometry mediumGeometry = new Geometry("",mediumBox);
-        Geometry longGeometry = new Geometry("",longBox);
-        
-        //modelForMediumPlatform.attachChild(mediumGeometry);
-        //modelForLongPlatform.attachChild(longGeometry);
-        
-        mediumBox.scaleTextureCoordinates(new Vector2f(Math.round(PType.MEDIUM.length/8f), 1.25f));
-        mediumGeometry.setMaterial(materialForPlatforms);
-        
-        longBox.scaleTextureCoordinates(new Vector2f(Math.round(PType.LONG.length/8f), 1.25f));
-        longGeometry.setMaterial(materialForPlatforms);
-        
-        mediumGeometry.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-        longGeometry.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-    */
     
     }
 
@@ -182,6 +153,10 @@ public class Platform extends Node {
      */
     public float getX() {
         return this.getLocalTranslation().x;
+    }
+    
+    public PType getType() {
+        return this.type;
     }
 
     /**
