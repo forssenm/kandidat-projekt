@@ -85,6 +85,7 @@ public class DoubleJumpPowerup extends PlayerInteractor {
                     DoubleJumpPowerup.this.destroy();
                 }
             }
+
             @Override
             protected void positionUpdate(float tpf) {
                 //time += tpf;

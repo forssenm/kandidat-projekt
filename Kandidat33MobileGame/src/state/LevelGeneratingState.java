@@ -128,6 +128,18 @@ public class LevelGeneratingState extends AbstractAppState {
                  */
                 if (spatial.getName().equals("background")) {
                     generateNextChunk();
+                    //showLevelProgress();
+                }
+            }
+        }
+        for (Light light : this.gameNode.getLocalLightList()) {
+            if (light instanceof PointLight) {
+                if (isOutsideLevelBounds(((PointLight)light).getPosition())) {
+                    this.gameNode.removeLight(light);
+                }
+            } else if (light instanceof SpotLight) {
+                if (isOutsideLevelBounds(((SpotLight)light).getPosition())) {
+                    this.gameNode.removeLight(light);
                 }
             }
         }

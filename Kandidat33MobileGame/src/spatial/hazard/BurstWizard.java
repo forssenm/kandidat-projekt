@@ -5,13 +5,11 @@ import com.jme3.effect.ParticleEmitter;
 import com.jme3.light.SpotLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
+import com.jme3.math.Vector3f;
 import control.AbstractWizardControl;
 import control.PlayerInteractorControl;
-import java.util.Random;
 import spatial.Player;
+import variables.EffectSettings;
 
 /**
  * A class for a Wizard, using a
@@ -31,6 +29,11 @@ public class BurstWizard extends AbstractWizard {
        
         this.redress();
        
+        if(EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE) {
+            this.attachChild(this.addWallOcclusion(assetManager, new Vector3f(0f, -1f, -4f)));
+        }
+        this.scale(0.8f);
+        
     }
 
     @Override
@@ -64,4 +67,5 @@ public class BurstWizard extends AbstractWizard {
         this.getChild("Cylinder.0031").setMaterial(mat);
         ((ParticleEmitter)this.getChild("spark")).setStartColor(ColorRGBA.Red);
     }
+
 }

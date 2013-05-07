@@ -13,7 +13,6 @@ import com.jme3.scene.Spatial;
 import control.AbstractPlayerInteractorControl;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
-import variables.P;
 
 /**
  * A class for a non-physical torch, purely for decoration.

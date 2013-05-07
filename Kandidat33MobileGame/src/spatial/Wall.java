@@ -52,10 +52,10 @@ public class Wall extends Node {
         //the resolution is higher is greater than 640x480)
         Texture texture = assetManager.loadTexture("Textures/tegel.png");
         texture.setWrap(Texture.WrapMode.Repeat);
-        model1.scaleTextureCoordinates(new Vector2f(Math.round(10f*P.screenWidth/640), Math.round(10f*P.screenHeight/480)));
-        model2.scaleTextureCoordinates(new Vector2f(Math.round(10f*P.screenWidth/640), Math.round(10f*P.screenHeight/480)));
-        
 
+        model1.scaleTextureCoordinates(new Vector2f(Math.round(10f*640/640), Math.round(10f*480/480)));
+        model2.scaleTextureCoordinates(new Vector2f(Math.round(10f*640/640), Math.round(10f*480/480)));
+        
         Geometry geometry1 = new Geometry("",model1);
         Geometry geometry2 = new Geometry("",model2);
         geometry1.setLocalTranslation(new Vector3f(0,0,-P.platformWidth/2-P.playerZOffset));

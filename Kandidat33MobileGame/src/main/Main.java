@@ -51,7 +51,19 @@ public class Main extends SimpleApplication {
         inGameState = new InGameState();
         inMainMenuState = new InMainMenuState();
         stateManager.attach(inMainMenuState);
-       // stateManager.attach(inGameState);
+        //stateManager.attach(inGameState);
+        
+        //FilterPostProcessor processor = (FilterPostProcessor) assetManager.loadAsset("Filters/PostFilter.j3f");
+        //viewPort.addProcessor(processor);
+        
+        /*
+        AmbientOcclusionFilter aof = new AmbientOcclusionFilter();
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        //Filter testFilter = new SSAOFilter(4, 3, 0.2f, 0.1f);
+        Filter testFilter = aof;
+        fpp.addFilter(testFilter);
+        viewPort.addProcessor(fpp);
+        */
     }
 
     @Override

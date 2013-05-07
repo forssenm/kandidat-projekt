@@ -11,6 +11,8 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.Random;
 import spatial.PlayerInteractor;
+import variables.EffectSettings;
+import variables.EffectSettings.AmbientOcclusion;
 
 /**
  * An abstract AbstractFireball. Any class extending this one will make a PlayerInteractor
@@ -30,8 +32,11 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
     protected Spatial createModel(AssetManager assetManager) {
         
         if (modelForBat == null) {
-            modelForBat = (Node) assetManager.loadModel ("Models/bat/bat02-002mirror006anim3fly-smooth.j3o");
-            
+            if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
+                modelForBat = (Node) assetManager.loadModel("Models/bat/AO/bat-with-ao.j3o");
+            } else {
+                modelForBat = (Node) assetManager.loadModel("Models/bat/bat02-002mirror006anim2fix.j3o");
+            }
             Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
             mat.setBoolean("UseMaterialColors",true);
             mat.setColor("Diffuse", ColorRGBA.Orange);
@@ -43,6 +48,7 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
         Node model = (Node) modelForBat.clone();
 
         control = model.getChild("Sphere").getControl(AnimControl.class);
+
         channel = control.createChannel();
         
         control.addListener(this);
@@ -56,6 +62,7 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
         
         
         return model;
+
     }
     //animation function that must be implemented even if unused
     public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
@@ -69,7 +76,7 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
          Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
                   
          Random r = new Random();
-         int i = r.nextInt(2);
+         int i = r.nextInt(5);
          mat.setBoolean("UseMaterialColors",true);
          ColorRGBA[] c = {ColorRGBA.Cyan, ColorRGBA.Red, ColorRGBA.White, ColorRGBA.Orange, ColorRGBA.Yellow};
          mat.setColor("Diffuse", c[i]);

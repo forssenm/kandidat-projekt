@@ -44,15 +44,14 @@ public class P {
     public static boolean useWizardLights = true;
     public static boolean useWindowLights = true;
     public static boolean useTorchLights = true;
-    
+                
     public static int screenWidth;
     public static int screenHeight;
     
     public static final float windowFreq = 0.3f;
     public static final float torchFreq = 0.3f;
     
-    //strings
-    
+    //strings    
     public static final String playerSpot = "playerspot";
     
 }

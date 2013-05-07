@@ -23,6 +23,9 @@ import spatial.WindowFrame;
 import spatial.hazard.BurstWizard;
 import spatial.hazard.CalculatingWizard;
 import spatial.hazard.LinearBat;
+import spatial.PlayerInteractor;
+import spatial.hazard.LinearBat;
+import spatial.hazard.LinearFireball;
 import spatial.hazard.SingleShotWizard;
 import spatial.hazard.SpinningFireball;
 import spatial.hazard.StationaryFireball;
@@ -52,6 +55,18 @@ public class ChunkFactory {
     public ChunkFactory(AssetManager assetManager) {
         this.assetManager = assetManager;
     }
+    
+    private float getPlatformLength(int i) {
+        switch (i) {
+            case (1):
+                return P.shortPlatformLength;
+            case (2):
+                return P.mediumPlatformLength;
+            case (3):
+                return P.longPlatformLength;
+        }
+        return 0;
+    }
 
     /**
      * Generates a new chunk of the level. The generated content is delivered in
@@ -64,7 +79,6 @@ public class ChunkFactory {
      *
      */
     public List<Object> generateChunk(int level) {
-
         if (level == 1) {
             this.reset();
         }
@@ -174,6 +188,7 @@ public class ChunkFactory {
                     spatials.add(createPlatform(d, height + random.nextFloat() * 4, pType));
                     d += pType.length + nDist;
                 }
+                //powerupType = -1;
                 break;
             case (4): // invulnerability only reachable with double-jump
                 height = -1;
@@ -358,6 +373,7 @@ public class ChunkFactory {
         list.addAll(spatials);
         list.addAll(lights);
 
+        
         return list;
 
     }
@@ -389,12 +405,13 @@ public class ChunkFactory {
         Torch window = new Torch(this.assetManager, windowPos);
         return window;
     }
-
-    private Plant createPlant(float positionX, float positionY) {
+    
+    private Plant createPlant (float positionX, float positionY) {
         Vector3f windowPos = new Vector3f(positionX, positionY, 0f); //beware the Z is  not used
         Plant window = new Plant(this.assetManager, windowPos);
         return window;
     }
+    
 
 
     /* Creates a spotlight shining through a window at a given position */
@@ -491,5 +508,4 @@ public class ChunkFactory {
         mileStone.setLocalTranslation(positionX, positionY, 0f);
         return mileStone;
     }
-
 }

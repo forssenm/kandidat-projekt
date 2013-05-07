@@ -6,12 +6,18 @@ import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.light.SpotLight;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import spatial.StandardParticleEmitter;
 import variables.P;
+import com.jme3.scene.shape.Box;
+import spatial.StandardParticleEmitter;
+import variables.EffectSettings;
+import variables.EffectSettings.AmbientOcclusion;
 
 /**
  * A class for a general Wizard. Any class extending this will have the wizard
@@ -33,17 +39,35 @@ public abstract class AbstractWizard extends PlayerInteractor {
     protected Spatial createModel(AssetManager assetManager) {
         
         if (modelForWizard == null) {
-            modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair004MergeGreen.j3o");
+            if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
+                modelForWizard = (Node) assetManager.loadModel("Models/wizard/AO/wizard-with-ao.j3o");
+            } else {
+                //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003-nolightcam.j3o"); // Nina's
+                modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair004MergeGreen.j3o");
+            }
             modelForWizard.scale(1.5f);
         }
         
         Node model = (Node) modelForWizard.clone();
-        model.setName("model");
+
+        model.setName("wizardSpatial");
         ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
         model.attachChild(sparkle);
         sparkle.move(0.8f, 1.5f, -1f);   //what should be z effectively is x. what should be x is positive into the picture. Y is as is should be.
 
         return model;
+
+    }
+    
+    protected Geometry addWallOcclusion(AssetManager assetManager, Vector3f localTranslation) {
+        Box wallAO = new Box(3.5f, 3.5f, 0f);
+        Geometry wall = new Geometry("wallOcclusion", wallAO);
+        wall.setLocalTranslation(localTranslation);
+        Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/wizard/AO/wall-ao-transparent-small.png"));
+        wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
+        wall.setMaterial(wallMaterial);
+        return wall;
     }
     
     private ParticleEmitter getWandParticleEmitter (AssetManager assetManager) {

@@ -16,13 +16,28 @@ import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.math.Vector4f;
+import com.jme3.post.Filter;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
 import control.SpotlightControl;
+import com.jme3.scene.Spatial;
+import control.PlayerControl;
+import control.PlayerInteractorControl;
+import filters.AmbientOcclusionFilter;
+import filters.BuiltInSSAO;
+import filters.BuiltInSSAO_intervals;
+import java.util.LinkedList;
+import java.util.List;
 import main.Main;
 import spatial.Player;
+import spatial.hazard.LinearFireball;
+import variables.EffectSettings;
+import variables.EffectSettings.AmbientOcclusion;
 import variables.P;
 
 /**
@@ -63,6 +78,8 @@ public class InGameState extends AbstractAppState {
     private DirectionalLight sun;
     private boolean startInvulnerable;
     private boolean stopInvulnerable;
+    private AmbientOcclusionFilter aof;
+    private BuiltInSSAO_intervals builtInSSAO;
     
     /**
      * This method initializes the the InGameState and thus gets the game ready
@@ -105,6 +122,10 @@ public class InGameState extends AbstractAppState {
         gameNode.addLight(sun);
 
         initAudio();
+        
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.FULL_POST_PROCESSING || EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
+            initAO();
+        }
     }
     /**
      * This method creates a node for the player. Also the default player model
@@ -157,7 +178,56 @@ public class InGameState extends AbstractAppState {
         super.cleanup();
         this.app.getRootNode().detachChild(this.gameNode);
     }
+    
+    private void initAO() {
+        //aof = new AmbientOcclusionFilter();
+        Filter testFilter = null;
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
+            builtInSSAO = new BuiltInSSAO_intervals(2, 5, 0.4f, 0.02f);
+            testFilter = builtInSSAO;
+        } else if (EffectSettings.ambientOcclusion == AmbientOcclusion.FULL_POST_PROCESSING) {
+            testFilter = new BuiltInSSAO(2, 5, 0.4f, 0.02f);
+        }
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        fpp.addFilter(testFilter);
+        viewPort.addProcessor(fpp);
+        //Filter testFilter = new SSAOFilter(4, 3, 0.2f, 0.1f);
+        //Filter testFilter = new SSAOFilter(2, 5, 0.4f, 0.02f);
+        //Filter testFilter = new BuiltInSSAO(2, 5, 0.4f, 0.02f);
+        //Filter testFilter = aof;
+        //Filter testFilter = builtInSSAO;
+        //fpp.addFilter(testFilter);
+        //viewPort.addProcessor(fpp);
+    }
 
+    /*
+     * this implementation does no longer match the structure of the scene graph
+     * see LevelControl for current structure
+     */
+    private void updateAOIntervals() {
+        Vector3f playerCenter = viewPort.getCamera().getScreenCoordinates(player.getWorldTranslation());
+        List<Spatial> movingObjects = new LinkedList<Spatial>();
+        int margin = 50;
+        
+        try {
+            Node levelNode = (Node)gameNode.getChild("Level Node");
+            movingObjects = ((Node)levelNode.getChild("wizards")).getChildren();
+        } catch (NullPointerException e) {
+            System.out.println(e);
+        }
+        
+        Vector4f[] values = new Vector4f[1 + movingObjects.size()];
+        values[0] = new Vector4f(playerCenter.x - margin, playerCenter.x + margin, playerCenter.y - margin / 2, playerCenter.y + margin * 1.5f);
+
+        for (int i = 1; i < values.length; i++) {
+            Vector3f center = viewPort.getCamera().getScreenCoordinates(movingObjects.get(i - 1).getWorldTranslation());
+            values[i] = new Vector4f(center.x - margin, center.x + margin, center.y - margin, center.y + margin);
+        }
+        
+        //aof.updateIntervals(values);
+        builtInSSAO.updateIntervals(values);
+        
+    }
     
     private float gameTime;
     private int difficultyLevel;
@@ -168,6 +238,9 @@ public class InGameState extends AbstractAppState {
      */
     @Override
     public void update(float tpf) {
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
+            this.updateAOIntervals();
+        }
         
         if (startInvulnerable || stopInvulnerable) {
             if (startInvulnerable) {

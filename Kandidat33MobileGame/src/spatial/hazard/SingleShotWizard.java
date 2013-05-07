@@ -2,9 +2,12 @@ package spatial.hazard;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.light.SpotLight;
+import com.jme3.math.Vector3f;
 import control.AbstractWizardControl;
 import control.PlayerInteractorControl;
 import spatial.Player;
+import variables.EffectSettings;
+import variables.EffectSettings.AmbientOcclusion;
 
 /**
  * A class for a Wizard, using a
@@ -21,8 +24,12 @@ public class SingleShotWizard extends AbstractWizard {
         this.assetManager = assetManager;
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
-        this.getChild(0).scale(1.2f);
+        if(EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
+            this.attachChild(this.addWallOcclusion(assetManager, new Vector3f(0f, -1f, -4f)));
+        }
+        this.scale(1.2f);
     }
+    
 
     @Override
     protected PlayerInteractorControl createControl() {

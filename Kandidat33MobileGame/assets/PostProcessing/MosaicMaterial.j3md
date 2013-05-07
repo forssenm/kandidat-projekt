@@ -1,0 +1,20 @@
+MaterialDef My MaterialDef {
+
+    MaterialParameters {
+        Int NumSamples
+        Int NumSamplesDepth
+        Texture2D Texture
+        Color Color
+    }
+
+    Technique {
+        VertexShader GLSL100:   PostProcessing/Mosaic.vert
+        FragmentShader GLSL100: PostProcessing/Mosaic.frag
+
+        WorldParameters {
+            WorldViewProjectionMatrix
+            ViewPort
+        }
+    }
+
+}
