@@ -87,6 +87,7 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
                     PlayerControl pc = player.getControl(PlayerControl.class);
                     hasHit = true;
                     channel.setAnim("ArmatureAction.002");
+                    //channel.setAnim("roll"); //renderar inte bra
                 }
             }
 
