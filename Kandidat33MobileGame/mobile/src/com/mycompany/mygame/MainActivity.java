@@ -26,9 +26,9 @@ public class MainActivity extends AndroidHarness{
         // Choose screen orientation
         screenOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
         // Invert the MouseEvents X (default = true)
-        mouseEventsInvertX = true;
+        mouseEventsInvertX = false;
         // Invert the MouseEvents Y (default = true)
-        mouseEventsInvertY = true;
+        mouseEventsInvertY = false;
     }
  
 }

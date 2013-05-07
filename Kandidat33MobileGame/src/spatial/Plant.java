@@ -40,24 +40,28 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
         
         if (modelForPlant == null) {
           //  modelForPlant = (Node)assetManager.loadModel("Models/plant/plant002arm007.j3o");
-              modelForPlant = (Node)assetManager.loadModel("Models/plant/New Folder/untitled7.j3o");
-        modelForPlant.scale(1.8f);
+             // modelForPlant = (Node)assetManager.loadModel("Models/plant/New Folder/untitled7.j3o");
+              modelForPlant = (Node)assetManager.loadModel("Models/plant/untitled2.j3o");
+        modelForPlant.scale(6f);
         //modelForPlant.rotate(0, 2f, 0);
         
         }
         
         Node model = (Node)modelForPlant.clone();
+        model.setName("model");
+        
        // control = model.getChild("Sphere").getControl(AnimControl.class);
-         control = model.getChild("Cone").getControl(AnimControl.class);
+         control = model.getChild("Plane").getControl(AnimControl.class);
         channel = control.createChannel(); 
         control.addListener(this);
         
-        //channel.setAnim("ArmatureAction");
-        //channel.setLoopMode(LoopMode.Loop);
+        channel.setAnim("ArmatureAction.002");
+        channel.setLoopMode(LoopMode.DontLoop);
         
         
         this.attachChild(model);
-        model.move(0,modelHeight/2,-5);
+        model.move(0,modelHeight/2,-2);
+        model.rotate(-1.74f,0,0);
         //model.move(0f, modelHeight,-P.platformWidth/2-P.playerZOffset+0.7f);
         this.addControl(this.createControl());
         this.setLocalTranslation(position.x, position.y, 0);//-P.platformWidth/2-P.playerZOffset+0.6f);
@@ -80,19 +84,19 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
             public void collideWithPlayer(Player player) {
                 if (!hasHit) {
                     PlayerControl pc = player.getControl(PlayerControl.class);
-                    //pc.speedBoostPowerup();
                     hasHit = true;
-                    
-                   // channel.setAnim("ArmatureAction");
-                     channel.setAnim("ArmatureAction.002");
-                    channel.setLoopMode(LoopMode.Cycle);
-                    channel.setSpeed(2.0f);
-
+                    channel.setAnim("ArmatureAction.002");
+                    //channel.setAnim("roll"); //renderar inte bra
                 }
             }
 
             @Override
-            protected void positionUpdate(float tpf) {/*do not move*/}
+            protected void positionUpdate(float tpf) {/*do not move*/
+            Spatial model = ((Node)this.spatial).getChild("model");
+                if (model != null) {
+                    //model.rotate(0.24f, 0.12f, 0.02f);
+                }
+            }
 
             public void collideWithStatic() {/*do nothing*/}
 
