@@ -53,8 +53,8 @@ public class Wall extends Node {
         Texture texture = assetManager.loadTexture("Textures/tegel.png");
         texture.setWrap(Texture.WrapMode.Repeat);
 
-        model1.scaleTextureCoordinates(new Vector2f(Math.round(10f*640/640), Math.round(10f*480/480)));
-        model2.scaleTextureCoordinates(new Vector2f(Math.round(10f*640/640), Math.round(10f*480/480)));
+        model1.scaleTextureCoordinates(new Vector2f(Math.round(10f*800/640), Math.round(10f*480/480)));
+        model2.scaleTextureCoordinates(new Vector2f(Math.round(10f*800/640), Math.round(10f*480/480)));
         
         Geometry geometry1 = new Geometry("",model1);
         Geometry geometry2 = new Geometry("",model2);

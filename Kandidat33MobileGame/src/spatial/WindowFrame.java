@@ -27,13 +27,13 @@ public class WindowFrame extends Node {
     public WindowFrame(AssetManager assetManager, Vector3f position) {
         super("WindowFrame");
         
-        Node window = (Node)assetManager.loadModel("Models/window/window.j3o");
-        window.scale(4);
+        Node window = (Node)assetManager.loadModel("Models/window/flat-window-2.j3o");
+        window.scale(4.5f);
         window.rotate(90*FastMath.DEG_TO_RAD, 0f, 0f);
         
         this.attachChild(window);
         
-        this.setLocalTranslation(position.x, position.y, -P.platformWidth/2-P.playerZOffset-5.7f);
+        this.setLocalTranslation(position.x, position.y, -P.platformWidth-P.playerZOffset-3f);
         this.setShadowMode(ShadowMode.Off);   
 
     }
