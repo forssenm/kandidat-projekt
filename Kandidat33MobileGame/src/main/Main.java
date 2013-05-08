@@ -28,7 +28,7 @@ public class Main extends SimpleApplication {
         appSettings.setSamples(2);
         appSettings.setVSync(true);
         appSettings.setFrameRate(30);
-        appSettings.setResolution(640, 480);
+        appSettings.setResolution(800, 480);
         appSettings.setBitsPerPixel(16);
         Main app = new Main();
         app.setShowSettings(false);
