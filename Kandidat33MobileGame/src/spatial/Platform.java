@@ -61,19 +61,24 @@ public class Platform extends Node {
             initModels(assetManager);
         }
         
+        float length = type.length;
+        
         switch(type) {
             case SHORT:
                 this.attachChild(modelForShortPlatform.clone());
                 break;
             case MEDIUM:
-                this.attachChild(modelForMediumPlatform.clone());
+                this.attachChild(modelForShortPlatform.clone().move(-P.shortPlatformLength/2, 0f, 0f));
+                this.attachChild(modelForShortPlatform.clone().move(P.shortPlatformLength/2, 0f, 0f));
                 break;
             case LONG:
-                this.attachChild(modelForLongPlatform.clone());
+                this.attachChild(modelForShortPlatform.clone().move(-P.shortPlatformLength, 0f, 0f));
+                this.attachChild(modelForShortPlatform.clone());
+                this.attachChild(modelForShortPlatform.clone().move(P.shortPlatformLength, 0f, 0f));
                 break;
         }
         
-        float length = type.length;
+        
 
         
         this.setLocalTranslation(length / 2 + position.x, position.y, -P.playerZOffset);
@@ -97,7 +102,7 @@ public class Platform extends Node {
     }
     
     private static void initModels(AssetManager assetManager) {
-        modelForShortPlatform = (Node) assetManager.loadModel("Models/platform/untitled8.j3o");
+        modelForShortPlatform = (Node) assetManager.loadModel("Models/platform/untitled8-new.j3o");
         modelForMediumPlatform = (Node) assetManager.loadModel("Models/platform/untitled24.j3o");
         modelForLongPlatform = (Node) assetManager.loadModel("Models/platform/untitled36.j3o");
     
