@@ -361,7 +361,8 @@ public class ChunkFactory {
             default:
                 break;
         }
-        if (random.nextFloat() < 0.4f) {
+        float plantProbability = random.nextFloat();
+        if (plantProbability < 0.6f) {
             float plantX = 0f;
             float plantY = 0f;
             for (Spatial s : spatials) {
@@ -371,7 +372,8 @@ public class ChunkFactory {
                     plantY = p.getLocalTranslation().getY() + 15;
                 }
             }
-            Plant plant = createPlant(plantX, plantY);
+            Plant.Type plantType = plantProbability < 0.45 ? Plant.Type.LEAVES : Plant.Type.FLOWERS;
+            Plant plant = createPlant(plantX, plantY, plantType);
             staticObjects.attachChild(plant);
         }
 
@@ -420,9 +422,9 @@ public class ChunkFactory {
         return window;
     }
     
-    private Plant createPlant (float positionX, float positionY) {
+    private Plant createPlant (float positionX, float positionY, Plant.Type plantType) {
         Vector3f windowPos = new Vector3f(positionX, positionY, 0f); //beware the Z is  not used
-        Plant window = new Plant(this.assetManager, windowPos);
+        Plant window = new Plant(this.assetManager, windowPos, plantType);
         return window;
     }
     

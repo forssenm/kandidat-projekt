@@ -10,6 +10,7 @@ import com.jme3.bullet.collision.shapes.CylinderCollisionShape;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.sun.org.apache.bcel.internal.generic.L2D;
 import control.AbstractPlayerInteractorControl;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
@@ -21,11 +22,26 @@ import control.PlayerInteractorControl;
 public class Plant extends PlayerInteractor implements AnimEventListener {
 
     private static Node modelForPlant;
+    private static Node modelForFlowerPlant;
     private AnimChannel channel;
     private AnimControl control;
     private static final CollisionShape collisionShape =
             new CylinderCollisionShape(new Vector3f(1,10,1),1);
     private static final float modelHeight = 10;
+    
+    public enum Type {
+        LEAVES ("Models/plant/plant-new.j3o", 6f),
+        FLOWERS ("Models/plant/plant-new-2.j3o", 3.5f);
+
+        public Node model;
+        public final String modelSrc;
+        public final float scale;
+
+        Type(String modelSrc, float scale) {
+            this.modelSrc = modelSrc;
+            this.scale = scale;
+        }
+    }
     
     /**
      * This constructor creates a
@@ -35,19 +51,20 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
      * @param assetManager is used to load the geometry and texture of
      * the <code>Window</code>.
      */
-    public Plant(AssetManager assetManager, Vector3f position) {
+    public Plant(AssetManager assetManager, Vector3f position, Type type) {
         //super("Plant");
         
-        if (modelForPlant == null) {
+        if (Type.LEAVES.model == null) {
           //  modelForPlant = (Node)assetManager.loadModel("Models/plant/plant002arm007.j3o");
              // modelForPlant = (Node)assetManager.loadModel("Models/plant/New Folder/untitled7.j3o");
-              modelForPlant = (Node)assetManager.loadModel("Models/plant/plant-new.j3o");
-        modelForPlant.scale(6f);
+              
+              Type.LEAVES.model = (Node)assetManager.loadModel(Type.LEAVES.modelSrc).scale(Type.LEAVES.scale);
+              Type.FLOWERS.model = (Node)assetManager.loadModel(Type.FLOWERS.modelSrc).scale(Type.FLOWERS.scale);
         //modelForPlant.rotate(0, 2f, 0);
         
         }
         
-        Node model = (Node)modelForPlant.clone();
+        Node model = (Node)type.model.clone();
         model.setName("model");
         
        // control = model.getChild("Sphere").getControl(AnimControl.class);
@@ -59,7 +76,7 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
         
         
         this.attachChild(model);
-        model.move(0,modelHeight/2,-2);
+        model.move(0,modelHeight/2,-2.5f);
         model.rotate(-1.74f,0,0);
         //model.move(0f, modelHeight,-P.platformWidth/2-P.playerZOffset+0.7f);
         this.addControl(this.createControl());
