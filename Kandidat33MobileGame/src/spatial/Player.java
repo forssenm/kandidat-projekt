@@ -180,6 +180,7 @@ public class Player extends Node implements AnimEventListener {
         String s = channel.getAnimationName();
         if (s.equals("ArmatureAction.000") || s.equals( "jump")) {
             channel.setAnim ("jump");
+            channel.setSpeed(1.8f);
         }
     }
 
