@@ -35,7 +35,7 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
             if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
                 modelForBat = (Node) assetManager.loadModel("Models/bat/AO/bat-with-ao.j3o");
             } else {
-                modelForBat = (Node) assetManager.loadModel("Models/bat/bat02-002mirror006anim2fix.j3o");
+                modelForBat = (Node) assetManager.loadModel("Models/bat/bat2-anim3-smooth.j3o");
             }
             Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
             mat.setBoolean("UseMaterialColors",true);
