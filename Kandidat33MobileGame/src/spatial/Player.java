@@ -263,7 +263,7 @@ public class Player extends Node implements AnimEventListener {
     }
     
     private ParticleEmitter getDustParticleEmitter (AssetManager assetManager) {
-             ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
+             ParticleEmitter fire = StandardParticleEmitter.standard(assetManager);
             
     fire.setStartColor(  new ColorRGBA(.40f, 0.40f, 0.40f, 1f));   // bluish grey
     fire.setEndColor(new ColorRGBA(0.05f, 0.05f, 0.05f, 0.5f)); // grey

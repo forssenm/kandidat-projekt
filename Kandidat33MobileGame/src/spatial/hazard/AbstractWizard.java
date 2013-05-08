@@ -71,7 +71,7 @@ public abstract class AbstractWizard extends PlayerInteractor {
     }
     
     private ParticleEmitter getWandParticleEmitter (AssetManager assetManager) {
-    ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
+    ParticleEmitter fire = StandardParticleEmitter.standard(assetManager);
     fire.setName("spark");
     fire.setNumParticles(5);
     fire.getMaterial().setTexture("Texture", assetManager.loadTexture(

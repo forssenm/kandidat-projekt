@@ -49,7 +49,7 @@ public class DoubleJumpPowerup extends PlayerInteractor {
     }
 
     private ParticleEmitter getPowerupParticleEmitter(AssetManager assetManager) {
-        ParticleEmitter glow = StandardParticleEmitter.make(assetManager);
+        ParticleEmitter glow = StandardParticleEmitter.standard(assetManager);
            
         glow.setNumParticles(5);
         glow.setStartColor(ColorRGBA.Green);

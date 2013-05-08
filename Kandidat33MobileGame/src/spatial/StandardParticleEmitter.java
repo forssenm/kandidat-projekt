@@ -17,7 +17,7 @@ public class StandardParticleEmitter {
     
     public StandardParticleEmitter () {}
     
-    public static ParticleEmitter make (AssetManager assetManager) {
+    public static ParticleEmitter standard (AssetManager assetManager) {
         ParticleEmitter fire = 
             new ParticleEmitter("Emitter", ParticleMesh.Type.Triangle, 30);
             Material materialForParticles = new Material(assetManager, 
@@ -36,7 +36,7 @@ public class StandardParticleEmitter {
     }
     
     public static ParticleEmitter forcefield (AssetManager assetManager) {
-        ParticleEmitter glow = StandardParticleEmitter.make(assetManager);
+        ParticleEmitter glow = StandardParticleEmitter.standard(assetManager);
          glow.getMaterial().setTexture("Texture", assetManager.loadTexture(
             "Textures/Explosion/shockwave.png"));
         glow.setImagesX(1);

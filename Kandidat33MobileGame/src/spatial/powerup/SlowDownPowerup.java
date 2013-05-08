@@ -41,7 +41,7 @@ public class SlowDownPowerup extends PlayerInteractor {
     }
 
     private ParticleEmitter getPowerupParticleEmitter(AssetManager assetManager) {
-        ParticleEmitter glow = StandardParticleEmitter.make(assetManager);
+        ParticleEmitter glow = StandardParticleEmitter.standard(assetManager);
        // glow.setName("glow");      
 
         glow.setStartColor(ColorRGBA.DarkGray);

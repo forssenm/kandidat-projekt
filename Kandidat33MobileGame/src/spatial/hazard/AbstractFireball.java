@@ -67,7 +67,7 @@ public abstract class AbstractFireball extends PlayerInteractor {
     }
 
     private ParticleEmitter getFireballParticleEmitter(AssetManager assetManager) {
-        ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
+        ParticleEmitter fire = StandardParticleEmitter.standard(assetManager);
                 
         
         Random r = new Random();

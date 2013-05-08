@@ -43,7 +43,7 @@ public class SpeedPowerup extends PlayerInteractor {
     }
 
     private ParticleEmitter getPowerupParticleEmitter(AssetManager assetManager) {
-        ParticleEmitter glow = StandardParticleEmitter.make(assetManager);
+        ParticleEmitter glow = StandardParticleEmitter.standard(assetManager);
                 
         glow.setStartColor(ColorRGBA.Cyan);
         glow.setEndColor(ColorRGBA.White);

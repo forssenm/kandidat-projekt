@@ -57,7 +57,7 @@ public class Torch extends Node {
     
     private ParticleEmitter getTorchParticleEmitter (AssetManager assetManager) {
         
-        ParticleEmitter fire = StandardParticleEmitter.make(assetManager);
+        ParticleEmitter fire = StandardParticleEmitter.standard(assetManager);
     //Default values for a standard Torch
     ColorRGBA startColor = new ColorRGBA (0.9f, 0.3f, 0.1f, 0.8f);
     ColorRGBA endColor = new ColorRGBA (0.45f, 0.4f, 0f, 0.5f);
