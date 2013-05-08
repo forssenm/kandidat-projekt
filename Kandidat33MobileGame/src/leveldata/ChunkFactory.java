@@ -343,7 +343,8 @@ public class ChunkFactory {
             case (0): // window
             case (1):
             case (2):
-                WindowFrame window = createWindowFrame(30f, windowHeight + 23f);
+                WindowFrame.Design windowDesign = random.nextBoolean() ? WindowFrame.Design.BIRD : WindowFrame.Design.FLOWERS;
+                WindowFrame window = createWindowFrame(30f, windowHeight + 23f, windowDesign);
                 staticObjects.attachChild(window);
                 if (P.useWindowLights) {
                     lights.add(this.createWindowLight(30f, windowHeight + 23f));
@@ -409,9 +410,9 @@ public class ChunkFactory {
     }
 
     /* Creates a windowframe on the wall at a given position */
-    private WindowFrame createWindowFrame(float positionX, float positionY) {
+    private WindowFrame createWindowFrame(float positionX, float positionY, WindowFrame.Design design) {
         Vector3f windowPos = new Vector3f(positionX, positionY, 0f);
-        WindowFrame window = new WindowFrame(this.assetManager, windowPos);
+        WindowFrame window = new WindowFrame(this.assetManager, windowPos, design);
         return window;
     }
 

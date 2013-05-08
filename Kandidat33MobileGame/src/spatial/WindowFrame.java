@@ -15,6 +15,17 @@ import variables.P;
  * @author jonatankilhamn
  */
 public class WindowFrame extends Node {
+    
+    public enum Design {
+        FLOWERS ("Models/window/flat-window-2.j3o"),
+        BIRD ("Models/window/flat-window-2b.j3o");
+
+        public final String modelSrc;
+
+        Design(String modelSrc) {
+            this.modelSrc = modelSrc;
+        }
+    }
 
     /**
      * This constructor creates a
@@ -24,10 +35,10 @@ public class WindowFrame extends Node {
      * @param assetManager is used to load the geometry and texture of
      * the <code>Window</code>.
      */
-    public WindowFrame(AssetManager assetManager, Vector3f position) {
+    public WindowFrame(AssetManager assetManager, Vector3f position, Design design ) {
         super("WindowFrame");
         
-        Node window = (Node)assetManager.loadModel("Models/window/flat-window-2.j3o");
+        Node window = (Node)assetManager.loadModel(design.modelSrc);
         window.scale(4.5f);
         window.rotate(90*FastMath.DEG_TO_RAD, 0f, 0f);
         
