@@ -134,7 +134,7 @@ public class ChunkFactory {
             case (-1): // starting platform
                 while (d < totalLength) {
                     spatials.add(createPlatform(d, height, PType.LONG));
-                    d += PType.LONG.length;
+                    d += PType.LONG.length+4;
                 }
                 if (level == P.noOfStartingChunks-1) {
                     d += dist;
