@@ -376,7 +376,7 @@ public class ChunkFactory {
         }
 
         if (level > 4 && level % 3 == 2) {
-            staticObjects.attachChild(createMileStone((int) (level - 4) / 3 + 1, 30f, windowHeight + 20f));
+            staticObjects.attachChild(createMileStone((int) (level - 4) / 3 + 1, 10f, windowHeight + 20f));
         }
         
         spatials.add(staticObjects);
