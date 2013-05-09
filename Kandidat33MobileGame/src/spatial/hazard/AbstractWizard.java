@@ -43,17 +43,19 @@ public abstract class AbstractWizard extends PlayerInteractor {
                 modelForWizard = (Node) assetManager.loadModel("Models/wizard/AO/wizard-with-ao.j3o");
             } else {
                 //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003-nolightcam.j3o"); // Nina's
-                modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair004MergeGreen.j3o");
+                //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair004MergeGreen.j3o");
+                modelForWizard = (Node) assetManager.loadModel("Models/wizard/wizard3/untitled21.j3o");
             }
             modelForWizard.scale(1.5f);
+            
         }
         
         Node model = (Node) modelForWizard.clone();
-
+        model.rotate(0,3.1f,0);
         model.setName("wizardSpatial");
         ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
         model.attachChild(sparkle);
-        sparkle.move(0.8f, 1.5f, -1f);   //what should be z effectively is x. what should be x is positive into the picture. Y is as is should be.
+        sparkle.move(-1.0f, 1.5f, 1.4f);  //tested in scenecomposer. Good fit for wizard3.
 
         return model;
 
@@ -88,5 +90,17 @@ public abstract class AbstractWizard extends PlayerInteractor {
     fire.getParticleInfluencer().setVelocityVariation(0.3f);
     return fire;
     }
-
+    
+    protected void redress(AssetManager a, ColorRGBA cloth, ColorRGBA particle) { //Changes wizard to black clothes and red particle
+        Material mat = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
+        mat.setBoolean("UseMaterialColors",true);
+        mat.setColor("Diffuse", cloth);
+        this.getChild("Cone.0002").setMaterial(mat);
+       
+        this.getChild("Cone.0012").setMaterial(mat);
+   
+        this.getChild("Cone.0021").setMaterial(mat);
+     
+        ((ParticleEmitter)this.getChild("spark")).setStartColor(particle);
+    }
 }

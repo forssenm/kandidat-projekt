@@ -27,7 +27,7 @@ public class BurstWizard extends AbstractWizard {
         this.attachChild(createModel(assetManager));
         this.addControl(createControl());
        
-        this.redress();
+       this.redress(assetManager, ColorRGBA.Black, ColorRGBA.Red);
        
         if(EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE) {
             this.attachChild(this.addWallOcclusion(assetManager, new Vector3f(0f, -1f, -4f)));
@@ -60,12 +60,6 @@ public class BurstWizard extends AbstractWizard {
         };
     }
     
-    private void redress() { //Changes wizard to black clothes and red particle
-        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        mat.setBoolean("UseMaterialColors",true);
-        mat.setColor("Diffuse", ColorRGBA.Black);
-        this.getChild("Cylinder.0031").setMaterial(mat);
-        ((ParticleEmitter)this.getChild("spark")).setStartColor(ColorRGBA.Red);
-    }
+    
 
 }
