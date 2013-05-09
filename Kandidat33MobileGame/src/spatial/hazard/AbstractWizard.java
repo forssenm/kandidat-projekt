@@ -51,7 +51,7 @@ public abstract class AbstractWizard extends PlayerInteractor {
         }
         
         Node model = (Node) modelForWizard.clone();
-        model.rotate(0,3.1f,0);
+        //model.rotate(0,3.1f,0);
         model.setName("wizardSpatial");
         ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
         model.attachChild(sparkle);
@@ -92,15 +92,17 @@ public abstract class AbstractWizard extends PlayerInteractor {
     }
     
     protected void redress(AssetManager a, ColorRGBA cloth, ColorRGBA particle) { //Changes wizard to black clothes and red particle
+        if (cloth != null) {
         Material mat = new Material(a, "Common/MatDefs/Light/Lighting.j3md");
         mat.setBoolean("UseMaterialColors",true);
+        //saknas något här för att materialet ska reflektera ljus på bra sätt. det blir"torrt"
         mat.setColor("Diffuse", cloth);
         this.getChild("Cone.0002").setMaterial(mat);
-       
         this.getChild("Cone.0012").setMaterial(mat);
-   
         this.getChild("Cone.0021").setMaterial(mat);
-     
+        }
+        if (particle != null) {
         ((ParticleEmitter)this.getChild("spark")).setStartColor(particle);
+        }
     }
 }
