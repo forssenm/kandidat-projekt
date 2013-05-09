@@ -55,7 +55,7 @@ public abstract class AbstractWizard extends PlayerInteractor {
         model.setName("wizardSpatial");
         ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
         model.attachChild(sparkle);
-        sparkle.move(-1.0f, 1.5f, 1.4f);  //tested in scenecomposer. Good fit for wizard3.
+        sparkle.move(-1.2f, 1.65f, 1.4f);  //tested in scenecomposer. Good fit for wizard3.
 
         return model;
 
