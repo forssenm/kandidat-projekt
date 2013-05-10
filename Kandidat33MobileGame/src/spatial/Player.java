@@ -76,6 +76,9 @@ public class Player extends Node implements AnimEventListener {
             this.attachChild(floorOcclusion);
         } else {
             playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
+            Material material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+            material.setColor("Diffuse", ColorRGBA.White);
+            playerModel.setMaterial(material);
         }
         control = playerModel.getChild("Plane").getControl(AnimControl.class);
         channel = control.createChannel();
