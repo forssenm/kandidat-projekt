@@ -30,7 +30,7 @@ public class SlowDownPowerup extends PlayerInteractor {
     @Override
     protected Spatial createModel(AssetManager assetManager) {
         Node fireball = new Node("modelnode");
-        Node model = (Node) assetManager.loadModel("Models/pyramidred/pyramidred.j3o");
+        Node model = (Node) assetManager.loadModel("Models/powerups/pyramidred/pyramidred.j3o");
         model.setName("model");
       //  model.scale(1.5f);
         fireball.attachChild(model);

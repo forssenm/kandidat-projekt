@@ -33,7 +33,7 @@ public class SpeedPowerup extends PlayerInteractor {
     protected Spatial createModel(AssetManager assetManager) {
         Node modelNode = new Node("modelnode");
         
-        Node model = (Node)assetManager.loadModel("Models/icosphere/ico001.j3o");
+        Node model = (Node)assetManager.loadModel("Models/powerups/icosphere/ico001.j3o");
         model.setName("model");
         ParticleEmitter glow = getPowerupParticleEmitter(assetManager);
         modelNode.attachChild(glow);

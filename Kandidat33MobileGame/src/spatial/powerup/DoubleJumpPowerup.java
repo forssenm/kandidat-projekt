@@ -34,7 +34,7 @@ public class DoubleJumpPowerup extends PlayerInteractor {
         fireball.setName ("fireball");
         
        
-        Node model = (Node) assetManager.loadModel("Models/torus/torus002black.j3o");
+        Node model = (Node) assetManager.loadModel("Models/powerups/torus/torus002black.j3o");
         model.setName("model");
         model.move(-0.2f, 0.1f, 1.2f);
         model.scale(0.9f);
