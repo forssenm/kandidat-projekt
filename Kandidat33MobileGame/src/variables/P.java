@@ -41,8 +41,8 @@ public class P {
     public static final ColorRGBA sunColor = new ColorRGBA(0.7f,0.7f,0.7f,0f);
     
     public static boolean usePlayerSpot = true;
-    public static boolean useWizardLights = true;
-    public static boolean useWindowLights = true;
+    public static boolean useWizardLights = false;
+    public static boolean useWindowLights = false;
     public static boolean useTorchLights = true;
                 
     public static int screenWidth;

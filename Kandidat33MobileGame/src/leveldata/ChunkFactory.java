@@ -433,6 +433,12 @@ public class ChunkFactory {
 
     /* Creates a spotlight shining through a window at a given position */
     private Light createWindowLight(float positionX, float positionY) {
+        PointLight light = new PointLight();
+        light.setRadius(75);
+        light.setPosition(new Vector3f(positionX, positionY, 0f));
+        light.setColor(ColorRGBA.Red);
+        return light;
+        /*
         SpotLight windowLight = new SpotLight();
         windowLight.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
         windowLight.setSpotOuterAngle(45f * FastMath.DEG_TO_RAD);
@@ -442,6 +448,7 @@ public class ChunkFactory {
         windowLight.setDirection(P.windowLightDirection);
         windowLight.setSpotRange(100f);
         return windowLight;
+        * */
     }
 
     /* Creates a pointlight, to use with a torch */
