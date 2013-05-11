@@ -45,7 +45,8 @@ public abstract class AbstractWizard extends PlayerInteractor {
             } else {
                 //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003-nolightcam.j3o"); // Nina's
                 //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair004MergeGreen.j3o");
-                modelForWizard = (Node) assetManager.loadModel("Models/wizard/wizard3/untitled21.j3o");
+                //modelForWizard = (Node) assetManager.loadModel("Models/wizard/wizard3/untitled21.j3o");
+                modelForWizard = (Node) assetManager.loadModel("Models/wizard/wizard3/new/untitled21b-textures.j3o");
             }
             modelForWizard.scale(1.5f);
             modelForWizard.rotate(0, FastMath.DEG_TO_RAD*180, 0);
