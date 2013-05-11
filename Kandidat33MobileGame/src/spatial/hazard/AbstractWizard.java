@@ -8,6 +8,7 @@ import com.jme3.light.SpotLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -47,7 +48,7 @@ public abstract class AbstractWizard extends PlayerInteractor {
                 modelForWizard = (Node) assetManager.loadModel("Models/wizard/wizard3/untitled21.j3o");
             }
             modelForWizard.scale(1.5f);
-            
+            modelForWizard.rotate(0, FastMath.DEG_TO_RAD*180, 0);
         }
         
         Node model = (Node) modelForWizard.clone();
