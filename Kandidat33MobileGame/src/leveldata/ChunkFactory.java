@@ -435,8 +435,8 @@ public class ChunkFactory {
     private Light createWindowLight(float positionX, float positionY) {
         PointLight light = new PointLight();
         light.setRadius(75);
-        light.setPosition(new Vector3f(positionX, positionY, 0f));
-        light.setColor(ColorRGBA.Red);
+        light.setPosition(new Vector3f(positionX, positionY, -P.platformWidth / 2 + 0.2f));
+        light.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
         return light;
         /*
         SpotLight windowLight = new SpotLight();
