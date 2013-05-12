@@ -52,6 +52,10 @@ public class Torch extends Node {
         if (EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE || EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.INTERVAL_POST_PROCESSING) {
             this.attachChild(this.addWallOcclusion(assetManager));
         }
+        
+        if (EffectSettings.light == EffectSettings.Light.TEXTURES || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW) {
+            this.attachChild(this.addWallLighting(assetManager));
+        }
 
     }
     
@@ -146,6 +150,18 @@ public class Torch extends Node {
         wall.setLocalTranslation(0f, -2.8f, -0.5f);
         Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/torch/AO/wall-ao-small.png"));
+        wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
+        wall.setMaterial(wallMaterial);
+        //wall.setQueueBucket(RenderQueue.Bucket.Transparent);
+        return wall;
+    }
+    
+    private Geometry addWallLighting(AssetManager assetManager) {
+        Box wallLight = new Box(5f, 5f, 0f);
+        Geometry wall = new Geometry("wallLighting", wallLight);
+        wall.setLocalTranslation(0f, 1.8f, -0.4f);
+        Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/torch/Light/light.png"));
         wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
         wall.setMaterial(wallMaterial);
         //wall.setQueueBucket(RenderQueue.Bucket.Transparent);

@@ -33,6 +33,7 @@ import spatial.powerup.DoubleJumpPowerup;
 import spatial.powerup.InvulnerabilityPowerup;
 import spatial.powerup.SlowDownPowerup;
 import spatial.powerup.SpeedPowerup;
+import variables.EffectSettings;
 import variables.P;
 
 /**
@@ -355,7 +356,7 @@ public class ChunkFactory {
             case (5):
                 Torch torch = createTorch(15, windowHeight + 15);
                 staticObjects.attachChild(torch);
-                if (P.useTorchLights) {
+                if (P.useTorchLights && EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
                     lights.add(this.createTorchLight(15f, windowHeight + 15f));
                 }
                 break;
