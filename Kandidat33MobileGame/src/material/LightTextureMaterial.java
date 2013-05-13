@@ -37,7 +37,12 @@ public class LightTextureMaterial extends Material {
     @Override
     public void render(Geometry geom, RenderManager rm) {
         System.out.println("own render");
-        //this.setInt("Time", (int)(new Date().getTime() - startTime.getTime())/100);
+        int time = (int)(new Date().getTime() - startTime.getTime())/100;
+        float alpha = 1;
+        if (time % 2 == 0) {
+            alpha = 0;
+        }
+        this.setFloat("Alpha", alpha);
         super.render(geom, rm);
         
     }
