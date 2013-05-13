@@ -36,9 +36,16 @@ public class LightTextureMaterial extends Material {
     @Override
     public void render(Geometry geom, RenderManager rm) {
         int time = (int)(new Date().getTime() - startTime.getTime())/100;
+        int mod = time % 15;
         float alpha = 1;
-        if (time % 2 == 0) {
-            alpha = 0;
+        if (mod == 0 || mod == 7) {
+            alpha = 0.5f;
+        } else if (mod == 1 || mod == 11) {
+            alpha = 0.625f;
+        } else if (mod == 9 || mod == 6 || mod == 12) {
+            alpha = 0.75f;
+        } else if (mod == 8 || mod == 4 || mod == 13 || mod == 10) {
+            alpha = 0.875f;
         }
         this.setFloat("Alpha", alpha);
         super.render(geom, rm);
