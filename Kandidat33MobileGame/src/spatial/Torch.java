@@ -6,6 +6,7 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
@@ -160,11 +161,11 @@ public class Torch extends Node {
         Box wallLight = new Box(5f, 5f, 0f);
         Geometry wall = new Geometry("wallLighting", wallLight);
         wall.setLocalTranslation(0f, 1.8f, -0.4f);
-        Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Material wallMaterial = new Material(assetManager, "Materials/UnshadedMovingTexture.j3md");
         wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/torch/Light/light.png"));
         wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
         wall.setMaterial(wallMaterial);
-        //wall.setQueueBucket(RenderQueue.Bucket.Transparent);
+        wall.setQueueBucket(RenderQueue.Bucket.Transparent);
         return wall;
     }
     
