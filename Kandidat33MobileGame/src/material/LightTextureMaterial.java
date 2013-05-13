@@ -27,7 +27,6 @@ public class LightTextureMaterial extends Material {
 
     public LightTextureMaterial(AssetManager contentMan, String defName) {
         super(contentMan, defName);
-        System.out.println("own material");
     }
 
     public LightTextureMaterial() {
@@ -36,7 +35,6 @@ public class LightTextureMaterial extends Material {
     
     @Override
     public void render(Geometry geom, RenderManager rm) {
-        System.out.println("own render");
         int time = (int)(new Date().getTime() - startTime.getTime())/100;
         float alpha = 1;
         if (time % 2 == 0) {
