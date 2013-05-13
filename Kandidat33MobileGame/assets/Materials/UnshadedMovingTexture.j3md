@@ -1,17 +1,20 @@
-MaterialDef Unshaded {
+MaterialDef UnshadedMovingTexture {
 
     MaterialParameters {
         Texture2D ColorMap
         Texture2D LightMap
-        Color Color
-        Boolean VertexColor
-        Boolean SeperateTexCoord
-        Float Time
+        Color Color (Color)
+        Boolean VertexColor (UseVertexColor)
+        Boolean SeparateTexCoord
 
         // Texture of the glowing parts of the material
         Texture2D GlowMap
         // The glow color of the object
         Color GlowColor
+
+        // For hardware skinning
+        Int NumberOfBones
+        Matrix4Array BoneMatrices
     }
 
     Technique {
@@ -23,12 +26,16 @@ MaterialDef Unshaded {
         }
 
         Defines {
-            SEPERATE_TEXCOORD : SeperateTexCoord
+            SEPARATE_TEXCOORD : SeparateTexCoord
             HAS_COLORMAP : ColorMap
             HAS_LIGHTMAP : LightMap
             HAS_VERTEXCOLOR : VertexColor
             HAS_COLOR : Color
+            NUM_BONES : NumberOfBones
         }
+    }
+
+    Technique {
     }
 
       Technique PreNormalPass {
@@ -43,9 +50,7 @@ MaterialDef Unshaded {
             }
 
             RenderState {
-
             }
-
         }
 
 
@@ -59,12 +64,10 @@ MaterialDef Unshaded {
         }
 
         Defines {
+            NEED_TEXCOORD1
             HAS_GLOWMAP : GlowMap
             HAS_GLOWCOLOR : GlowColor
+            NUM_BONES : NumberOfBones
         }
     }
-
-    Technique FixedFunc {
-    }
-
 }
