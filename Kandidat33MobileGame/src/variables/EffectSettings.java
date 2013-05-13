@@ -14,6 +14,6 @@ public class EffectSettings {
     }
     
     public enum Light {
-        STANDARD_LIGHTING, NONE, TEXTURES_AND_WINDOW, TEXTURES;
+        STANDARD_LIGHTING, NONE, TEXTURES_AND_WINDOW, TEXTURES, TEXTURES_SMALL_LIGHTS;
     }
 }

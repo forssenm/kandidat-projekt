@@ -55,7 +55,7 @@ public class Torch extends Node {
             this.attachChild(this.addWallOcclusion(assetManager));
         }
         
-        if (EffectSettings.light == EffectSettings.Light.TEXTURES || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW) {
+        if (EffectSettings.light == EffectSettings.Light.TEXTURES || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
             this.attachChild(this.addWallLighting(assetManager));
         }
 
