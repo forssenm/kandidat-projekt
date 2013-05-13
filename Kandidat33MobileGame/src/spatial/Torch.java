@@ -11,6 +11,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import java.util.Random;
+import material.LightTextureMaterial;
 import variables.EffectSettings;
 import variables.P;
 
@@ -161,7 +162,7 @@ public class Torch extends Node {
         Box wallLight = new Box(5f, 5f, 0f);
         Geometry wall = new Geometry("wallLighting", wallLight);
         wall.setLocalTranslation(0f, 1.8f, -0.4f);
-        Material wallMaterial = new Material(assetManager, "Materials/UnshadedMovingTexture.j3md");
+        Material wallMaterial = new LightTextureMaterial(assetManager, "Materials/UnshadedMovingTexture.j3md");
         wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/torch/Light/light.png"));
         wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
         wall.setMaterial(wallMaterial);
