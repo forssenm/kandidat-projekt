@@ -15,71 +15,68 @@ import variables.EffectSettings;
 import variables.EffectSettings.AmbientOcclusion;
 
 /**
- * An abstract AbstractFireball. Any class extending this one will make a PlayerInteractor
- * that looks like a fireball.
- * 
+ * An abstract AbstractFireball. Any class extending this one will make a
+ * PlayerInteractor that looks like a fireball.
+ *
  * @author jonatankilhamn
  */
 public abstract class AbstractBat extends PlayerInteractor implements AnimEventListener {
-    
+
     //animation
     protected AnimChannel channel;
     protected AnimControl control;
-    
-    private static Node modelForBat = null;
-    
+
     @Override
     protected Spatial createModel(AssetManager assetManager) {
-        
-        if (modelForBat == null) {
-            if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
-                modelForBat = (Node) assetManager.loadModel("Models/bat/AO/bat-with-ao.j3o");
-            } else {
-                modelForBat = (Node) assetManager.loadModel("Models/bat/bat2-anim3-smooth.j3o");
-            }
-            Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-            mat.setBoolean("UseMaterialColors",true);
-            mat.setColor("Diffuse", ColorRGBA.Orange);
 
-            modelForBat.setMaterial(mat);
-            modelForBat.rotate (+1.6f,+1.4f,0); //flying towards player, slightly tilted up
-            
+        Node model;
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
+            model = (Node) assetManager.loadModel("Models/bat/AO/bat-with-ao.j3o");
+        } else {
+            model = (Node) assetManager.loadModel("Models/bat/bat2-anim3-smooth.j3o");
         }
-        Node model = (Node) modelForBat.clone();
+        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat.setBoolean("UseMaterialColors", true);
+        mat.setColor("Diffuse", ColorRGBA.Orange);
 
+        model.setMaterial(mat);
+        model.rotate(+1.6f, +1.4f, 0); //flying towards player, slightly tilted up
+        
         control = model.getChild("Sphere").getControl(AnimControl.class);
 
         channel = control.createChannel();
-        
+
         control.addListener(this);
-        
+
         channel.setAnim("ArmatureAction");
         channel.setLoopMode(LoopMode.Loop);
-        
-        int mod = (new Random().nextInt(8)-3); // from -3 to +4
-        model.scale(1f-0.05f*mod); //smaller flap faster
-        channel.setSpeed(2f+0.4f*mod);
-        
-        
+
+        int mod = (new Random().nextInt(8) - 3); // from -3 to +4
+        model.scale(1f - 0.05f * mod); //smaller flap faster
+        channel.setSpeed(2f + 0.4f * mod);
+
+
         return model;
 
     }
     //animation function that must be implemented even if unused
+
     public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
     }
     //animation function that must be implemented even if unused
+
     public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
     }
-    
+
     @Deprecated
-    public Material getRandomColorMaterial (AssetManager assetManager) {
-         Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-                  
-         Random r = new Random();
-         int i = r.nextInt(5);
-         mat.setBoolean("UseMaterialColors",true);
-         ColorRGBA[] c = {ColorRGBA.Cyan, ColorRGBA.Red, ColorRGBA.White, ColorRGBA.Orange, ColorRGBA.Yellow};
-         mat.setColor("Diffuse", c[i]);
-         return mat;
+    public Material getRandomColorMaterial(AssetManager assetManager) {
+        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+
+        Random r = new Random();
+        int i = r.nextInt(5);
+        mat.setBoolean("UseMaterialColors", true);
+        ColorRGBA[] c = {ColorRGBA.Cyan, ColorRGBA.Red, ColorRGBA.White, ColorRGBA.Orange, ColorRGBA.Yellow};
+        mat.setColor("Diffuse", c[i]);
+        return mat;
     }
 }

@@ -28,7 +28,6 @@ import variables.EffectSettings.AmbientOcclusion;
  */
 public abstract class AbstractWizard extends PlayerInteractor {
     
-    private static Node modelForWizard;
     protected SpotLight spotlight;
     
     public AbstractWizard(SpotLight spotlight) {
@@ -39,20 +38,19 @@ public abstract class AbstractWizard extends PlayerInteractor {
     @Override
     protected Spatial createModel(AssetManager assetManager) {
         
-        if (modelForWizard == null) {
-            if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
-                modelForWizard = (Node) assetManager.loadModel("Models/wizard/AO/wizard-with-ao.j3o");
-            } else {
-                //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003-nolightcam.j3o"); // Nina's
-                //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair004MergeGreen.j3o");
-                //modelForWizard = (Node) assetManager.loadModel("Models/wizard/wizard3/untitled21.j3o");
-                modelForWizard = (Node) assetManager.loadModel("Models/wizard/wizard3/new/untitled21b-textures.j3o");
-            }
-            modelForWizard.scale(1.5f);
-            modelForWizard.rotate(0, FastMath.DEG_TO_RAD*180, 0);
+        Node model;
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
+            model = (Node) assetManager.loadModel("Models/wizard/AO/wizard-with-ao.j3o");
+        } else {
+            //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003-nolightcam.j3o"); // Nina's
+            //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair004MergeGreen.j3o");
+            //modelForWizard = (Node) assetManager.loadModel("Models/wizard/wizard3/untitled21.j3o");
+            model = (Node) assetManager.loadModel("Models/wizard/wizard3/new/untitled21b-textures.j3o");
         }
-        
-        Node model = (Node) modelForWizard.clone();
+        model.scale(1.5f);
+        model.rotate(0, FastMath.DEG_TO_RAD * 180, 0);
+
+
         //model.rotate(0,3.1f,0);
         model.setName("wizardSpatial");
         ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
