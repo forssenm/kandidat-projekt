@@ -21,8 +21,6 @@ import control.PlayerInteractorControl;
  */
 public class Plant extends PlayerInteractor implements AnimEventListener {
 
-    private static Node modelForPlant;
-    private static Node modelForFlowerPlant;
     private AnimChannel channel;
     private AnimControl control;
     private static final CollisionShape collisionShape =
@@ -33,7 +31,6 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
         LEAVES ("Models/plant/plant-new.j3o", 6f),
         FLOWERS ("Models/plant/plant-new-2.j3o", 3.5f);
 
-        public Node model;
         public final String modelSrc;
         public final float scale;
 
@@ -52,28 +49,14 @@ public class Plant extends PlayerInteractor implements AnimEventListener {
      * the <code>Window</code>.
      */
     public Plant(AssetManager assetManager, Vector3f position, Type type) {
-        //super("Plant");
-        
-        if (Type.LEAVES.model == null) {
-          //  modelForPlant = (Node)assetManager.loadModel("Models/plant/plant002arm007.j3o");
-             // modelForPlant = (Node)assetManager.loadModel("Models/plant/New Folder/untitled7.j3o");
-              
-              Type.LEAVES.model = (Node)assetManager.loadModel(Type.LEAVES.modelSrc).scale(Type.LEAVES.scale);
-              Type.FLOWERS.model = (Node)assetManager.loadModel(Type.FLOWERS.modelSrc).scale(Type.FLOWERS.scale);
-        //modelForPlant.rotate(0, 2f, 0);
-        
-        }
-        
-        Node model = (Node)type.model.clone();
+        Node model = (Node)assetManager.loadModel(type.modelSrc).scale(type.scale);
         model.setName("model");
         
-       // control = model.getChild("Sphere").getControl(AnimControl.class);
-         control = model.getChild("Plane").getControl(AnimControl.class);
+        control = model.getChild("Plane").getControl(AnimControl.class);
         channel = control.createChannel(); 
         control.addListener(this);
         
         channel.setLoopMode(LoopMode.DontLoop);
-        
         
         this.attachChild(model);
         model.move(0,modelHeight/2,-2.5f);
