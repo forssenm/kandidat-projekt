@@ -1,0 +1,25 @@
+Material MyMaterial : Materials/MultiColoredLighting.j3md {
+    MaterialParameters {
+        DiffuseMap : Flip Repeat Models/ghost/ghost04-014cloth003armature003UV001.png
+        Minnaert : false
+        Specular : 0.14731379 0.14731379 0.14731379 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        UseMaterialColors : true
+        ParallaxHeight : 0.05
+        Ambient : 0.0 0.0 0.0 1.0
+        Shininess : 20.0
+        WardIso : false
+        LightTexture2 : Models/window/Light/light_colors_test.png
+    }
+    AdditionalRenderState {
+      FaceCull Off
+      Wireframe Off
+      DepthWrite On
+      PolyOffset 0.0 0.0
+      AlphaTestFalloff 0.0
+      Blend Off
+      PointSprite Off
+      ColorWrite On
+      DepthTest On
+    }
+}

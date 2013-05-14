@@ -4,6 +4,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.FastMath;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
@@ -24,22 +25,26 @@ public class WindowFrame extends Node {
         FLOWERS ("Models/window/flat-window-2.j3o",
                 "Models/window/Light/flat-window-2.j3o",
                 "Models/window/Light/texture1_light.png",
-                "Models/window/Light/texture1_light_colors.png"),
+                "Models/window/Light/texture1_light_colors.png",
+                new Vector2f(4,6)),
         BIRD ("Models/window/flat-window-2b.j3o",
                 "Models/window/Light/flat-window-2b.j3o",
                 "Models/window/Light/texture2_light.png",
-                "Models/window/Light/texture2_light_colors.png");
+                "Models/window/Light/texture2_light_colors.png",
+                new Vector2f(4,6));
 
         public final String modelSrc;
         public final String lightModelSrc;
         public final String wallLightSrc;
         public final String lightColorsSrc;
+        public final Vector2f lightColorsDimensions;
 
-        Design(String modelSrc, String lightModelSrc, String wallLightSrc, String lightColorsSrc) {
+        Design(String modelSrc, String lightModelSrc, String wallLightSrc, String lightColorsSrc, Vector2f lightColorsDimensions) {
             this.modelSrc = modelSrc;
             this.lightModelSrc = lightModelSrc;
             this.wallLightSrc = wallLightSrc;
             this.lightColorsSrc = lightColorsSrc;
+            this.lightColorsDimensions = lightColorsDimensions;
         }
     }
     
@@ -72,7 +77,7 @@ public class WindowFrame extends Node {
         this.setLocalTranslation(position.x, position.y, -P.platformWidth-P.playerZOffset-3f);
         this.setShadowMode(ShadowMode.Off);   
         
-        if (EffectSettings.light == EffectSettings.Light.TEXTURES) {
+        if (EffectSettings.light == EffectSettings.Light.TEXTURES || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
             this.attachChild(this.addWallLighting(assetManager));
         }
 

@@ -12,6 +12,7 @@ import com.jme3.scene.Spatial;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import light.MultiColoredLight;
 import spatial.MileStone;
 import spatial.Plant;
 import spatial.Platform;
@@ -24,6 +25,7 @@ import spatial.hazard.BurstWizard;
 import spatial.hazard.CalculatingWizard;
 import spatial.hazard.LinearBat;
 import spatial.PlayerInteractor;
+import spatial.WindowFrame.Design;
 import spatial.hazard.LinearBat;
 import spatial.hazard.LinearFireball;
 import spatial.hazard.SingleShotWizard;
@@ -347,8 +349,8 @@ public class ChunkFactory {
                 WindowFrame.Design windowDesign = random.nextBoolean() ? WindowFrame.Design.BIRD : WindowFrame.Design.FLOWERS;
                 WindowFrame window = createWindowFrame(30f, windowHeight + 23f, windowDesign);
                 staticObjects.attachChild(window);
-                if (P.useWindowLights) {
-                    lights.add(this.createWindowLight(30f, windowHeight + 23f));
+                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
+                    lights.add(this.createWindowLight(30f, windowHeight + 23f, windowDesign));
                 }
                 break;
             case (3): // torch
@@ -356,7 +358,7 @@ public class ChunkFactory {
             case (5):
                 Torch torch = createTorch(15, windowHeight + 15);
                 staticObjects.attachChild(torch);
-                if (P.useTorchLights && EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
+                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
                     lights.add(this.createTorchLight(15f, windowHeight + 15f));
                 }
                 break;
@@ -433,10 +435,10 @@ public class ChunkFactory {
 
 
     /* Creates a spotlight shining through a window at a given position */
-    private Light createWindowLight(float positionX, float positionY) {
-        PointLight light = new PointLight();
+    private Light createWindowLight(float positionX, float positionY, Design design) {
+        MultiColoredLight light = new MultiColoredLight(assetManager, design);
         light.setRadius(75);
-        light.setPosition(new Vector3f(positionX, positionY, -P.platformWidth / 2 + 0.2f));
+        light.setPosition(new Vector3f(positionX, positionY-5, -P.platformWidth / 2 + 0.2f));
         light.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
         return light;
         /*
