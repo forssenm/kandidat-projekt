@@ -170,6 +170,10 @@ void main(){
    vec4 wvLightPos = (g_ViewMatrix * vec4(g_LightPosition.xyz,clamp(g_LightColor.w,0.0,1.0)));
    wvLightPos.w = g_LightPosition.w;
    vec4 lightColor = g_LightColor;
+    //vec4 lightColor = vec4(0.7,1,0.5,1);
+    //vec4 lightColor = texture2D(m_LightTexture2, vec2(0.7f,0.7f));
+   //vec4 lightColor = g_LightColor * vec4(1,1,0,1); 
+//vec4 lightColor = g_LightColor * vec4(0,1,0,1);
     //lightColor = texture2D(m_LightTexture2, vec2(0.7f,0.7f));
     //lightColor = vec4(1,1,1,1);
 
