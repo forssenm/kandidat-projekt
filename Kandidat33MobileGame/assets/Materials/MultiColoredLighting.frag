@@ -275,7 +275,7 @@ void main(){
             light.y = 1.0;
        #endif
         //vec3 directionToLight = normalize(g_LightPosition.xyz - viewSpacePosition);
-       vec4 lightColor2 = texture2D(m_LightTexture2, normalize(lightVec));
+       vec4 lightColor2 = texture2D(m_LightTexture2, vec2(0.5f,0.5f)*normalize(-lightVec.xy)+vec2(0.5f,0.5f));
        gl_FragColor.rgb =  AmbientSum       * diffuseColor.rgb  +
                            DiffuseSum.rgb   * diffuseColor.rgb  * lightColor2.rgb * vec3(light.x) +
                            SpecularSum2.rgb * specularColor.rgb * lightColor2.rgb * vec3(light.y);
