@@ -8,6 +8,9 @@ uniform mat4 g_WorldViewMatrix;
 uniform mat3 g_NormalMatrix;
 uniform mat4 g_ViewMatrix;
 
+varying vec3 wvPosition;
+varying vec4 wvLightPos;
+
 uniform sampler2D g_LightTexture;
 uniform vec2 g_LightTextureSize;
 uniform sampler2D m_LightTexture2;
@@ -36,6 +39,7 @@ attribute vec2 inTexCoord;
 attribute vec3 inNormal;
 
 varying vec3 lightVec;
+varying float spotFallOff;
 //varying vec4 spotVec;
 
 #ifdef VERTEX_COLOR
@@ -119,7 +123,7 @@ void lightComputeDir(in vec3 worldPos, in vec4 color, in vec4 position, out vec4
 vec2 computeLighting(in vec3 wvPos, in vec3 wvNorm, in vec3 wvViewDir, in vec4 wvLightPos){
      vec4 lightDir;
      lightComputeDir(wvPos, g_LightColor, wvLightPos, lightDir);
-     float spotFallOff = 1.0;
+     spotFallOff = 1.0;
      if(g_LightDirection.w != 0.0){
           vec3 L=normalize(lightVec.xyz);
           vec3 spotdir = normalize(g_LightDirection.xyz);
@@ -158,7 +162,7 @@ void main(){
       texCoord2 = inTexCoord2;
    #endif
 
-   vec3 wvPosition = (g_WorldViewMatrix * modelSpacePos).xyz;
+   wvPosition = (g_WorldViewMatrix * modelSpacePos).xyz;
    vec3 wvNormal  = normalize(g_NormalMatrix * modelSpaceNorm);
    vec3 viewDir = normalize(-wvPosition);
   
@@ -167,7 +171,7 @@ void main(){
        //vec4 wvLightPos = (g_ViewMatrix * vec4(lightPos.xyz, lightColor.w));
        //wvLightPos.w = lightPos.w;
 
-   vec4 wvLightPos = (g_ViewMatrix * vec4(g_LightPosition.xyz,clamp(g_LightColor.w,0.0,1.0)));
+   wvLightPos = (g_ViewMatrix * vec4(g_LightPosition.xyz,clamp(g_LightColor.w,0.0,1.0)));
    wvLightPos.w = g_LightPosition.w;
    vec4 lightColor = g_LightColor;
     //vec4 lightColor = vec4(0.7,1,0.5,1);
