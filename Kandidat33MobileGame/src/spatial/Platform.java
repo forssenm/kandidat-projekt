@@ -3,6 +3,7 @@ package spatial;
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.material.MatParam;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.FastMath;
@@ -12,7 +13,9 @@ import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import com.jme3.shader.VarType;
 import com.jme3.texture.Texture;
+import material.MultiColoredLightMaterial;
 import variables.EffectSettings;
 import variables.EffectSettings.AmbientOcclusion;
 import variables.P;
@@ -103,8 +106,16 @@ public class Platform extends Node {
     
     private static void initModels(AssetManager assetManager) {
         modelForShortPlatform = (Node) assetManager.loadModel("Models/platform/untitled8-new.j3o");
-        modelForMediumPlatform = (Node) assetManager.loadModel("Models/platform/untitled24.j3o");
-        modelForLongPlatform = (Node) assetManager.loadModel("Models/platform/untitled36.j3o");
+        Material newMaterial = new MultiColoredLightMaterial(assetManager, "Materials/MultiColoredLighting.j3md");
+        newMaterial.setTexture("LightTexture", assetManager.loadTexture("Models/window/Light/light_colors_test.png"));
+        Geometry platform = ((Geometry)((Node)modelForShortPlatform.getChild("Cube")).getChild("Cube1"));
+        for (MatParam p : platform.getMaterial().getParams()) {
+            System.out.println(p + " " + p.getName() + " " + p.getVarType() + " " + p.getValue());
+            //newMaterial.setParam(p.getName(), p.getVarType(), p.getValue());
+        }
+        platform.setMaterial(newMaterial);
+        //modelForMediumPlatform = (Node) assetManager.loadModel("Models/platform/untitled24.j3o");
+        //modelForLongPlatform = (Node) assetManager.loadModel("Models/platform/untitled36.j3o");
     
     }
 
