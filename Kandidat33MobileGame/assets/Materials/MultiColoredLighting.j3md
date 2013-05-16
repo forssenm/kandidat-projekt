@@ -132,7 +132,7 @@ MaterialDef Phong Lighting {
         Int NumberOfBones
         Matrix4Array BoneMatrices
 
-        Texture2D LightTexture2
+        Texture2D LightTexture
     }
 
     Technique {
@@ -149,8 +149,6 @@ MaterialDef Phong Lighting {
             ViewMatrix
             CameraPosition
             WorldMatrix
-            LightTexture
-            LightTextureSize
         }
 
         Defines {

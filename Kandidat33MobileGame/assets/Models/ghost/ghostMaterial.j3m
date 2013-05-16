@@ -9,7 +9,7 @@ Material MyMaterial : Materials/MultiColoredLighting.j3md {
         Ambient : 0.0 0.0 0.0 1.0
         Shininess : 20.0
         WardIso : false
-        LightTexture2 : Models/window/Light/light_colors_test.png
+        LightTexture : Models/window/Light/light_colors_test.png
     }
     AdditionalRenderState {
       FaceCull Off

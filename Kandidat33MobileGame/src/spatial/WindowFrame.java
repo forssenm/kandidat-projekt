@@ -25,11 +25,13 @@ public class WindowFrame extends Node {
         FLOWERS ("Models/window/flat-window-2.j3o",
                 "Models/window/Light/flat-window-2.j3o",
                 "Models/window/Light/texture1_light.png",
+                //"Models/window/Light/test1.png",
                 "Models/window/Light/texture1_light_colors.png",
                 new Vector2f(4,6)),
         BIRD ("Models/window/flat-window-2b.j3o",
                 "Models/window/Light/flat-window-2b.j3o",
                 "Models/window/Light/texture2_light.png",
+                //"Models/window/Light/test2.png",
                 "Models/window/Light/texture2_light_colors.png",
                 new Vector2f(4,6));
 

@@ -14,6 +14,7 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.math.Vector4f;
 import com.jme3.renderer.queue.RenderQueue;
@@ -97,8 +98,9 @@ public class Player extends Node implements AnimEventListener {
             playerModel.setLocalTranslation(0f,2.8f+hoverHeight,0f); 
             Material newMaterial = new MultiColoredLightMaterial(assetManager, "Materials/MultiColoredLighting.j3md");
             //Material standardMaterial = assetManager.loadMaterial("Models/ghost/ghostMaterial.j3m");
+            
             newMaterial.setTexture("DiffuseMap", assetManager.loadTexture("Models/ghost/ghost04-014cloth003armature003UV001.png"));
-            newMaterial.setTexture("LightTexture2", assetManager.loadTexture("Models/window/Light/light_colors_test.png"));
+            newMaterial.setTexture("LightTexture", assetManager.loadTexture("Models/window/Light/light_colors_test.png"));
             newMaterial.setBoolean("UseMaterialColors", true);
             newMaterial.setVector4("Specular", new Vector4f( 0.14731379f,0.14731379f,0.14731379f,1.0f));
             newMaterial.setVector4("Ambient", new Vector4f( 0, 0, 0, 1));

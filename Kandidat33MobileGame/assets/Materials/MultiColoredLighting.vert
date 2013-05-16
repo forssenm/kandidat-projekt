@@ -91,7 +91,7 @@ varying float spotFallOff;
 
 // JME3 lights in world space
 void lightComputeDir(in vec3 worldPos, in vec4 color, in vec4 position, out vec4 lightDir){
-    float posLight = step(0.5, color.w);
+    float posLight = step(0.5, (color.w == 5) ? 1.0f : color.w);
     vec3 tempVec = position.xyz * sign(posLight - 0.5) - (worldPos * posLight);
     lightVec = tempVec;  
     #ifdef ATTENUATION
@@ -171,7 +171,7 @@ void main(){
        //vec4 wvLightPos = (g_ViewMatrix * vec4(lightPos.xyz, lightColor.w));
        //wvLightPos.w = lightPos.w;
 
-   wvLightPos = (g_ViewMatrix * vec4(g_LightPosition.xyz,clamp(g_LightColor.w,0.0,1.0)));
+   wvLightPos = (g_ViewMatrix * vec4(g_LightPosition.xyz,clamp(g_LightColor.w == 5 ? 1.0f : g_LightColor.w,0.0,1.0)));
    wvLightPos.w = g_LightPosition.w;
    vec4 lightColor = g_LightColor;
     //vec4 lightColor = vec4(0.7,1,0.5,1);

@@ -439,7 +439,8 @@ public class ChunkFactory {
         MultiColoredLight light = new MultiColoredLight(assetManager, design);
         light.setRadius(75);
         light.setPosition(new Vector3f(positionX, positionY-5, -P.platformWidth / 2 + 0.2f));
-        light.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
+        light.setColor(ColorRGBA.White);
+        //light.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
         return light;
         /*
         SpotLight windowLight = new SpotLight();

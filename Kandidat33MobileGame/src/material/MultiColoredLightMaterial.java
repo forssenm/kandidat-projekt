@@ -39,6 +39,8 @@ public class MultiColoredLightMaterial extends Material {
     private static final RenderState additiveLight = new RenderState();
     private static final Quaternion nullDirLight = new Quaternion(0, -1, 0, -1);
     
+    AssetManager assetManager;
+    
     static {
         additiveLight.setBlendMode(RenderState.BlendMode.AlphaAdditive);
         additiveLight.setDepthWrite(false);
@@ -50,7 +52,7 @@ public class MultiColoredLightMaterial extends Material {
 
     public MultiColoredLightMaterial(AssetManager contentMan, String defName) {
         super(contentMan, defName);
-        System.out.println("own material");
+        this.assetManager = contentMan;
     }
 
     public MultiColoredLightMaterial() {
@@ -82,12 +84,12 @@ public class MultiColoredLightMaterial extends Material {
         Uniform lightColor = shader.getUniform("g_LightColor");
         Uniform lightPos = shader.getUniform("g_LightPosition");
         Uniform ambientColor = shader.getUniform("g_AmbientLightColor");
-        Uniform lightTexture = shader.getUniform("g_LightTexture");
-        Uniform lightTextureSize = shader.getUniform("g_LightTextureSize");
-        UniformBinding a = null;
+        //Uniform lightTexture = shader.getUniform("g_LightTexture");
+        //Uniform lightTextureSize = shader.getUniform("g_LightTextureSize");
+        
         boolean isFirstLight = true;
         boolean isSecondLight = false;
-        Uniform test = new Uniform();
+        boolean isFirstWindow = true;
 
         for (int i = 0; i < lightList.size(); i++) {
             Light l = lightList.get(i);
@@ -120,7 +122,12 @@ public class MultiColoredLightMaterial extends Material {
             tmpLightColor.set(color);
             //tmpLightColor.a = l.getType().getId();
             
-            tmpLightColor.a = (l.getClass() == MultiColoredLight.class) ? 1 : 0;
+            tmpLightColor.a = (l.getClass() == MultiColoredLight.class) ? 5 : l.getType().getId();
+            if (l.getClass() == MultiColoredLight.class && isFirstWindow) {
+                MultiColoredLight mcl = (MultiColoredLight) l;
+                this.setTexture("LightTexture", mcl.getLightTexture());
+                isFirstWindow = false;
+            }
             
             lightColor.setValue(VarType.Vector4, tmpLightColor);
 
@@ -143,7 +150,7 @@ public class MultiColoredLightMaterial extends Material {
                     lightPos.setValue(VarType.Vector4, tmpLightPosition);
                     tmpLightDirection.set(0, 0, 0, 0);
                     lightDir.setValue(VarType.Vector4, tmpLightDirection);
-                    
+                    /*
                     if(l.getClass() == MultiColoredLight.class) {
                         MultiColoredLight light = (MultiColoredLight) l;
                         tmpRes.set(new Vector2f(1,1));
@@ -155,7 +162,7 @@ public class MultiColoredLightMaterial extends Material {
                         //System.out.println("\t" + lightTextureSize + " " + light.getTextureDimensions() + " " + tmpRes);
                         
                         //System.out.println("\t" + test);
-                    }
+                    }*/
                     
                     break;
                 case Spot:

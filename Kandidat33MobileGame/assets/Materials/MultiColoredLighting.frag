@@ -13,7 +13,8 @@ varying vec2 texCoord;
 varying vec3 AmbientSum;
 varying vec4 DiffuseSum;
 varying vec3 SpecularSum;
-uniform sampler2D m_LightTexture2;
+uniform sampler2D m_LightTexture;
+
 varying float spotFallOff;
 
 varying vec3 wvPosition;
@@ -283,15 +284,15 @@ void main(){
         //vec3 directionToLight = normalize(g_LightPosition.xyz - viewSpacePosition);
         vec2 lightDistance = wvLightPos.xy - wvPosition.xy; 
 
-        float factorLight = (g_LightColor.a == 1) ? max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/30.0f)) : 0.0f;
+        float factorLight = (g_LightColor.a == 5) ? max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/30.0f)) : 0.0f;
         //float factorLight = (lightDistance.x < -10 || lightDistance.x > 10) ? 0.0f : 1.0f;
         //float factorLight = max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/10.0f));
         //float factorLight = max(0, 1-((lightDistance.x*lightDistance.x + lightDistance.y * lightDistance.y)/70.0f));
         //float factorLight = 1;
-        vec4 lightColor2 = (1-factorLight) * vec4(1, 1, 1, 1) + factorLight * texture2D(m_LightTexture2, vec2(0.5f,0.5f)*normalize(-lightDistance)+vec2(0.5f,0.5f));
+        vec4 lightColor2 = (1-factorLight) * vec4(1, 1, 1, 1) + factorLight * texture2D(m_LightTexture, vec2(0.5f,0.5f)*normalize(-lightDistance)+vec2(0.5f,0.5f));
 
         //float factorLight = max(0, (lightVec.x*lightVec.x + lightVec.y * lightVec.y));
-        //vec4 lightColor2 = (1-factorLight) * vec4(1, 1, 1, 1) + factorLight * texture2D(m_LightTexture2, vec2(0.5f,0.5f)*normalize(-lightVec.xy)+vec2(0.5f,0.5f));
+        //vec4 lightColor2 = (1-factorLight) * vec4(1, 1, 1, 1) + factorLight * texture2D(m_LightTexture, vec2(0.5f,0.5f)*normalize(-lightVec.xy)+vec2(0.5f,0.5f));
        gl_FragColor.rgb =  AmbientSum       * diffuseColor.rgb  +
                            DiffuseSum.rgb   * diffuseColor.rgb  * lightColor2.rgb * vec3(light.x) +
                            SpecularSum2.rgb * specularColor.rgb * lightColor2.rgb * vec3(light.y);
