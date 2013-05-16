@@ -58,7 +58,7 @@ public class MultiColoredLightMaterial extends Material {
     }
     
     private ColorRGBA getAmbientColor(LightList lightList) {
-        System.out.println("own ambient");
+        //System.out.println("own ambient");
         ambientLightColor.set(0, 0, 0, 1);
         for (int j = 0; j < lightList.size(); j++) {
             Light l = lightList.get(j);
@@ -72,7 +72,7 @@ public class MultiColoredLightMaterial extends Material {
     
     @Override
     protected void renderMultipassLighting(Shader shader, Geometry g, RenderManager rm) {
-        System.out.println("own multipass");
+        //System.out.println("own multipass");
         
         //------------------------------------
         
@@ -91,6 +91,8 @@ public class MultiColoredLightMaterial extends Material {
 
         for (int i = 0; i < lightList.size(); i++) {
             Light l = lightList.get(i);
+            System.out.println(l.getColor() + " " + l + " " + l.getType().getId());
+            
             if (l instanceof AmbientLight) {
                 continue;
             }
@@ -116,7 +118,10 @@ public class MultiColoredLightMaterial extends Material {
 
             ColorRGBA color = l.getColor();
             tmpLightColor.set(color);
-            tmpLightColor.a = l.getType().getId();
+            //tmpLightColor.a = l.getType().getId();
+            
+            tmpLightColor.a = (l.getClass() == MultiColoredLight.class) ? 1 : 0;
+            
             lightColor.setValue(VarType.Vector4, tmpLightColor);
 
             switch (l.getType()) {

@@ -3,7 +3,7 @@
 #define ATTENUATION
 //#define HQ_ATTENUATION
 
-
+uniform vec4 g_LightColor;
 
 varying vec2 texCoord;
 #ifdef SEPARATE_TEXCOORD
@@ -283,7 +283,9 @@ void main(){
         //vec3 directionToLight = normalize(g_LightPosition.xyz - viewSpacePosition);
         vec2 lightDistance = wvLightPos.xy - wvPosition.xy; 
 
-        float factorLight = max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/10.0f));
+        float factorLight = (g_LightColor.a == 1) ? max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/30.0f)) : 0.0f;
+        //float factorLight = (lightDistance.x < -10 || lightDistance.x > 10) ? 0.0f : 1.0f;
+        //float factorLight = max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/10.0f));
         //float factorLight = max(0, 1-((lightDistance.x*lightDistance.x + lightDistance.y * lightDistance.y)/70.0f));
         //float factorLight = 1;
         vec4 lightColor2 = (1-factorLight) * vec4(1, 1, 1, 1) + factorLight * texture2D(m_LightTexture2, vec2(0.5f,0.5f)*normalize(-lightDistance)+vec2(0.5f,0.5f));
@@ -293,7 +295,7 @@ void main(){
        gl_FragColor.rgb =  AmbientSum       * diffuseColor.rgb  +
                            DiffuseSum.rgb   * diffuseColor.rgb  * lightColor2.rgb * vec3(light.x) +
                            SpecularSum2.rgb * specularColor.rgb * lightColor2.rgb * vec3(light.y);
-       gl_FragColor.rgb = vec3(factorLight, factorLight, factorLight);
+       //gl_FragColor.rgb = vec3(factorLight, factorLight, factorLight);
     #endif
     
     gl_FragColor.a = alpha;
