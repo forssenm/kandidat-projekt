@@ -86,6 +86,7 @@ public class Platform extends Node {
         Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/platform/AO/wall-ao-transparant-small.png"));
         wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
+        //wallMaterial.getAdditionalRenderState().setDepthWrite(false);
         wall.setMaterial(wallMaterial);
         //wall.setQueueBucket(RenderQueue.Bucket.Transparent);
         return wall;

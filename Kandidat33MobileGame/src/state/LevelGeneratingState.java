@@ -114,7 +114,7 @@ public class LevelGeneratingState extends AbstractAppState {
      */
     @Override
     public void update(float tpf) {
-        
+        //app.getGuiNode().detachAllChildren();
         tempVec = this.player.getLocalTranslation();
         leftBound = tempVec.getX() - P.minLeftDistance;
         rightBound = tempVec.getX() + P.minRightDistance;

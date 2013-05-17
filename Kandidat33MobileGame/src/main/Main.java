@@ -36,6 +36,7 @@ public class Main extends SimpleApplication {
         super(new StatsAppState(), new DebugKeysAppState());
         Logger.getLogger("").setLevel(Level.SEVERE);
         Logger.getLogger("Kandidat").setLevel(Level.FINE);
+        
     }
     
     @Override

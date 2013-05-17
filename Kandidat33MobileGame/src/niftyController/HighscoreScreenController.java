@@ -21,7 +21,7 @@ public class HighscoreScreenController implements ScreenController {
     @Override
     public void bind(final Nifty newNifty, final Screen newScreen) {
         this.nifty = newNifty;
-        System.out.println("Startar screenen");
+        //System.out.println("Startar screenen");
     }
 
     @Override

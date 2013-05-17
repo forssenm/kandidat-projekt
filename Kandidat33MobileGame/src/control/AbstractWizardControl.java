@@ -96,7 +96,7 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
         float theta = FastMath.atan2(direction.z - 5, direction.x) - FastMath.PI / 2;
         float[] angles = {-0.2f, theta, 0.0f};
         Quaternion rotation = new Quaternion(angles);
-        System.out.println(((Node)this.spatial).getChildren());
+        //System.out.println(((Node)this.spatial).getChildren());
         ((Node)this.spatial).getChild("wizardSpatial").setLocalRotation(rotation);
     }
 

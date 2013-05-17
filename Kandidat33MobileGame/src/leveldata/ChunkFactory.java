@@ -241,6 +241,7 @@ public class ChunkFactory {
         // record this number so that the next chunk doesn't overlap
         distanceOverFlow = d - totalLength;
 
+        enemyType = 1;
         // generate enemies:
         switch (enemyType) {
             case (-1):

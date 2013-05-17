@@ -347,7 +347,7 @@ public class BuiltInSSAO_intervals extends Filter {
      */
     public void updateIntervals(Vector4f[] intervals) {
         if(ssaoMat == null || intervals == null) {
-            System.out.println("No material");
+            //System.out.println("No material");
         } else {
             //System.out.println(material.getAssetName());
             ssaoMat.setParam("intervals", VarType.Vector4Array, intervals);

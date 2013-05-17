@@ -56,7 +56,7 @@ public class AmbientOcclusionFilter extends Filter {
      */
     public void updateIntervals(Vector4f[] intervals) {
         if(material == null || intervals == null) {
-            System.out.println("No material");
+            //System.out.println("No material");
         } else {
             material.setParam("intervals", VarType.Vector4Array, intervals);
             material.setInt("numMoving", intervals.length);
