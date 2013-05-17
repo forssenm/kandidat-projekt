@@ -21,20 +21,20 @@ public class P {
     public static final float platformHeight = 1f;
     public static final float playerZOffset =2f;
     public static final float platformDistance = 7.0f;
-    public static final float minSpeedFactor = 1.5f;
-    public static final float maxSpeedFactor = 3.5f;
-    public static float speedFactor = 1.5f; // player speed
         
     public static final float deathTreshold = -20.0f;
     
     public static final float chunkLength = 70.0f;
     public static final int noOfStartingChunks = 3;    
 
-
     public static final float minLeftDistance = 130;
     public static final float minRightDistance = 400;
     public static final float minDownDistance = 50;
-
+    
+    // player speed variables
+    public static final float minSpeedFactor = 1.5f;
+    public static final float maxSpeedFactor = 3.5f;
+    public static float speedFactor = 1.5f;
 
     //lighting variables
     public static final Vector3f windowLightDirection = new Vector3f(0f,-20f,0f);

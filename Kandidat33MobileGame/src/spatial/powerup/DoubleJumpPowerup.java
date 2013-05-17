@@ -15,6 +15,7 @@ import control.PlayerInteractorControl;
 import spatial.Player;
 import spatial.PlayerInteractor;
 import spatial.StandardParticleEmitter;
+import variables.EffectSettings;
 
 /**
  * An powerup that gives the player the ability to double jump.
@@ -41,10 +42,11 @@ public class DoubleJumpPowerup extends PlayerInteractor {
         fireball.attachChild(model);
        
         
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
         
         ParticleEmitter glow = getPowerupParticleEmitter(assetManager);
         fireball.attachChild(glow);
-
+        }
         return fireball;
     }
 
@@ -66,9 +68,11 @@ public class DoubleJumpPowerup extends PlayerInteractor {
     
     public void destroy() {
         this.setName("");
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
         ParticleEmitter pe = (ParticleEmitter) this.getChild("Emitter");
         pe.setLowLife(0f);
         pe.setHighLife(0f);
+        }
         ((Node)this.getChild("fireball")).detachChild(this.getChild("model"));
     }
 

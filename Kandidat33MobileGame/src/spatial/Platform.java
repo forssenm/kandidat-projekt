@@ -89,9 +89,12 @@ public class Platform extends Node {
 
         this.addControl(rigidBodyControl);
         
-        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE || EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE || EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING ||
+                EffectSettings.ambientOcclusion == AmbientOcclusion.PLATFORMS) {
             Geometry wallOccl = this.addWallOcclusion(assetManager, length);
             Node platformOccl = this.addPlatformOcclusion(assetManager, length);
+            wallOccl.setShadowMode(ShadowMode.Off);
+            platformOccl.setShadowMode(ShadowMode.Off);
             this.attachChild(wallOccl);
             this.attachChild(platformOccl);
             //wallOccl.rotate(0, 90*FastMath.DEG_TO_RAD, 0);

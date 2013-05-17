@@ -16,6 +16,7 @@ import control.PlayerInteractorControl;
 import spatial.Player;
 import spatial.PlayerInteractor;
 import spatial.StandardParticleEmitter;
+import variables.EffectSettings;
 
 /**
  * An powerup that gives the player a boost to run and jump speed.
@@ -35,8 +36,10 @@ public class SpeedPowerup extends PlayerInteractor {
         
         Node model = (Node)assetManager.loadModel("Models/powerups/icosphere/ico001.j3o");
         model.setName("model");
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
         ParticleEmitter glow = getPowerupParticleEmitter(assetManager);
         modelNode.attachChild(glow);
+        }
         modelNode.attachChild(model);
 
         return modelNode;
@@ -59,9 +62,11 @@ public class SpeedPowerup extends PlayerInteractor {
     
     public void destroy() {
         this.setName("");
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
         ParticleEmitter pe = (ParticleEmitter) this.getChild("Emitter");
         pe.setLowLife(0f);
         pe.setHighLife(0f);
+        }
         ((Node)this.getChild("modelnode")).detachChild(this.getChild("model"));
     }
 

@@ -9,8 +9,12 @@ import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.effect.ParticleEmitter;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
@@ -26,6 +30,8 @@ import control.PlayerControl;
 import control.PlayerInteractorControl;
 import control.SpotlightControl;
 import com.jme3.scene.Spatial;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
+import com.jme3.shadow.PssmShadowRenderer;
 import control.PlayerControl;
 import control.PlayerInteractorControl;
 import filters.AmbientOcclusionFilter;
@@ -35,9 +41,13 @@ import java.util.LinkedList;
 import java.util.List;
 import main.Main;
 import spatial.Player;
+import spatial.StandardParticleEmitter;
+import spatial.Torch;
 import spatial.hazard.LinearFireball;
+import spatial.hazard.SingleShotWizard;
 import variables.EffectSettings;
 import variables.EffectSettings.AmbientOcclusion;
+import variables.EffectSettings.Shadows;
 import variables.P;
 
 /**
@@ -78,6 +88,7 @@ public class InGameState extends AbstractAppState {
     private boolean stopInvulnerable;
     private AmbientOcclusionFilter aof;
     private BuiltInSSAO_intervals builtInSSAO;
+    private DirectionalLightShadowRenderer shadows;
     
     /**
      * This method initializes the the InGameState and thus gets the game ready
@@ -120,10 +131,15 @@ public class InGameState extends AbstractAppState {
         gameNode.addLight(sun);
 
         initAudio();
+        if (EffectSettings.shadows == EffectSettings.shadows.DIRECTIONAL) {
+            this.refreshShadows();
+        }
         
         if (EffectSettings.ambientOcclusion == AmbientOcclusion.FULL_POST_PROCESSING || EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
             initAO();
         }
+                
+        
     }
     /**
      * This method creates a node for the player. Also the default player model
@@ -301,7 +317,10 @@ public class InGameState extends AbstractAppState {
         gameOver = false;
         gameTime = 0;
         difficultyLevel = 0;
-        stopInvulnerable = true;
+        stopInvulnerable = false;
+        startInvulnerable = false;
+        lightShiftTime = 0;
+        sun.setColor(P.sunColor);
         P.speedFactor = P.minSpeedFactor;
         
         Vector3f spawnPosition = player.getLocalTranslation();
@@ -341,6 +360,52 @@ public class InGameState extends AbstractAppState {
     private void initInputs() {
         inputManager.addListener(player.getControl(PlayerControl.class), "jump");
         inputManager.addListener(player.getControl(PlayerControl.class), "pause");
+        inputManager.addListener(player.getControl(PlayerControl.class), "pauseAnim");
+        
+        if (EffectSettings.shadows == Shadows.DIRECTIONAL) {
+        inputManager.addMapping("shadows",
+                new KeyTrigger(KeyInput.KEY_E));
+        inputManager.addMapping("shadowSplitsDown",
+                new KeyTrigger(KeyInput.KEY_Q));
+        inputManager.addMapping("shadowSplitsUp",
+                new KeyTrigger(KeyInput.KEY_W));
+        
+        inputManager.addMapping("shadowResDown",
+                new KeyTrigger(KeyInput.KEY_A));
+        inputManager.addMapping("shadowResUp",
+                new KeyTrigger(KeyInput.KEY_S));
+
+        ActionListener shadowController = new ActionListener() {
+            //private InGameState state = InGameState.this;
+            public void onAction(String name, boolean isPressed, float tpf) {
+                if (!isPressed) {
+                    return;
+                }
+                if (name.equals("shadows")) {
+                    InGameState.this.toggleShadows();
+                    return;
+                }
+                if (name.equals("shadowSplitsDown")) {
+                    if (InGameState.this.shadowSplits > 1) {
+                        InGameState.this.shadowSplits -= 1;
+                    }
+                }
+                if (name.equals("shadowSplitsUp")) {
+                    if (InGameState.this.shadowSplits < 4) {
+                        InGameState.this.shadowSplits += 1;
+                    }
+                }
+                if (name.equals("shadowResUp")) {
+                    InGameState.this.shadowRes *= 2;
+                }
+                if (name.equals("shadowResDown")) {
+                    InGameState.this.shadowRes /= 2;
+                }
+                InGameState.this.refreshShadows();
+            }
+        };
+        inputManager.addListener(shadowController, "shadows","shadowSplitsUp","shadowSplitsDown","shadowResUp","shadowResDown");
+        }
         
     }
 
@@ -363,7 +428,96 @@ public class InGameState extends AbstractAppState {
     public void setInvulnerable(boolean setting) {
         startInvulnerable = setting;
         stopInvulnerable = !setting;
-        
-        
     }
+
+    private void toggleShadows() {
+        if (viewPort.getProcessors().contains(shadows)) {
+            viewPort.removeProcessor(shadows);
+        } else {
+            viewPort.addProcessor(shadows);
+        }
+    }
+
+    private int shadowRes = 128;
+    private int shadowSplits = 1;
+
+    private void refreshShadows() {
+        if (shadows != null) {
+            viewPort.removeProcessor(shadows);
+        }
+                shadows = new DirectionalLightShadowRenderer(assetManager,shadowRes,shadowSplits);
+        shadows.setShadowIntensity(0.5f);
+        shadows.setLight(sun);
+        viewPort.addProcessor(shadows);
+        System.out.println(shadowRes + " " + shadowSplits);
+    }
+/* Methods below are used for screenshots, probably won't have to be used again
+    private void initParticles() {
+        
+        ParticleEmitter glow = StandardParticleEmitter.standard(assetManager);
+           
+        glow.setNumParticles(5);
+        glow.setStartColor(ColorRGBA.Red);
+        glow.setEndColor(ColorRGBA.White);
+        glow.getParticleInfluencer().setInitialVelocity(Vector3f.ZERO);
+        glow.setStartSize(3.5f);
+        glow.setEndSize(0.1f);
+        glow.setGravity(0, 0, 2);
+        glow.setLowLife(1f);
+        glow.setHighLife(1f);
+        glow.getParticleInfluencer().setVelocityVariation(0.3f);
+        glow.setLocalTranslation(-10f, 20f, 0f);
+        this.gameNode.attachChild(glow);
+
+
+
+
+        ParticleEmitter fire = StandardParticleEmitter.standard(assetManager);
+        fire.setStartColor(new ColorRGBA(0, 1f, 0.3f, 1.0f));
+        fire.setEndColor(new ColorRGBA(0.45f, 0.4f, 0f, 0.5f));
+        fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 5, 5));
+        fire.setStartSize(1.7f);
+        fire.setEndSize(0.1f);
+        fire.setGravity(new Vector3f(0, 30f, 0));
+        fire.setLowLife(0.3f);
+        fire.setHighLife(1f);
+        fire.getParticleInfluencer().setVelocityVariation(0.3f);
+        fire.setLocalTranslation(-5f, 20f, 0f);
+        this.gameNode.attachChild(fire);
+        
+
+        ParticleEmitter sparkle = StandardParticleEmitter.standard(assetManager);
+        sparkle.setName("spark");
+        sparkle.setNumParticles(5);
+        sparkle.getMaterial().setTexture("Texture", assetManager.loadTexture(
+                "Textures/Explosion/flash.png"));
+
+        sparkle.setStartColor(new ColorRGBA(.10f, 0.40f, 0.90f, 1f));   // bright cyan
+        sparkle.setEndColor(new ColorRGBA(0f, 0.1f, 0.25f, 0.5f)); // dark blue
+        sparkle.getParticleInfluencer().setInitialVelocity(new Vector3f(0, -5, 0));
+        sparkle.setStartSize(1.5f);
+        sparkle.setEndSize(0.5f);
+        sparkle.setGravity(0, 0f, 0);
+        sparkle.setLowLife(0.2f);
+        sparkle.setHighLife(0.6f);
+        sparkle.getParticleInfluencer().setVelocityVariation(0.3f);
+        sparkle.setLocalTranslation(0f,20f,0f);
+        this.gameNode.attachChild(sparkle);
+        
+        ParticleEmitter forcefield = StandardParticleEmitter.forcefield(assetManager);
+        forcefield.setLocalTranslation(5f,20f,0f);
+        this.gameNode.attachChild(forcefield);
+    }*/
+    
+    /*public void initScene() {
+        SpotLight spotlight = new SpotLight();
+        SingleShotWizard wizard = new SingleShotWizard(assetManager, spotlight);
+        this.level.addToLevel(wizard, new Vector3f(20f, 15f, 0f));
+        this.level.addToLevel(spotlight, new Vector3f(20f, 15f, 0f));
+        
+        Torch torch = new Torch(assetManager, new Vector3f(0f,13f,0f));
+        gameNode.attachChild(torch);
+        Torch torch2 = new Torch(assetManager, new Vector3f(-10f,17f,0f));
+        gameNode.attachChild(torch2);        
+    }*/
 }

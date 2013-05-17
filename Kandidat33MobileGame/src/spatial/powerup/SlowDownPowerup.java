@@ -14,6 +14,7 @@ import control.PlayerInteractorControl;
 import spatial.Player;
 import spatial.PlayerInteractor;
 import spatial.StandardParticleEmitter;
+import variables.EffectSettings;
 
 /**
  * An powerup that gives the player a boost to run and jump speed.
@@ -34,8 +35,10 @@ public class SlowDownPowerup extends PlayerInteractor {
         model.setName("model");
       //  model.scale(1.5f);
         fireball.attachChild(model);
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
         ParticleEmitter glow = getPowerupParticleEmitter(assetManager);
         fireball.attachChild(glow);
+        }
 
         return fireball;
     }
@@ -58,9 +61,11 @@ public class SlowDownPowerup extends PlayerInteractor {
     
     public void destroy() {
         this.setName("");
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
         ParticleEmitter pe = (ParticleEmitter) this.getChild("Emitter");
         pe.setLowLife(0f);
         pe.setHighLife(0f);
+        }
         ((Node)this.getChild("modelnode")).detachChild(this.getChild("model"));
     }
 

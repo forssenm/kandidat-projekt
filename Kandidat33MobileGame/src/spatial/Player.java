@@ -75,6 +75,7 @@ public class Player extends Node implements AnimEventListener {
         playerControl = new PlayerControl(1f, 4f+hoverHeight);
         playerControl.setSpeedFactor(P.speedFactor);
         this.addControl(playerControl);
+        playerControl.setPaused(true);
 
         //Sets the model of the player
         if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
@@ -100,11 +101,18 @@ public class Player extends Node implements AnimEventListener {
             /*playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
             playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
             control = playerModel.getChild("Plane").getControl(AnimControl.class);*/
+            if (EffectSettings.ambientOcclusion == AmbientOcclusion.PLATFORMS) {
+                this.attachChild(this.addWallOcclusion(assetManager, hoverHeight));
+                this.attachChild(this.addFloorOcclusion(assetManager, hoverHeight));
+                
+            }
         }
         
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
         playerModel.attachChild(dust);
         dust.move(0.6f, -2.0f, 0f);
+        }
         
         this.attachChild(playerModel);
         //All the code below is for animation of the model
@@ -132,6 +140,14 @@ public class Player extends Node implements AnimEventListener {
      */
     public Node getPlayerModel() {
         return this.playerModel;
+    }
+
+    public void pauseAnimation(boolean paused) {
+        if (paused) {
+            channel.setSpeed(0f);
+        } else {
+            channel.setSpeed(1f);
+        }
     }
     
     public enum Powerup {
@@ -194,6 +210,7 @@ public class Player extends Node implements AnimEventListener {
         wallMaterial.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); // activate transparency
         wall.setMaterial(wallMaterial);
         wall.setQueueBucket(Bucket.Transparent);
+        wall.setShadowMode(ShadowMode.Off);
         return wall;
     }
     
@@ -206,12 +223,17 @@ public class Player extends Node implements AnimEventListener {
         floorMaterial.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); // activate transparency
         floor.setMaterial(floorMaterial);
         floor.setQueueBucket(Bucket.Transparent);
+        floor.setShadowMode(ShadowMode.Off);
         return floor;
     }
-    
+
     public void updateModelAfterPowerup(Powerup powerup, boolean setting) {
-        ParticleEmitter dust = (ParticleEmitter)this.playerModel.getChild("Emitter");
-        switch(powerup) {
+        if (EffectSettings.particles == EffectSettings.Particles.OFF) {
+            return;
+        }
+
+        ParticleEmitter dust = (ParticleEmitter) this.playerModel.getChild("Emitter");
+        switch (powerup) {
             case SPEED:
                 if (setting) {
                     dust.setHighLife(4f);

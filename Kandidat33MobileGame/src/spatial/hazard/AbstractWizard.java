@@ -55,10 +55,11 @@ public abstract class AbstractWizard extends PlayerInteractor {
         Node model = (Node) modelForWizard.clone();
         //model.rotate(0,3.1f,0);
         model.setName("wizardSpatial");
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
         ParticleEmitter sparkle = getWandParticleEmitter(assetManager);
         model.attachChild(sparkle);
         sparkle.move(-1.2f, 1.65f, 1.4f);  //tested in scenecomposer. Good fit for wizard3.
-
+        }
         return model;
 
     }
@@ -75,22 +76,22 @@ public abstract class AbstractWizard extends PlayerInteractor {
     }
     
     private ParticleEmitter getWandParticleEmitter (AssetManager assetManager) {
-    ParticleEmitter fire = StandardParticleEmitter.standard(assetManager);
-    fire.setName("spark");
-    fire.setNumParticles(5);
-    fire.getMaterial().setTexture("Texture", assetManager.loadTexture(
+    ParticleEmitter sparkle = StandardParticleEmitter.standard(assetManager);
+    sparkle.setName("spark");
+    sparkle.setNumParticles(5);
+    sparkle.getMaterial().setTexture("Texture", assetManager.loadTexture(
             "Textures/Explosion/flash.png"));
     
-    fire.setStartColor( new ColorRGBA(.10f, 0.40f, 0.90f, 1f));   // bright cyan
-    fire.setEndColor(new ColorRGBA(0f, 0.1f, 0.25f, 0.5f)); // dark blue
-    fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, -5, 0));
-    fire.setStartSize(1.5f);
-    fire.setEndSize(0.5f);
-    fire.setGravity(0, 0f, 0);
-    fire.setLowLife(0.2f);
-    fire.setHighLife(0.6f);
-    fire.getParticleInfluencer().setVelocityVariation(0.3f);
-    return fire;
+    sparkle.setStartColor( new ColorRGBA(.10f, 0.40f, 0.90f, 1f));   // bright cyan
+    sparkle.setEndColor(new ColorRGBA(0f, 0.1f, 0.25f, 0.5f)); // dark blue
+    sparkle.getParticleInfluencer().setInitialVelocity(new Vector3f(0, -5, 0));
+    sparkle.setStartSize(1.5f);
+    sparkle.setEndSize(0.5f);
+    sparkle.setGravity(0, 0f, 0);
+    sparkle.setLowLife(0.2f);
+    sparkle.setHighLife(0.6f);
+    sparkle.getParticleInfluencer().setVelocityVariation(0.3f);
+    return sparkle;
     }
     
     protected void redress(AssetManager a, ColorRGBA cloth, ColorRGBA particle) { //Changes wizard to black clothes and red particle
@@ -101,10 +102,13 @@ public abstract class AbstractWizard extends PlayerInteractor {
         mat.setColor("Diffuse", cloth);
         this.getChild("Cone.0002").setMaterial(mat);
         this.getChild("Cone.0012").setMaterial(mat);
-        this.getChild("Cone.0021").setMaterial(mat);
+            this.getChild("Cone.0021").setMaterial(mat);
         }
-        if (particle != null) {
-        ((ParticleEmitter)this.getChild("spark")).setStartColor(particle);
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
+
+            if (particle != null) {
+                ((ParticleEmitter) this.getChild("spark")).setStartColor(particle);
+            }
         }
     }
 }

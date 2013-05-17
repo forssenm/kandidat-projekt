@@ -43,7 +43,9 @@ public class Torch extends Node {
         Node model = (Node)modelForTorch.clone();
        // window.scale(4);
        // window.rotate(90*FastMath.DEG_TO_RAD, 0f, 0f);
-        model.attachChild (getTorchParticleEmitter(assetManager));
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
+            model.attachChild (getTorchParticleEmitter(assetManager));
+        }
         this.attachChild(model);
         
        // this.setLocalTranslation(position.x, position.y, -P.platformWidth*2+0.5f);

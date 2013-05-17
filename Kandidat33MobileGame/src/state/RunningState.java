@@ -44,9 +44,10 @@ public class RunningState extends AbstractAppState{
                 );
         inputManager.addMapping("pause", 
                 new KeyTrigger(KeyInput.KEY_P));
-        
+        inputManager.addMapping("pauseAnim",
+                new KeyTrigger(KeyInput.KEY_L));
     }
-    
+
     /**
      * Clean up the input mappings associated with the RunningState.
      */

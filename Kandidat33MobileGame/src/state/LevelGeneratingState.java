@@ -279,7 +279,7 @@ public class LevelGeneratingState extends AbstractAppState {
         }
     }
     
-    private void addToLevel(SpotLight light, Vector3f position) {
+    public void addToLevel(SpotLight light, Vector3f position) {
         light.setPosition(position);
         this.gameNode.addLight(light);
     }

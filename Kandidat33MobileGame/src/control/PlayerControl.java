@@ -443,11 +443,20 @@ public class PlayerControl extends AbstractPhysicsControl implements PhysicsTick
                 setPaused(!paused);
             }
         }
+        if (name.equals("pauseAnim")) {
+            if (isPressed) {
+                animPaused = !animPaused;
+                ((Player)this.spatial).pauseAnimation(animPaused);
+            }
+        }
     }
 
+    boolean animPaused = false;
+    
     public void setPaused(boolean paused) {
         this.rigidBody.setKinematic(paused);
         this.paused = paused;
+        //((Player)this.spatial).pauseAnimation(paused);
     }
 
     /**

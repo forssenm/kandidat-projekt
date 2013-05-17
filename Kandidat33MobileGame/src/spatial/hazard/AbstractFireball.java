@@ -14,6 +14,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import java.util.Random;
 import spatial.StandardParticleEmitter;
+import variables.EffectSettings;
 
 /**
  * An abstract AbstractFireball. Any class extending this one will make a PlayerInteractor
@@ -53,8 +54,10 @@ public abstract class AbstractFireball extends PlayerInteractor {
     protected Spatial createModel(AssetManager assetManager) {
         Node fireball = new Node();
         
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
         fire = getFireballParticleEmitter(assetManager);
         fireball.attachChild(fire);
+        }
         
         //AudioNode audio = new AudioNode(assetManager, "fire-sound-effect", false);
         AudioNode audio = new AudioNode(assetManager, "Sound/Effects/Bang.wav", false);
@@ -97,8 +100,10 @@ public abstract class AbstractFireball extends PlayerInteractor {
     
     public void destroy() {
         this.setName("");
+        if (EffectSettings.particles == EffectSettings.Particles.ON) {
         fire.setHighLife(0f);
         fire.setLowLife(0f);
+        }
         AudioNode audio = (AudioNode) this.getChild("audio");
         audio.playInstance();
     }
