@@ -9,6 +9,7 @@ import com.jme3.material.RenderState;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.math.Vector4f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -106,15 +107,25 @@ public class Platform extends Node {
     
     private static void initModels(AssetManager assetManager) {
         modelForShortPlatform = (Node) assetManager.loadModel("Models/platform/untitled8-new.j3o");
-        Material newMaterial = new MultiColoredLightMaterial(assetManager, "Materials/MultiColoredLighting.j3md");
-        newMaterial.setTexture("LightTexture", assetManager.loadTexture("Models/window/Light/light_colors_test.png"));
-        Geometry platform = ((Geometry)((Node)modelForShortPlatform.getChild("Cube")).getChild("Cube1"));
-        for (MatParam p : platform.getMaterial().getParams()) {
-            System.out.println(p + " " + p.getName() + " " + p.getVarType() + " " + p.getValue());
-            //newMaterial.setParam(p.getName(), p.getVarType(), p.getValue());
+        
+        if (EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
+            MultiColoredLightMaterial newMaterial = new MultiColoredLightMaterial(assetManager, "Materials/MultiColoredLighting.j3md");
+            newMaterial.setOnlyOneWindowLight(true);
+            newMaterial.setTexture("LightTexture", assetManager.loadTexture("Models/window/Light/light_colors_test.png"));
+            Geometry platform = ((Geometry)((Node)modelForShortPlatform.getChild("Cube")).getChild("Cube1"));
+            /*for (MatParam p : platform.getMaterial().getParams()) {
+                System.out.println(p + " " + p.getName() + " " + p.getVarType() + " " + p.getValue());
+                //newMaterial.setParam(p.getName(), p.getVarType(), p.getValue());
+            }*/
+            newMaterial.setTexture("DiffuseMap", assetManager.loadTexture("Models/platform/untitled8-uv-tegel.png"));
+            newMaterial.setBoolean("UseMaterialColors", true);
+            newMaterial.setVector4("Specular", new Vector4f( 1.0f, 1.0f, 1.0f, 1.0f));
+            newMaterial.setVector4("Ambient", new Vector4f( 0, 0, 0, 1));
+            newMaterial.setVector4("Diffuse", new Vector4f( 1.0f, 1.0f, 1.0f, 1.0f));
+            platform.setMaterial(newMaterial);
+            
         }
-        platform.setMaterial(newMaterial);
-        //modelForMediumPlatform = (Node) assetManager.loadModel("Models/platform/untitled24.j3o");
+         //modelForMediumPlatform = (Node) assetManager.loadModel("Models/platform/untitled24.j3o");
         //modelForLongPlatform = (Node) assetManager.loadModel("Models/platform/untitled36.j3o");
     
     }

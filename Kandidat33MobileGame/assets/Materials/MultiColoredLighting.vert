@@ -3,17 +3,21 @@
 
 #import "Common/ShaderLib/Skinning.glsllib"
 
+//varying float typeNr;
+varying vec2 lightDistance;
+//varying vec2 objectPos;
+//varying vec2 windowLightPos; 
+
 uniform mat4 g_WorldViewProjectionMatrix;
 uniform mat4 g_WorldViewMatrix;
 uniform mat3 g_NormalMatrix;
 uniform mat4 g_ViewMatrix;
 
-varying vec3 wvPosition;
-varying vec4 wvLightPos;
+//varying vec3 wvPosition;
+//varying vec4 wvLightPos;
 
 uniform sampler2D g_LightTexture;
 uniform vec2 g_LightTextureSize;
-uniform sampler2D m_LightTexture2;
 
 uniform vec4 m_Ambient;
 uniform vec4 m_Diffuse;
@@ -32,14 +36,15 @@ varying vec2 texCoord;
 
 varying vec3 AmbientSum;
 varying vec4 DiffuseSum;
-varying vec3 SpecularSum;
+vec3 SpecularSum;
+varying float SpecularBrightness;
 
 attribute vec3 inPosition;
 attribute vec2 inTexCoord;
 attribute vec3 inNormal;
 
 varying vec3 lightVec;
-varying float spotFallOff;
+//varying float spotFallOff;
 //varying vec4 spotVec;
 
 #ifdef VERTEX_COLOR
@@ -123,7 +128,7 @@ void lightComputeDir(in vec3 worldPos, in vec4 color, in vec4 position, out vec4
 vec2 computeLighting(in vec3 wvPos, in vec3 wvNorm, in vec3 wvViewDir, in vec4 wvLightPos){
      vec4 lightDir;
      lightComputeDir(wvPos, g_LightColor, wvLightPos, lightDir);
-     spotFallOff = 1.0;
+     float spotFallOff = 1.0;
      if(g_LightDirection.w != 0.0){
           vec3 L=normalize(lightVec.xyz);
           vec3 spotdir = normalize(g_LightDirection.xyz);
@@ -162,7 +167,7 @@ void main(){
       texCoord2 = inTexCoord2;
    #endif
 
-   wvPosition = (g_WorldViewMatrix * modelSpacePos).xyz;
+   vec3 wvPosition = (g_WorldViewMatrix * modelSpacePos).xyz;
    vec3 wvNormal  = normalize(g_NormalMatrix * modelSpaceNorm);
    vec3 viewDir = normalize(-wvPosition);
   
@@ -171,7 +176,7 @@ void main(){
        //vec4 wvLightPos = (g_ViewMatrix * vec4(lightPos.xyz, lightColor.w));
        //wvLightPos.w = lightPos.w;
 
-   wvLightPos = (g_ViewMatrix * vec4(g_LightPosition.xyz,clamp(g_LightColor.w == 5 ? 1.0f : g_LightColor.w,0.0,1.0)));
+   vec4 wvLightPos = (g_ViewMatrix * vec4(g_LightPosition.xyz,clamp(g_LightColor.w == 5 ? 1.0f : g_LightColor.w,0.0,1.0)));
    wvLightPos.w = g_LightPosition.w;
    vec4 lightColor = g_LightColor;
     //vec4 lightColor = vec4(0.7,1,0.5,1);
@@ -234,4 +239,21 @@ void main(){
     #ifdef USE_REFLECTION
         computeRef(modelSpacePos);
     #endif 
+
+    //typeNr = g_LightColor.a;
+    lightDistance = wvLightPos.xy - wvPosition.xy;
+    if (g_LightColor.a != 5) {
+        lightDistance.y = -5000;
+        lightDistance.x = -5000;
+    }
+    /*
+    objectPos = wvPosition.xy;
+    windowLightPos = wvLightPos.xy;
+
+    if (g_LightColor.a != 5) {
+        windowLightPos.y = -5000;
+        windowLightPos.x = -5000;
+    }
+    */
+    SpecularBrightness = ((m_Specular.x / m_Diffuse.x) + (m_Specular.y / m_Diffuse.y) + (m_Specular.z / m_Diffuse.z))/3;
 }

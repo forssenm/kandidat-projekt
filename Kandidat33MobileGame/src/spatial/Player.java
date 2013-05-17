@@ -96,16 +96,8 @@ public class Player extends Node implements AnimEventListener {
             playerModel.rotate(0, -2.07f, 0);
             playerModel.scale(1f);
             playerModel.setLocalTranslation(0f,2.8f+hoverHeight,0f); 
-            Material newMaterial = new MultiColoredLightMaterial(assetManager, "Materials/MultiColoredLighting.j3md");
-            //Material standardMaterial = assetManager.loadMaterial("Models/ghost/ghostMaterial.j3m");
             
-            newMaterial.setTexture("DiffuseMap", assetManager.loadTexture("Models/ghost/ghost04-014cloth003armature003UV001.png"));
-            newMaterial.setTexture("LightTexture", assetManager.loadTexture("Models/window/Light/light_colors_test.png"));
-            newMaterial.setBoolean("UseMaterialColors", true);
-            newMaterial.setVector4("Specular", new Vector4f( 0.14731379f,0.14731379f,0.14731379f,1.0f));
-            newMaterial.setVector4("Ambient", new Vector4f( 0, 0, 0, 1));
-            newMaterial.setVector4("Diffuse", new Vector4f( 1.0f, 1.0f, 1.0f, 1.0f));
-            ((Geometry)((Node)playerModel.getChild("Sphere")).getChild("Sphere1")).setMaterial(newMaterial);
+            
             control = playerModel.getChild("Sphere").getControl(AnimControl.class);
             channel = control.createChannel();
             channel.setAnim("ArmatureAction.000");
@@ -113,6 +105,16 @@ public class Player extends Node implements AnimEventListener {
             /*playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
             playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
             control = playerModel.getChild("Plane").getControl(AnimControl.class);*/
+        }
+        
+        if (EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
+            Material newMaterial = new MultiColoredLightMaterial(assetManager, "Materials/MultiColoredLighting.j3md");
+            newMaterial.setTexture("DiffuseMap", assetManager.loadTexture("Models/ghost/ghost04-014cloth003armature003UV001.png"));
+            newMaterial.setBoolean("UseMaterialColors", true);
+            newMaterial.setVector4("Specular", new Vector4f( 0.14731379f,0.14731379f,0.14731379f,1.0f));
+            newMaterial.setVector4("Ambient", new Vector4f( 0, 0, 0, 1));
+            newMaterial.setVector4("Diffuse", new Vector4f( 1.0f, 1.0f, 1.0f, 1.0f));
+            ((Geometry)((Node)playerModel.getChild("Sphere")).getChild("Sphere1")).setMaterial(newMaterial);
         }
         
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);

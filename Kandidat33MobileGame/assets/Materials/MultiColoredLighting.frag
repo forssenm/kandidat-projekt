@@ -3,7 +3,14 @@
 #define ATTENUATION
 //#define HQ_ATTENUATION
 
-uniform vec4 g_LightColor;
+//varying float typeNr;
+uniform sampler2D m_LightTexture;
+//varying float spotFallOff;
+//varying vec3 wvPosition;
+//varying vec4 wvLightPos;
+varying vec2 lightDistance;
+//varying vec2 objectPos;
+//varying vec2 windowLightPos; 
 
 varying vec2 texCoord;
 #ifdef SEPARATE_TEXCOORD
@@ -12,13 +19,11 @@ varying vec2 texCoord;
 
 varying vec3 AmbientSum;
 varying vec4 DiffuseSum;
-varying vec3 SpecularSum;
-uniform sampler2D m_LightTexture;
+vec3 SpecularSum;
+varying float SpecularBrightness;
 
-varying float spotFallOff;
 
-varying vec3 wvPosition;
-varying vec4 wvLightPos;
+
 
 #ifndef VERTEX_LIGHTING
   uniform vec4 g_LightDirection;
@@ -146,6 +151,9 @@ vec2 computeLighting(in vec3 wvNorm, in vec3 wvViewDir, in vec3 wvLightDir){
 
 void main(){
     vec2 newTexCoord;
+
+    //SpecularSum = DiffuseSum.xyz;
+    SpecularSum = SpecularBrightness * DiffuseSum.xyz;
      
     #if (defined(PARALLAXMAP) || (defined(NORMALMAP_PARALLAX) && defined(NORMALMAP))) && !defined(VERTEX_LIGHTING) 
      
@@ -282,14 +290,16 @@ void main(){
             light.y = 1.0;
        #endif
         //vec3 directionToLight = normalize(g_LightPosition.xyz - viewSpacePosition);
-        vec2 lightDistance = wvLightPos.xy - wvPosition.xy; 
+        //vec2 lightDistance = wvLightPos.xy - wvPosition.xy; 
+        //vec2 lightDistance = windowLightPos - objectPos;
 
-        float factorLight = (g_LightColor.a == 5) ? max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/30.0f)) : 0.0f;
+        //float factorLight = 1;
+        float factorLight = (lightDistance.y == -5000) ? 0.0f : max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/30.0f));
         //float factorLight = (lightDistance.x < -10 || lightDistance.x > 10) ? 0.0f : 1.0f;
         //float factorLight = max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/10.0f));
         //float factorLight = max(0, 1-((lightDistance.x*lightDistance.x + lightDistance.y * lightDistance.y)/70.0f));
         //float factorLight = 1;
-        vec4 lightColor2 = (1-factorLight) * vec4(1, 1, 1, 1) + factorLight * texture2D(m_LightTexture, vec2(0.5f,0.5f)*normalize(-lightDistance)+vec2(0.5f,0.5f));
+        vec4 lightColor2 = (factorLight == 0.0f) ? vec4(1, 1, 1, 1) : (1-factorLight) * vec4(1, 1, 1, 1) + factorLight * texture2D(m_LightTexture, vec2(0.5f,0.5f)*normalize(-lightDistance)+vec2(0.5f,0.5f));
 
         //float factorLight = max(0, (lightVec.x*lightVec.x + lightVec.y * lightVec.y));
         //vec4 lightColor2 = (1-factorLight) * vec4(1, 1, 1, 1) + factorLight * texture2D(m_LightTexture, vec2(0.5f,0.5f)*normalize(-lightVec.xy)+vec2(0.5f,0.5f));

@@ -40,6 +40,8 @@ public class MultiColoredLightMaterial extends Material {
     private static final Quaternion nullDirLight = new Quaternion(0, -1, 0, -1);
     
     AssetManager assetManager;
+    boolean oneWindowLight = false;
+    boolean oneWindowLightLeft = true;
     
     static {
         additiveLight.setBlendMode(RenderState.BlendMode.AlphaAdditive);
@@ -93,7 +95,7 @@ public class MultiColoredLightMaterial extends Material {
 
         for (int i = 0; i < lightList.size(); i++) {
             Light l = lightList.get(i);
-            System.out.println(l.getColor() + " " + l + " " + l.getType().getId());
+            //System.out.println(l.getColor() + " " + l + " " + l.getType().getId());
             
             if (l instanceof AmbientLight) {
                 continue;
@@ -123,10 +125,13 @@ public class MultiColoredLightMaterial extends Material {
             //tmpLightColor.a = l.getType().getId();
             
             tmpLightColor.a = (l.getClass() == MultiColoredLight.class) ? 5 : l.getType().getId();
-            if (l.getClass() == MultiColoredLight.class && isFirstWindow) {
+            if (l.getClass() == MultiColoredLight.class && isFirstWindow && oneWindowLightLeft) {
                 MultiColoredLight mcl = (MultiColoredLight) l;
                 this.setTexture("LightTexture", mcl.getLightTexture());
                 isFirstWindow = false;
+                if (oneWindowLight) {
+                    oneWindowLightLeft = false;
+                }
             }
             
             lightColor.setValue(VarType.Vector4, tmpLightColor);
@@ -229,6 +234,10 @@ public class MultiColoredLightMaterial extends Material {
         System.out.println(shader.getUniform("g_LightColor") + " " + lightList + " " + lightTexture + " " + lightTextureSize + " " );
         super.renderMultipassLighting(shader, g, rm);
         * */
+    }
+    
+    public void setOnlyOneWindowLight(boolean set) {
+        oneWindowLight = set;
     }
     
 }
