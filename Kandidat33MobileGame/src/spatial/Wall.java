@@ -10,6 +10,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
+import material.WallMaterial;
 import variables.EffectSettings;
 import variables.P;
 
@@ -63,13 +64,15 @@ public class Wall extends Node {
         geometry2.setLocalTranslation(new Vector3f(0,-WALL_HEIGHT/2,-P.platformWidth/2-P.playerZOffset));
         
         Material material = null;
-        if (true || EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
+        if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
             material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
             material.setTexture("DiffuseMap", texture);
         } else {
-            material =  new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+            material =  new WallMaterial(assetManager, "Materials/WallUnshaded.j3md");
             material.setTexture("ColorMap", texture);
         }
+       // material =  new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+         //   material.setTexture("ColorMap", texture);
         
         geometry1.setMaterial(material);
         geometry2.setMaterial(material);

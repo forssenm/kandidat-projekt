@@ -10,6 +10,8 @@ import com.jme3.math.Vector3f;
  * @author Mathias
  */
 public class P {
+    
+    public static Vector3f currentSunColor;
 
     //level variables
     public static final float shortPlatformLength = 12.0f;

@@ -113,6 +113,7 @@ public class InGameState extends AbstractAppState {
         initCamera();
         initInputs();
 
+        P.currentSunColor = P.sunColor.toVector3f();
         sun = new DirectionalLight();
         sun.setColor(P.sunColor);
         //sun.setColor(ColorRGBA.White);
@@ -253,6 +254,7 @@ public class InGameState extends AbstractAppState {
                 }
             }
             sun.setColor(P.sunColor.mult(1 + (lightShiftTime / 0.5f)));
+            P.currentSunColor = sun.getColor().toVector3f();
         }
         
         if (!gameOver) {
