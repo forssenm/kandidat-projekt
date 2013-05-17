@@ -439,8 +439,14 @@ public class ChunkFactory {
         MultiColoredLight light = new MultiColoredLight(assetManager, design);
         light.setRadius(75);
         light.setPosition(new Vector3f(positionX, positionY-5, -P.platformWidth / 2 + 0.2f));
-        light.setColor(ColorRGBA.White);
-        //light.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
+        if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
+            light.setRadius(75);
+            light.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
+        } else {
+            light.setRadius(75);
+            light.setColor(ColorRGBA.White);
+        }
+        
         return light;
         /*
         SpotLight windowLight = new SpotLight();
@@ -458,9 +464,13 @@ public class ChunkFactory {
     /* Creates a pointlight, to use with a torch */
     private Light createTorchLight(float positionX, float positionY) {
         PointLight light = new PointLight();
-        light.setRadius(50);
         light.setPosition(new Vector3f(positionX, positionY, -P.platformWidth / 2 + 0.2f));
         light.setColor(new ColorRGBA(1f, 0.3f, 0f, 0f));
+        if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
+            light.setRadius(50);
+        } else {
+            light.setRadius(8);
+        }
         return light;
     }
 
