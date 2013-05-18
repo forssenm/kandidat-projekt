@@ -51,7 +51,7 @@ void main(){
 
     #if defined(HAS_AFFECTMAP)
         float affectValue = texture2D(m_AffectMap, texCoord1).r;
-        color.rgb *= vec3(1-affectValue) + (affectValue * m_SunColor);
+        color.rgb *= vec3(1.0f-affectValue) + (affectValue * m_SunColor);
     #else
         color.rgb *= m_SunColor;
     #endif
