@@ -246,11 +246,13 @@ public class InGameState extends AbstractAppState {
                 lightShiftTime += tpf;
                 if (lightShiftTime > 0.5f) {
                     startInvulnerable = false;
+                    lightShiftTime = 0.5f;
                 }
             } else {
                 lightShiftTime -= tpf;
                 if (lightShiftTime < 0f) {
                     stopInvulnerable = false;
+                    lightShiftTime = 0f;
                 }
             }
             sun.setColor(P.sunColor.mult(1 + (lightShiftTime / 0.5f)));
