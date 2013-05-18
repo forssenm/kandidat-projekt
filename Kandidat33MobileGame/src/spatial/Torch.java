@@ -6,10 +6,12 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import java.util.Random;
+import material.LightTextureMaterial;
 import variables.EffectSettings;
 import variables.P;
 
@@ -30,19 +32,13 @@ public class Torch extends Node {
     public Torch(AssetManager assetManager, Vector3f position) {
         super("Torch");
 
-        Node model;
-        switch (EffectSettings.ambientOcclusion) {
-            case TEXTURE:
-            case INTERVAL_POST_PROCESSING:
-                model = (Node) assetManager.loadModel("Models/torch/AO/torch-with-ao.j3o");
-                break;
-            default:
-                model = (Node) assetManager.loadModel("Models/torch/Torch-nolightcam.j3o");
-                break;
+        Node model = null;
+        if (EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE || EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.INTERVAL_POST_PROCESSING ) {
+            model = (Node) assetManager.loadModel("Models/torch/AO/torch-with-ao.j3o");
+        } else {
+            model = (Node) assetManager.loadModel("Models/torch/Torch-nolightcam.j3o");
         }
 
-        // window.scale(4);
-        // window.rotate(90*FastMath.DEG_TO_RAD, 0f, 0f);
         model.attachChild(getTorchParticleEmitter(assetManager));
         this.attachChild(model);
 
@@ -51,6 +47,10 @@ public class Torch extends Node {
         //this.setShadowMode(ShadowMode.Off);   
         if (EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.TEXTURE || EffectSettings.ambientOcclusion == EffectSettings.AmbientOcclusion.INTERVAL_POST_PROCESSING) {
             this.attachChild(this.addWallOcclusion(assetManager));
+        }
+        
+        if (EffectSettings.light == EffectSettings.Light.TEXTURES || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
+            this.attachChild(this.addWallLighting(assetManager));
         }
         
     }
@@ -145,6 +145,18 @@ public class Torch extends Node {
         wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
         wall.setMaterial(wallMaterial);
         //wall.setQueueBucket(RenderQueue.Bucket.Transparent);
+        return wall;
+    }
+    
+    private Geometry addWallLighting(AssetManager assetManager) {
+        Box wallLight = new Box(5f, 5f, 0f);
+        Geometry wall = new Geometry("wallLighting", wallLight);
+        wall.setLocalTranslation(0f, 1.8f, -0.4f);
+        Material wallMaterial = new LightTextureMaterial(assetManager, "Materials/UnshadedMovingTexture.j3md");
+        wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/torch/Light/light.png"));
+        wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
+        wall.setMaterial(wallMaterial);
+        wall.setQueueBucket(RenderQueue.Bucket.Transparent);
         return wall;
     }
     

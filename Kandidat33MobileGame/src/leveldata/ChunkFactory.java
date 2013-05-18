@@ -33,6 +33,7 @@ import spatial.powerup.DoubleJumpPowerup;
 import spatial.powerup.InvulnerabilityPowerup;
 import spatial.powerup.SlowDownPowerup;
 import spatial.powerup.SpeedPowerup;
+import variables.EffectSettings;
 import variables.P;
 
 /**
@@ -258,7 +259,7 @@ public class ChunkFactory {
                 float wizardPosY = spatials.getLast().getLocalTranslation().getY()
                         + 18;
                 spotlight = new SpotLight();
-                if (P.useWizardLights) {
+                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
                     lights.add(spotlight);
                 }
                 spatials.add(createWizard(wizardPosX, wizardPosY, spotlight));
@@ -270,7 +271,7 @@ public class ChunkFactory {
                 wizardPosY = spatials.getLast().getLocalTranslation().getY()
                         + 18;
                 spotlight = new SpotLight();
-                if (P.useWizardLights) {
+                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
                     lights.add(spotlight);
                 }
                 spatials.add(createBurstWizard(wizardPosX, wizardPosY, spotlight));
@@ -300,7 +301,7 @@ public class ChunkFactory {
             case (7):
                 // a wizard in the foreground shooting fireballs at where the player's going
                 spotlight = new SpotLight();
-                if (P.useWizardLights) {
+                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
                     lights.add(spotlight);
                 }
                 spatials.add(createCalculatingWizard(d, height, spotlight));
@@ -346,7 +347,7 @@ public class ChunkFactory {
                 WindowFrame.Design windowDesign = random.nextBoolean() ? WindowFrame.Design.BIRD : WindowFrame.Design.FLOWERS;
                 WindowFrame window = createWindowFrame(30f, windowHeight + 23f, windowDesign);
                 staticObjects.attachChild(window);
-                if (P.useWindowLights) {
+                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
                     lights.add(this.createWindowLight(30f, windowHeight + 23f));
                 }
                 break;
@@ -355,7 +356,7 @@ public class ChunkFactory {
             case (5):
                 Torch torch = createTorch(15, windowHeight + 15);
                 staticObjects.attachChild(torch);
-                if (P.useTorchLights) {
+                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
                     lights.add(this.createTorchLight(15f, windowHeight + 15f));
                 }
                 break;

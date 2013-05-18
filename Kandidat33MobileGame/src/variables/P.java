@@ -40,10 +40,7 @@ public class P {
     public static final Vector3f windowLightDirection = new Vector3f(0f,-20f,0f);
     public static final ColorRGBA sunColor = new ColorRGBA(0.7f,0.7f,0.7f,0f);
     
-    public static boolean usePlayerSpot = true;
-    public static boolean useWizardLights = true;
-    public static boolean useWindowLights = true;
-    public static boolean useTorchLights = true;
+    public static boolean usePlayerSpot = false;
                 
     public static int screenWidth;
     public static int screenHeight;
