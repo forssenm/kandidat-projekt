@@ -6,12 +6,15 @@ import com.jme3.material.RenderState;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.math.Vector4f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import material.LightTextureMaterial;
+import material.MultiColoredLightMaterial;
+import material.WallMaterial;
 import variables.EffectSettings;
 import variables.P;
 
@@ -22,31 +25,27 @@ import variables.P;
 public class WindowFrame extends Node {
     
     public enum Design {
-        FLOWERS ("Models/window/flat-window-2.j3o",
-                "Models/window/Light/flat-window-2.j3o",
+        FLOWERS ("Models/window/flat-window-2-texture.png",
                 "Models/window/Light/texture1_light.png",
                 //"Models/window/Light/test1.png",
                 "Models/window/Light/texture1_light_colors.png",
-                new Vector2f(4,6)),
-        BIRD ("Models/window/flat-window-2b.j3o",
-                "Models/window/Light/flat-window-2b.j3o",
+                "Models/window/Light/flat-window-2-texture.png"),
+        BIRD ("Models/window/flat-window-2-texture-2.png",
                 "Models/window/Light/texture2_light.png",
                 //"Models/window/Light/test2.png",
                 "Models/window/Light/texture2_light_colors.png",
-                new Vector2f(4,6));
+                "Models/window/Light/flat-window-2-texture-2.png");
 
-        public final String modelSrc;
-        public final String lightModelSrc;
         public final String wallLightSrc;
         public final String lightColorsSrc;
-        public final Vector2f lightColorsDimensions;
+        public final String modelTexture;
+        public final String lightModelTexture;
 
-        Design(String modelSrc, String lightModelSrc, String wallLightSrc, String lightColorsSrc, Vector2f lightColorsDimensions) {
-            this.modelSrc = modelSrc;
-            this.lightModelSrc = lightModelSrc;
+        Design(String modelTexture, String wallLightSrc, String lightColorsSrc, String lightModelTexture) {
+            this.modelTexture = modelTexture;
             this.wallLightSrc = wallLightSrc;
             this.lightColorsSrc = lightColorsSrc;
-            this.lightColorsDimensions = lightColorsDimensions;
+            this.lightModelTexture = lightModelTexture;
         }
     }
     
@@ -64,12 +63,14 @@ public class WindowFrame extends Node {
         super("WindowFrame");
         this.design = design;
         
-        Node window = null;
-        if (EffectSettings.light == EffectSettings.Light.TEXTURES) {
-            window = (Node)assetManager.loadModel(design.lightModelSrc);
-            
+        Node window = (Node)assetManager.loadModel("Models/window/flat-window-2.j3o");;
+        if (EffectSettings.light == EffectSettings.Light.TEXTURES || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
+            Material newMaterial = new WallMaterial(assetManager, "Materials/WallUnshaded.j3md");
+            newMaterial.setTexture("ColorMap", assetManager.loadTexture(design.lightModelTexture));
+            newMaterial.setTexture("AffectMap", assetManager.loadTexture("Models/window/Light/affectionMap.png"));
+            ((Geometry)((Node)window.getChild("Cylinder")).getChild("Cylinder1")).setMaterial(newMaterial);
         } else {
-            window = (Node)assetManager.loadModel(design.modelSrc);
+            ((Geometry)((Node)window.getChild("Cylinder")).getChild("Cylinder1")).getMaterial().setTexture("DiffuseMap", assetManager.loadTexture(design.modelTexture));
         }
         window.scale(4.5f);
         window.rotate(90*FastMath.DEG_TO_RAD, 0f, 0f);

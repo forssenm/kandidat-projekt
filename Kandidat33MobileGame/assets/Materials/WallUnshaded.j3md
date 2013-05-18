@@ -49,6 +49,7 @@ MaterialDef Unshaded {
         Float ShadowMapSize
 
         Vector3 SunColor;
+        Texture2D AffectMap;
     }
 
     Technique {
@@ -67,6 +68,7 @@ MaterialDef Unshaded {
             HAS_COLOR : Color
             NUM_BONES : NumberOfBones
             DISCARD_ALPHA : AlphaDiscardThreshold
+            HAS_AFFECTMAP : AffectMap
         }
     }
 

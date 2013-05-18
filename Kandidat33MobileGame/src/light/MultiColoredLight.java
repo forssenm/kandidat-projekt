@@ -22,8 +22,6 @@ public class MultiColoredLight extends PointLight {
     public MultiColoredLight(AssetManager assetManager, Design design) {
         super();
         this.lightTexture = (Texture2D) assetManager.loadTexture(design.lightColorsSrc);
-        //this.lightTexture = (Texture2D) assetManager.loadTexture("Models/window/Light/light_colors_test.png");
-        this.dimensions = design.lightColorsDimensions;
     }
     
     public Texture2D getLightTexture() {

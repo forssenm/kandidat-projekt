@@ -7,6 +7,9 @@
 #endif
 
 uniform vec3 m_SunColor;
+#if defined(HAS_AFFECTMAP)
+    uniform sampler2D m_AffectMap;
+#endif
 
 uniform vec4 m_Color;
 uniform sampler2D m_ColorMap;
@@ -46,7 +49,13 @@ void main(){
         }
     #endif
 
-    color.rgb *= m_SunColor;
+    #if defined(HAS_AFFECTMAP)
+        float affectValue = texture2D(m_AffectMap, texCoord1).r;
+        color.rgb *= vec3(1-affectValue) + (affectValue * m_SunColor);
+    #else
+        color.rgb *= m_SunColor;
+    #endif
+    
 
     gl_FragColor = color;
 }
