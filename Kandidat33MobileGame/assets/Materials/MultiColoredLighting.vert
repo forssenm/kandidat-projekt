@@ -246,7 +246,7 @@ void main(){
         lightDistance = vec2(-5000.0, -5000.0);
     }
 
-    lightDistance = vec2(-5000.0f, -5000.0f);
+    //lightDistance = vec2(-5000.0f, -5000.0f);
 
     /*
     objectPos = wvPosition.xy;
