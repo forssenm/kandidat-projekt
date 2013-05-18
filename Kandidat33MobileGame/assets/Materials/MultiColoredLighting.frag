@@ -291,10 +291,11 @@ void main(){
        #endif
         //vec3 directionToLight = normalize(g_LightPosition.xyz - viewSpacePosition);
         //vec2 lightDistance = wvLightPos.xy - wvPosition.xy; 
-        //vec2 lightDistance = windowLightPos - objectPos;
+        //vec2 lightDistance = windowLightPos - objectPos; 
 
         //float factorLight = 1;
-        float factorLight = (lightDistance.y == -5000) ? 0.0f : max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/30.0f));
+        float factorLight = (lightDistance.y == -5000) ? 0.0f : max(0, 1-((lightDistance.x >= 0 ? lightDistance.x-15 : -lightDistance.x-15)/19.5f));
+        //float factorLight = (lightDistance.y == -5000) ? 0.0f : max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/30.0f));
         //float factorLight = (lightDistance.x < -10 || lightDistance.x > 10) ? 0.0f : 1.0f;
         //float factorLight = max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/10.0f));
         //float factorLight = max(0, 1-((lightDistance.x*lightDistance.x + lightDistance.y * lightDistance.y)/70.0f));

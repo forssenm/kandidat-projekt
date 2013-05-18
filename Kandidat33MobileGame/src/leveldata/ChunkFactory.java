@@ -443,7 +443,9 @@ public class ChunkFactory {
             light.setRadius(75);
             light.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
         } else {
-            light.setRadius(30);
+            //light.setRadius(30);
+            light.setRadius(39f/2f);
+            light.setPosition(light.getPosition().add(0,-11,0));
             light.setColor(ColorRGBA.White);
         }
         
