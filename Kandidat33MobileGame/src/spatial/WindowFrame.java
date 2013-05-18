@@ -90,7 +90,7 @@ public class WindowFrame extends Node {
     
     private Geometry addWallLighting(AssetManager assetManager) {
         //Box wallLight = new Box(39f/2f, 63f/2f, 0f);
-        Box wallLight = new Box(63f/2f, 63f/2f, 0f);
+        Box wallLight = new Box(30, 30, 0f);
         Geometry wall = new Geometry("wallLighting", wallLight);
         wall.setLocalTranslation(0f, -8f/3f, 6.6f);
         Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
