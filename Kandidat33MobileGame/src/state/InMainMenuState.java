@@ -60,11 +60,11 @@ public class InMainMenuState extends AbstractAppState {
         super.setEnabled(enabled);
         if (enabled) {
             //Initiate the things that are needed when the state is active
-            //nifty.setIgnoreMouseEvents(false);
+            nifty.setIgnoreMouseEvents(false);
             nifty.gotoScreen("gameOverScreen");
         } else {
             //Remove the things not needed when the state is inactive
-            //nifty.setIgnoreMouseEvents(true); // needed to prevent nullpointer from releasing the click too quickly when closing nifty
+            nifty.setIgnoreMouseEvents(true); // needed to prevent nullpointer from releasing the click too quickly when closing nifty
             nifty.exit();
         }
     }
