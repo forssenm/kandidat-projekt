@@ -26,12 +26,14 @@ public class WindowFrame extends Node {
     
     public enum Design {
         FLOWERS ("Models/window/flat-window-2-texture.png",
-                "Models/window/Light/texture1_light.png",
+                //"Models/window/Light/texture1_light.png",
+                "Models/window/Light/texture1_light-small-round.png",
                 //"Models/window/Light/test1.png",
                 "Models/window/Light/texture1_light_colors.png",
                 "Models/window/Light/flat-window-2-texture.png"),
         BIRD ("Models/window/flat-window-2-texture-2.png",
-                "Models/window/Light/texture2_light.png",
+                //"Models/window/Light/texture2_light.png",
+                "Models/window/Light/texture2_light-small-round.png",
                 //"Models/window/Light/test2.png",
                 "Models/window/Light/texture2_light_colors.png",
                 "Models/window/Light/flat-window-2-texture-2.png");
@@ -87,7 +89,8 @@ public class WindowFrame extends Node {
     }
     
     private Geometry addWallLighting(AssetManager assetManager) {
-        Box wallLight = new Box(39f/2f, 63f/2f, 0f);
+        //Box wallLight = new Box(39f/2f, 63f/2f, 0f);
+        Box wallLight = new Box(63f/2f, 63f/2f, 0f);
         Geometry wall = new Geometry("wallLighting", wallLight);
         wall.setLocalTranslation(0f, -8f/3f, 6.6f);
         Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
