@@ -241,7 +241,7 @@ void main(){
     #endif 
 
     //typeNr = g_LightColor.a;
-    lightDistance = wvLightPos.xy - wvPosition.xy;
+    lightDistance = wvLightPos.xy + vec2(0, 11)- wvPosition.xy;
     if (g_LightColor.a != 5) {
         lightDistance.y = -5000;
         lightDistance.x = -5000;

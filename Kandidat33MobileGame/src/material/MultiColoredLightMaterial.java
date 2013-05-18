@@ -125,13 +125,19 @@ public class MultiColoredLightMaterial extends Material {
             //tmpLightColor.a = l.getType().getId();
             
             tmpLightColor.a = (l.getClass() == MultiColoredLight.class) ? 5 : l.getType().getId();
-            if (l.getClass() == MultiColoredLight.class && isFirstWindow && oneWindowLightLeft) {
+            /*if (l.getClass() == MultiColoredLight.class && isFirstWindow && oneWindowLightLeft) {
                 MultiColoredLight mcl = (MultiColoredLight) l;
                 this.setTexture("LightTexture", mcl.getLightTexture());
                 isFirstWindow = false;
                 if (oneWindowLight) {
                     oneWindowLightLeft = false;
                 }
+            }*/
+            
+            if (l.getClass() == MultiColoredLight.class && isFirstWindow && !oneWindowLight) {
+                MultiColoredLight mcl = (MultiColoredLight) l;
+                this.setTexture("LightTexture", mcl.getLightTexture());
+                isFirstWindow = false;
             }
             
             lightColor.setValue(VarType.Vector4, tmpLightColor);

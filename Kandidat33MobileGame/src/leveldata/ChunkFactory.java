@@ -105,6 +105,8 @@ public class ChunkFactory {
         int enemyType;
         int powerupType;
         int decorationType;
+        WindowFrame.Design windowDesign = null;
+        
         if (level < P.noOfStartingChunks) { //nothing special on the first few chunks
             platformLayoutType = -1;
             enemyType = -1;
@@ -118,6 +120,10 @@ public class ChunkFactory {
             powerupType = random.nextInt(8);
             
             decorationType = random.nextInt(7);
+            
+            if (decorationType >= 0 && decorationType <=2) {
+                windowDesign = random.nextBoolean() ? WindowFrame.Design.BIRD : WindowFrame.Design.FLOWERS;
+            }
 
             // get back to normal height if we're too low or too high
             if (height < -2) {
@@ -136,7 +142,7 @@ public class ChunkFactory {
         switch (platformLayoutType) {
             case (-1): // starting platform
                 while (d < totalLength) {
-                    spatials.add(createPlatform(d, height, PType.LONG));
+                    spatials.add(createPlatform(d, height, PType.LONG, windowDesign));
                     d += PType.LONG.length+4;
                 }
                 if (level == P.noOfStartingChunks-1) {
@@ -145,7 +151,7 @@ public class ChunkFactory {
                 break;
             case (0): // standard platforms
                 while (d < totalLength) {
-                    spatials.add(createPlatform(d, height + random.nextFloat() * 3, PType.MEDIUM));
+                    spatials.add(createPlatform(d, height + random.nextFloat() * 3, PType.MEDIUM, windowDesign));
                     d += PType.MEDIUM.length + dist;
                 }
                 break;
@@ -158,7 +164,7 @@ public class ChunkFactory {
                     }
                     nDist = dist * (1f + random.nextFloat());
 
-                    spatials.add(createPlatform(d, height + random.nextFloat() * 3, pType));
+                    spatials.add(createPlatform(d, height + random.nextFloat() * 3, pType, windowDesign));
                     d += pType.length + nDist;
                 }
                 break;
@@ -171,7 +177,7 @@ public class ChunkFactory {
                     }
                     nDist = dist * (0.6f + 0.5f * random.nextFloat());
                     height += 1 + 4 * random.nextFloat();
-                    spatials.add(createPlatform(d, height + random.nextFloat() * 2, pType));
+                    spatials.add(createPlatform(d, height + random.nextFloat() * 2, pType, windowDesign));
                     d += pType.length + nDist;
                 }
                 windowHeight = Math.max(0, 5 * Math.round(height / 5));
@@ -189,30 +195,30 @@ public class ChunkFactory {
                     if (height - descent > P.deathTreshold + 2) {
                         height -= descent;
                     }
-                    spatials.add(createPlatform(d, height + random.nextFloat() * 4, pType));
+                    spatials.add(createPlatform(d, height + random.nextFloat() * 4, pType, windowDesign));
                     d += pType.length + nDist;
                 }
                 //powerupType = -1;
                 break;
             case (4): // invulnerability only reachable with double-jump
                 height = -1;
-                spatials.add(createPlatform(d, height, PType.LONG));
+                spatials.add(createPlatform(d, height, PType.LONG, windowDesign));
                 d += PType.LONG.length + dist;
                 // one high, one low
                 float nHeight = 5 + 3 * random.nextFloat();
-                spatials.add(createPlatform(d, height + nHeight, PType.SHORT));
-                spatials.add(createPlatform(d, height + nHeight - 13, PType.SHORT));
+                spatials.add(createPlatform(d, height + nHeight, PType.SHORT, windowDesign));
+                spatials.add(createPlatform(d, height + nHeight - 13, PType.SHORT, windowDesign));
                 height += nHeight;
                 d += PType.SHORT.length + dist;
                 spatials.add(createInvulnerabilityPowerup(d + 5, height - 6));
                 // one higher
                 height += 2 + 5 * random.nextFloat();
-                spatials.add(createPlatform(d, height, PType.SHORT));
+                spatials.add(createPlatform(d, height, PType.SHORT, windowDesign));
                 d += PType.SHORT.length + 5;
                 windowHeight = Math.max(0, 5 * Math.round(height / 5));
                 height = -1;
                 if (d < totalLength) {
-                    spatials.add(createPlatform(d, height, PType.MEDIUM));
+                    spatials.add(createPlatform(d, height, PType.MEDIUM, windowDesign));
                     d += PType.MEDIUM.length + dist;
                 }
                 powerupType = -1;
@@ -220,14 +226,14 @@ public class ChunkFactory {
             case (5): // long platform with short platforms above
                 float d2 = d + PType.LONG.length/2; // start higher platforms a bit in
                 while (d < totalLength) {
-                    spatials.add(createPlatform(d, height, PType.LONG));
+                    spatials.add(createPlatform(d, height, PType.LONG, windowDesign));
                     d += PType.LONG.length;
                 }
                 d += dist;
                 height += 15;
                 windowHeight = height;
                 while (d2 < totalLength) {
-                    spatials.add(createPlatform(d2, height,PType.SHORT));
+                    spatials.add(createPlatform(d2, height,PType.SHORT, windowDesign));
                     spatials.add(createLinearBat(d2 + 40,height - 6));
                     d2 += PType.SHORT.length + 2*dist;
                     height += 1 + random.nextFloat();
@@ -240,7 +246,7 @@ public class ChunkFactory {
 
         // fill up with platforms if whatever was in the switch statement didn't already
         while (d < totalLength) {
-            spatials.add(createPlatform(d, height, PType.SHORT));
+            spatials.add(createPlatform(d, height, PType.SHORT, windowDesign));
             height += random.nextInt(9) - 4;
             d += PType.SHORT.length + dist;
         }
@@ -346,7 +352,6 @@ public class ChunkFactory {
             case (0): // window
             case (1):
             case (2):
-                WindowFrame.Design windowDesign = random.nextBoolean() ? WindowFrame.Design.BIRD : WindowFrame.Design.FLOWERS;
                 WindowFrame window = createWindowFrame(30f, windowHeight + 23f, windowDesign);
                 staticObjects.attachChild(window);
                 if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
@@ -407,9 +412,9 @@ public class ChunkFactory {
     /**
      * Creates a platform at a given 2d position.
      */
-    private Platform createPlatform(float positionX, float positionY, PType type) {
+    private Platform createPlatform(float positionX, float positionY, PType type, WindowFrame.Design windowDesign) {
         Vector3f platformPos = new Vector3f(positionX, positionY, 0f);
-        return new Platform(this.assetManager, platformPos, type);
+        return new Platform(this.assetManager, platformPos, type, windowDesign);
     }
 
     /* Creates a windowframe on the wall at a given position */

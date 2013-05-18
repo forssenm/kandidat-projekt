@@ -13,6 +13,7 @@ import com.jme3.math.Vector4f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.shader.VarType;
 import com.jme3.texture.Texture;
@@ -57,13 +58,14 @@ public class Platform extends Node {
      * @param assetManager is used to load the geometry and texture of
      * the <code>Platform</code>.
      */
-    public Platform(AssetManager assetManager, Vector3f position, PType type) {
+    public Platform(AssetManager assetManager, Vector3f position, PType type, WindowFrame.Design windowDesign) {
         super("platform");
         this.type = type;
         
         if (modelForShortPlatform == null) {
             initModels(assetManager);
         }
+        
         
         float length = type.length;
         
@@ -82,8 +84,11 @@ public class Platform extends Node {
                 break;
         }
         
-        
-
+        if (windowDesign != null && (EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS)) {
+            for (Spatial part : this.getChildren()) {
+                ((Geometry)((Node)((Node)part).getChild("Cube")).getChild("Cube1")).getMaterial().setTexture("LightTexture", assetManager.loadTexture(windowDesign.lightColorsSrc));
+            }
+        }
         
         this.setLocalTranslation(length / 2 + position.x, position.y, -P.playerZOffset);
 
@@ -111,7 +116,7 @@ public class Platform extends Node {
         if (EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
             MultiColoredLightMaterial newMaterial = new MultiColoredLightMaterial(assetManager, "Materials/MultiColoredLighting.j3md");
             newMaterial.setOnlyOneWindowLight(true);
-            newMaterial.setTexture("LightTexture", assetManager.loadTexture("Models/window/Light/light_colors_test.png"));
+            
             Geometry platform = ((Geometry)((Node)modelForShortPlatform.getChild("Cube")).getChild("Cube1"));
             /*for (MatParam p : platform.getMaterial().getParams()) {
                 System.out.println(p + " " + p.getName() + " " + p.getVarType() + " " + p.getValue());
