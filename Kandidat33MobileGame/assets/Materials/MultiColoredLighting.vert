@@ -1,7 +1,7 @@
 #define ATTENUATION
 //#define HQ_ATTENUATION
 
-#import "Common/ShaderLib/Skinning.glsllib"
+//#import "Common/ShaderLib/Skinning.glsllib"
 
 //varying float typeNr;
 varying vec2 lightDistance;
@@ -96,7 +96,7 @@ varying vec3 lightVec;
 
 // JME3 lights in world space
 void lightComputeDir(in vec3 worldPos, in vec4 color, in vec4 position, out vec4 lightDir){
-    float posLight = step(0.5, (color.w == 5) ? 1.0f : color.w);
+    float posLight = step(0.5, (color.w == 5) ? 1.0 : color.w);
     vec3 tempVec = position.xyz * sign(posLight - 0.5) - (worldPos * posLight);
     lightVec = tempVec;  
     #ifdef ATTENUATION
@@ -176,7 +176,7 @@ void main(){
        //vec4 wvLightPos = (g_ViewMatrix * vec4(lightPos.xyz, lightColor.w));
        //wvLightPos.w = lightPos.w;
 
-   vec4 wvLightPos = (g_ViewMatrix * vec4(g_LightPosition.xyz,clamp(g_LightColor.w == 5 ? 1.0f : g_LightColor.w,0.0,1.0)));
+   vec4 wvLightPos = (g_ViewMatrix * vec4(g_LightPosition.xyz,clamp((g_LightColor.w == 5 ? 1.0 : g_LightColor.w),0.0,1.0)));
    wvLightPos.w = g_LightPosition.w;
    vec4 lightColor = g_LightColor;
     //vec4 lightColor = vec4(0.7,1,0.5,1);
@@ -241,11 +241,13 @@ void main(){
     #endif 
 
     //typeNr = g_LightColor.a;
-    lightDistance = wvLightPos.xy + vec2(0.0f, 7.0f)- wvPosition.xy;
-    if (g_LightColor.a != 5) {
-        lightDistance.y = -5000;
-        lightDistance.x = -5000;
+    lightDistance = wvLightPos.xy + vec2(0.0, 7.0)- wvPosition.xy;
+    if ((int(g_LightColor.a)) != 5) {
+        lightDistance = vec2(-5000.0, -5000.0);
     }
+
+    lightDistance = vec2(-5000.0f, -5000.0f);
+
     /*
     objectPos = wvPosition.xy;
     windowLightPos = wvLightPos.xy;

@@ -294,13 +294,13 @@ void main(){
         //vec2 lightDistance = windowLightPos - objectPos; 
 
         //float factorLight = 1;
-        float factorLight = (lightDistance.y == -5000) ? 0.0f : max(0, 1-((lightDistance.x >= 0 ? lightDistance.x-15 : -lightDistance.x-15)/23.5f));
+        float factorLight = (lightDistance.y == -5000.0) ? 0.0 : max(0.0, 1-((lightDistance.x >= 0 ? lightDistance.x-15.0 : -lightDistance.x-15.0)/23.5));
         //float factorLight = (lightDistance.y == -5000) ? 0.0f : max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/30.0f));
         //float factorLight = (lightDistance.x < -10 || lightDistance.x > 10) ? 0.0f : 1.0f;
         //float factorLight = max(0, 1-((lightDistance.x >= 0 ? lightDistance.x : -lightDistance.x)/10.0f));
         //float factorLight = max(0, 1-((lightDistance.x*lightDistance.x + lightDistance.y * lightDistance.y)/70.0f));
         //float factorLight = 1;
-        vec4 lightColor2 = (factorLight == 0.0f) ? vec4(1, 1, 1, 1) : (1-factorLight) * vec4(1, 1, 1, 1) + factorLight * texture2D(m_LightTexture, vec2(0.5f,0.5f)*normalize(-lightDistance)+vec2(0.5f,0.5f));
+        vec4 lightColor2 = (factorLight == 0.0) ? vec4(1.0, 1.0, 1.0, 1.0) : (1.0-factorLight) * vec4(1.0, 1.0, 1.0, 1.0) + factorLight * texture2D(m_LightTexture, vec2(0.5,0.5)*normalize(-lightDistance)+vec2(0.5,0.5));
 
         //float factorLight = max(0, (lightVec.x*lightVec.x + lightVec.y * lightVec.y));
         //vec4 lightColor2 = (1-factorLight) * vec4(1, 1, 1, 1) + factorLight * texture2D(m_LightTexture, vec2(0.5f,0.5f)*normalize(-lightVec.xy)+vec2(0.5f,0.5f));

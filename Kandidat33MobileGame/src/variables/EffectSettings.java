@@ -6,7 +6,7 @@ package variables;
  */
 public class EffectSettings {
     public static final AmbientOcclusion ambientOcclusion = AmbientOcclusion.NONE;
-    public static final Light light = Light.TEXTURES_SMALL_LIGHTS;
+    public static final Light light = Light.STANDARD_LIGHTING;
     
             
     public enum AmbientOcclusion {
