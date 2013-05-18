@@ -107,7 +107,7 @@ public class MileStone extends Node {
         materialForD = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         materialForD.setTexture("DiffuseMap", textureForD);
         
-        Box model = new Box(new Vector3f(LENGTH,0,-P.platformWidth/2-P.playerZOffset), LENGTH, LENGTH, 0.1f);
+        Box model = new Box(new Vector3f(LENGTH,0,-P.platformWidth/2-P.playerZOffset), LENGTH, LENGTH, 0.05f);
         geometryForMilestone = new Geometry("",model);
     }
     
