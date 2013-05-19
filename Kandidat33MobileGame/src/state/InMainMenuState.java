@@ -85,6 +85,11 @@ public class InMainMenuState extends AbstractAppState {
     //Might need to move these methods to the controllers
     @NiftyEventSubscriber(id = "playButton")
     public void onPlayClick(String id, NiftyMousePrimaryClickedEvent event) {
+        InGameState.firstPrint = true;
+        InGameState.lightSamples = 0;
+        InGameState.samples = 0;
+        InGameState.totalFPS = 0;
+        InGameState.totalLightSources = 0;
         this.app.gameStart();
     }
 

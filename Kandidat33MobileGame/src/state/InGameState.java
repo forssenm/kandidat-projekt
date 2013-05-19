@@ -3,6 +3,7 @@ package state;
 import audio.MusicNode;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.StatsView;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
@@ -231,11 +232,19 @@ public class InGameState extends AbstractAppState {
     private int difficultyLevel;
     private float lightShiftTime;
     
+    public static double totalFPS = 0;
+    public static int samples = 0;
+    public static boolean firstPrint = true;
+    public static int totalLightSources = 0;
+    public static int lightSamples = 0;
     /**
      * {inheritDoc}
      */
     @Override
     public void update(float tpf) {
+        double fps = app.getTimer().getFrameRate();
+        samples++;
+        totalFPS+=fps;
         if (EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
             this.updateAOIntervals();
         }
@@ -271,6 +280,11 @@ public class InGameState extends AbstractAppState {
             }
             
         } else { // gameOver
+            if(this.firstPrint) {
+                System.out.println("FPS: " + (totalFPS/samples) + " (" + samples + " samples)");
+                System.out.println("Lights: " + (((double)totalLightSources)/lightSamples) + " (" + lightSamples + " samples)");
+                firstPrint = false;
+            }
             // wait until player has fallen down
             if (player.getWorldTranslation().getY() < P.deathTreshold - 30) {
                 this.setEnabled(false);

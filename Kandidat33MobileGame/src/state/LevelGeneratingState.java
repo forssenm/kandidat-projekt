@@ -132,7 +132,9 @@ public class LevelGeneratingState extends AbstractAppState {
                 }
             }
         }
+        int numLights = 0;
         for (Light light : this.gameNode.getLocalLightList()) {
+            numLights++;
             if (light instanceof PointLight) {
                 if (isOutsideLevelBounds(((PointLight)light).getPosition())) {
                     this.gameNode.removeLight(light);
@@ -154,6 +156,11 @@ public class LevelGeneratingState extends AbstractAppState {
                 }
             }
         }
+        if(numLights >= 2) {
+            InGameState.totalLightSources += numLights-1;
+        }
+        InGameState.lightSamples++;
+        //System.out.println("-------------------LIGHTS: " + numLights);
     }
     
     Collection tempColl = new LinkedList<Spatial>();
@@ -305,6 +312,11 @@ public class LevelGeneratingState extends AbstractAppState {
     public void removeAllFromLevel() {
         for (Spatial spatial : getAllLevelObjects()) {
             removeFromLevel(spatial);
+        }
+        for (Light light : this.gameNode.getLocalLightList()) {
+            if (! (light instanceof DirectionalLight)) {
+                removeFromLevel(light);
+            }
         }
     }
     
