@@ -118,6 +118,7 @@ public class InGameState extends AbstractAppState {
         sun.setColor(P.sunColor);
         //sun.setColor(ColorRGBA.White);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
+        P.currentSunColor = P.sunColor.toVector3f();
         gameNode.addLight(sun);
 
         initAudio();
@@ -264,6 +265,7 @@ public class InGameState extends AbstractAppState {
                 }
             }
             sun.setColor(P.sunColor.mult(1 + (lightShiftTime / 0.5f)));
+            P.currentSunColor = sun.getColor().toVector3f();
         }
         
         if (!gameOver) {

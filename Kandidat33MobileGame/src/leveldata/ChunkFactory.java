@@ -443,15 +443,23 @@ public class ChunkFactory {
 
     /* Creates a spotlight shining through a window at a given position */
     private Light createWindowLight(float positionX, float positionY) {
-        SpotLight windowLight = new SpotLight();
-        windowLight.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
-        windowLight.setSpotOuterAngle(45f * FastMath.DEG_TO_RAD);
-        windowLight.setSpotInnerAngle(12f * FastMath.DEG_TO_RAD);
-        Vector3f windowPosition = new Vector3f(positionX, positionY + 8f, -P.platformWidth / 2 + 0.2f);
-        windowLight.setPosition(windowPosition);
-        windowLight.setDirection(P.windowLightDirection);
-        windowLight.setSpotRange(100f);
-        return windowLight;
+        if(EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
+            SpotLight windowLight = new SpotLight();
+            windowLight.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
+            windowLight.setSpotOuterAngle(45f * FastMath.DEG_TO_RAD);
+            windowLight.setSpotInnerAngle(12f * FastMath.DEG_TO_RAD);
+            Vector3f windowPosition = new Vector3f(positionX, positionY + 8f, -P.platformWidth / 2 + 0.2f);
+            windowLight.setPosition(windowPosition);
+            windowLight.setDirection(P.windowLightDirection);
+            windowLight.setSpotRange(100f);
+            return windowLight;
+        } else {
+            PointLight light = new PointLight();
+            light.setRadius(75);
+            light.setPosition(new Vector3f(positionX, positionY-5, -P.platformWidth / 2 + 0.2f));
+            light.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
+            return light;
+        }
     }
 
     /* Creates a pointlight, to use with a torch */
