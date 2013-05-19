@@ -341,5 +341,9 @@ public class LevelGeneratingState extends AbstractAppState {
     public void read(JmeImporter im) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    int getChunkNumber() {
+        return this.chunkNumber;
+    }
     
 }

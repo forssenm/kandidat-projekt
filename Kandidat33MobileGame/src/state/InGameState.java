@@ -12,6 +12,7 @@ import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
+import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
@@ -35,10 +36,12 @@ import filters.BuiltInSSAO_intervals;
 import java.util.LinkedList;
 import java.util.List;
 import main.Main;
+import spatial.MileStone;
 import spatial.Player;
 import spatial.hazard.LinearFireball;
 import variables.EffectSettings;
 import variables.EffectSettings.AmbientOcclusion;
+import variables.EffectSettings.Score;
 import variables.P;
 
 /**
@@ -119,6 +122,13 @@ public class InGameState extends AbstractAppState {
         //sun.setColor(ColorRGBA.White);
         sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
         gameNode.addLight(sun);
+
+        if (EffectSettings.score == Score.ON) {
+            DirectionalLight a = new DirectionalLight();
+            a.setColor(ColorRGBA.White);
+            a.setDirection(Vector3f.UNIT_Z.negate());
+            this.app.getGuiNode().addLight(a);
+        }
 
         initAudio();
         
@@ -298,6 +308,9 @@ public class InGameState extends AbstractAppState {
         gameOver = true;
         this.app.gameOver();
         this.chaseCam.setEnabled(false);
+        if (EffectSettings.score == Score.ON) {
+            printScore();
+        }
     }
         
     @Override
@@ -314,6 +327,9 @@ public class InGameState extends AbstractAppState {
      * level and difficulty.
      */
     public void restartLevel() {
+        if (EffectSettings.score == Score.ON) {
+            this.app.getGuiNode().detachChildNamed("score");
+        }
         gameOver = false;
         gameTime = 0;
         difficultyLevel = 0;
@@ -381,5 +397,13 @@ public class InGameState extends AbstractAppState {
         stopInvulnerable = !setting;
         
         
+    }
+
+    private void printScore() {
+        int temp = (int) (this.level.getChunkNumber() - 3) / 3;
+        Spatial score = new MileStone(assetManager, temp);
+        score.setName("score");
+        this.app.getGuiNode().attachChild(score.scale(10f));
+        score.setLocalTranslation(P.screenWidth/2, P.screenHeight/2, 0f);
     }
 }

@@ -43,9 +43,10 @@ public class MileStone extends Node {
             initMaterials(assetManager);
         }
         
+        
         String mileStoneText = RomanNumber.romanNumberString(progress);
         Geometry temp;
-        float length = 0;
+        float length = -mileStoneText.length()*LENGTH;
         for (int i = 0; i < mileStoneText.length(); i++) {
             temp = null;
             switch (mileStoneText.charAt(i)) {
@@ -106,6 +107,7 @@ public class MileStone extends Node {
         materialForL.setTexture("DiffuseMap", textureForL);
         materialForD = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         materialForD.setTexture("DiffuseMap", textureForD);
+        
         
         Box model = new Box(new Vector3f(LENGTH,0,-P.platformWidth/2-P.playerZOffset), LENGTH, LENGTH, 0.1f);
         geometryForMilestone = new Geometry("",model);
