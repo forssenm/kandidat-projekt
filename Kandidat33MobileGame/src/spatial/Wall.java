@@ -10,6 +10,8 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
+import material.WallMaterial;
+import variables.EffectSettings;
 import variables.P;
 
 /**
@@ -33,9 +35,17 @@ public class Wall extends Node {
         if(material == null){
             Texture texture = assetManager.loadTexture("Textures/tegel.png");
             texture.setWrap(Texture.WrapMode.Repeat);
-
-            material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-            material.setTexture("DiffuseMap", texture);
+            
+            if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING || EffectSettings.light == EffectSettings.Light.NONE) {
+                material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+                material.setTexture("DiffuseMap", texture);
+            } else {
+                material =  new WallMaterial(assetManager, "Materials/WallUnshaded.j3md");
+                material.setTexture("ColorMap", texture);
+                /*material =  new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+                material.setTexture("ColorMap", texture);*/
+            }
+            
         }
         
         Quad model = new Quad(P.chunkLength,WALL_HEIGHT/2);
