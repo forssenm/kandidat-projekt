@@ -90,6 +90,8 @@ public class ChunkFactory {
         LinkedList<Light> lights = new LinkedList<Light>();
 
         // Generate everything with a physical / game mechanical connection:
+        
+        
 
         // standard length and distance
         float totalLength = P.chunkLength;
@@ -259,7 +261,7 @@ public class ChunkFactory {
                 float wizardPosY = spatials.getLast().getLocalTranslation().getY()
                         + 18;
                 spotlight = new SpotLight();
-                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
+                if (P.useWizardLights && EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
                     lights.add(spotlight);
                 }
                 spatials.add(createWizard(wizardPosX, wizardPosY, spotlight));
@@ -271,7 +273,7 @@ public class ChunkFactory {
                 wizardPosY = spatials.getLast().getLocalTranslation().getY()
                         + 18;
                 spotlight = new SpotLight();
-                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
+                if (P.useWizardLights && EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
                     lights.add(spotlight);
                 }
                 spatials.add(createBurstWizard(wizardPosX, wizardPosY, spotlight));
@@ -301,7 +303,7 @@ public class ChunkFactory {
             case (7):
                 // a wizard in the foreground shooting fireballs at where the player's going
                 spotlight = new SpotLight();
-                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
+                if (P.useWizardLights && EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
                     lights.add(spotlight);
                 }
                 spatials.add(createCalculatingWizard(d, height, spotlight));
@@ -331,6 +333,13 @@ public class ChunkFactory {
                 break;
         }
         
+        //test amount of lights that can be used in a scene
+        /*
+        double useLight = random.nextDouble();
+        if (useLight <= 0.25) {
+            lights.add(this.createTorchLight(15f, windowHeight + 15f));
+            //lights.add(this.createWindowLight(30f, windowHeight + 23f));
+        }*/
         
         // Generate the background:
         Node staticObjects = new Node("background");
@@ -347,7 +356,7 @@ public class ChunkFactory {
                 WindowFrame.Design windowDesign = random.nextBoolean() ? WindowFrame.Design.BIRD : WindowFrame.Design.FLOWERS;
                 WindowFrame window = createWindowFrame(30f, windowHeight + 23f, windowDesign);
                 staticObjects.attachChild(window);
-                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
+                if ((EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING && P.useWindowLights) || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
                     lights.add(this.createWindowLight(30f, windowHeight + 23f));
                 }
                 break;
@@ -356,7 +365,7 @@ public class ChunkFactory {
             case (5):
                 Torch torch = createTorch(15, windowHeight + 15);
                 staticObjects.attachChild(torch);
-                if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
+                if ((EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING && P.useTorchLights) || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
                     lights.add(this.createTorchLight(15f, windowHeight + 15f));
                 }
                 break;

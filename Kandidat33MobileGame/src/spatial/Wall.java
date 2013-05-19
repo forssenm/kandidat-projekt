@@ -34,8 +34,11 @@ public class Wall extends Node {
             Texture texture = assetManager.loadTexture("Textures/tegel.png");
             texture.setWrap(Texture.WrapMode.Repeat);
 
-            material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-            material.setTexture("DiffuseMap", texture);
+            /*material = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+            material.setTexture("DiffuseMap", texture);*/
+            
+            material =  new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+            material.setTexture("ColorMap", texture);
         }
         
         Quad model = new Quad(P.chunkLength,WALL_HEIGHT/2);
