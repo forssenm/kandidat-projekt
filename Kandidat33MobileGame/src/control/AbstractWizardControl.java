@@ -9,6 +9,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import control.AbstractPlayerInteractorControl;
 import leveldata.LevelContentGenerator;
 import spatial.Player;
@@ -105,11 +106,13 @@ public abstract class AbstractWizardControl extends AbstractPlayerInteractorCont
     }
 
     public void lookAt(Vector3f position) {
+        Spatial wizard = ((Node)spatial).getChild("wizardSpatial");
         Vector3f direction = position.subtract(spatial.getLocalTranslation());
-        float theta = FastMath.atan2(direction.x,direction.z + 3f)/2 + FastMath.PI + 0.3f;
+        float theta = FastMath.atan2(direction.x,direction.z + 3f)/2 + 0.3f;//+FastMath.DEG_TO_RAD*180;
         float[] angles = {0f, theta, 0.0f};
         Quaternion rotation = new Quaternion(angles);
-        this.spatial.setLocalRotation(rotation);
+        wizard.setLocalRotation(rotation);
+        //spatial.rotate(0, FastMath.DEG_TO_RAD * 180, 0);
         this.spotlight.setDirection(direction.subtractLocal(wizardLightOffset));
     }
 

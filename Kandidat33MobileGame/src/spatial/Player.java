@@ -75,9 +75,19 @@ public class Player extends Node implements AnimEventListener {
         playerControl = new PlayerControl(1f, 4f+hoverHeight);
         playerControl.setSpeedFactor(P.speedFactor);
         this.addControl(playerControl);
+        
+        playerModel = (Node) assetManager.loadModel("Models/ghost/ghost04-014cloth003armature003UV002.j3o");
+        playerModel.rotate(0, -2.07f, 0);
+        playerModel.scale(1f);
+        playerModel.setLocalTranslation(0f,2.8f+hoverHeight,0f); 
+        control = playerModel.getChild("Sphere").getControl(AnimControl.class);
+        channel = control.createChannel();
+        channel.setAnim("ArmatureAction.000");
 
+        /*
         //Sets the model of the player
         if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
+            
             playerModel = (Node) assetManager.loadModel("Models/ghost/AO/ghost-with-ao.j3o");
             playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
             control = playerModel.getChild("Plane").getControl(AnimControl.class);
@@ -89,17 +99,14 @@ public class Player extends Node implements AnimEventListener {
             this.attachChild(floorOcclusion);
         } else {
             
-            playerModel = (Node) assetManager.loadModel("Models/ghost/ghost04-014cloth003armature003UV002.j3o");
-            playerModel.rotate(0, -2.07f, 0);
-            playerModel.scale(1f);
-            playerModel.setLocalTranslation(0f,2.8f+hoverHeight,0f); 
-            control = playerModel.getChild("Sphere").getControl(AnimControl.class);
-            channel = control.createChannel();
-            channel.setAnim("ArmatureAction.000");
-            // Nina's
-            /*playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
-            playerModel.setLocalTranslation(0f,1.8f+hoverHeight,0f); 
-            control = playerModel.getChild("Plane").getControl(AnimControl.class);*/
+            
+        }
+        * */
+        
+        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
+            ((Geometry)((Node)playerModel.getChild("Sphere")).getChild("Sphere1")).getMaterial().setTexture("DiffuseMap", assetManager.loadTexture("Models/ghost/AO/ghost-ao-small.png"));
+            this.attachChild(this.addWallOcclusion(assetManager, hoverHeight));
+            this.attachChild(this.addFloorOcclusion(assetManager, hoverHeight));
         }
         
         ParticleEmitter dust = this.getDustParticleEmitter(assetManager);
@@ -186,24 +193,26 @@ public class Player extends Node implements AnimEventListener {
 
 
     private Geometry addWallOcclusion(AssetManager assetManager, float hoverHeight) {
-        Quad wallAO = new Quad(13, 13);
+        Quad wallAO = new Quad(8*9/9, 8*12/9);
         Geometry wall = new Geometry("wallOcclusion", wallAO);
         wall.setLocalTranslation(-wallAO.getWidth()/2, -wallAO.getHeight()/2+hoverHeight, -P.platformWidth/2-P.playerZOffset+0.2f);
         Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/ghost/AO/wall-ao-transparent.png"));
+        wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/ghost/AO/wall-ao-small.png"));
         wallMaterial.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); // activate transparency
+        wallMaterial.getAdditionalRenderState().setDepthWrite(false);
         wall.setMaterial(wallMaterial);
         wall.setQueueBucket(Bucket.Transparent);
         return wall;
     }
     
     private Geometry addFloorOcclusion(AssetManager assetManager, float hoverHeight) {
-        Box floorAO = new Box(6.5f, 0f, 6.5f);
+        Box floorAO = new Box(4.2f/3, 0f, 6.5f/3);
         Geometry floor = new Geometry("floorOcclusion", floorAO);
-        floor.setLocalTranslation(0f, 0.25f, 0f);
+        floor.setLocalTranslation(0f, 0.35f, 0f);
         Material floorMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        floorMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/ghost/AO/floor-ao-transparent.png"));
+        floorMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/ghost/AO/floor-ao-small.png"));
         floorMaterial.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); // activate transparency
+        floorMaterial.getAdditionalRenderState().setDepthWrite(false);
         floor.setMaterial(floorMaterial);
         floor.setQueueBucket(Bucket.Transparent);
         return floor;
