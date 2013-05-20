@@ -10,6 +10,7 @@ import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import material.WallMaterial;
 import variables.EffectSettings;
 import variables.P;
 
@@ -59,10 +60,10 @@ public class WindowFrame extends Node {
         
         Node window = (Node)assetManager.loadModel("Models/window/flat-window-2.j3o");
         if (EffectSettings.light == EffectSettings.Light.TEXTURES || EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
-            Material newMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-            //Material newMaterial = new WallMaterial(assetManager, "Materials/WallUnshaded.j3md");
+            //Material newMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+            Material newMaterial = new WallMaterial(assetManager, "Materials/WallUnshaded.j3md");
             newMaterial.setTexture("ColorMap", assetManager.loadTexture(design.lightModelTexture));
-            //newMaterial.setTexture("AffectMap", assetManager.loadTexture("Models/window/Light/affectionMap.png"));
+            newMaterial.setTexture("AffectMap", assetManager.loadTexture("Models/window/Light/affectionMap.png"));
             ((Geometry)((Node)window.getChild("Cylinder")).getChild("Cylinder1")).setMaterial(newMaterial);
         } else {
             ((Geometry)((Node)window.getChild("Cylinder")).getChild("Cylinder1")).getMaterial().setTexture("DiffuseMap", assetManager.loadTexture(design.modelTexture));
