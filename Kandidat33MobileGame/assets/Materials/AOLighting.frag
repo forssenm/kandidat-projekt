@@ -278,14 +278,17 @@ void main(){
             light.y = 1.0;
        #endif
 
+       vec3 AmbientSum2 = AmbientSum;
+       vec4 DiffuseSum2 = DiffuseSum;
+
        #ifdef AOMAP
             vec3 AOColor = texture2D(m_AOMap, newTexCoord).xyz;
-            AmbientSum *= AOColor;
-            DiffuseSum.rgb *= AOColor;
+            AmbientSum2 *= AOColor;
+            DiffuseSum2.rgb *= AOColor;
        #endif
 
-       gl_FragColor.rgb =  AmbientSum       * diffuseColor.rgb  +
-                           DiffuseSum.rgb   * diffuseColor.rgb  * vec3(light.x) +
+       gl_FragColor.rgb =  AmbientSum2       * diffuseColor.rgb  +
+                           DiffuseSum2.rgb   * diffuseColor.rgb  * vec3(light.x) +
                            SpecularSum2.rgb * specularColor.rgb * vec3(light.y);
     #endif
     gl_FragColor.a = alpha;

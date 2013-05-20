@@ -156,6 +156,7 @@ public class Torch extends Node {
         Material wallMaterial = new LightTextureMaterial(assetManager, "Materials/UnshadedMovingTexture.j3md");
         wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/torch/Light/light.png"));
         wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
+        wallMaterial.getAdditionalRenderState().setDepthWrite(false);
         wall.setMaterial(wallMaterial);
         wall.setQueueBucket(RenderQueue.Bucket.Transparent);
         return wall;
