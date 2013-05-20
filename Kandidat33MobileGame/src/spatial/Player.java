@@ -15,6 +15,7 @@ import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.math.Vector4f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
@@ -25,6 +26,7 @@ import com.jme3.scene.shape.Quad;
 import control.PlayerControl;
 import java.util.Iterator;
 import java.util.Random;
+import material.MultiColoredLightMaterial;
 import state.InGameState;
 import variables.EffectSettings;
 import variables.EffectSettings.AmbientOcclusion;
@@ -77,6 +79,17 @@ public class Player extends Node implements AnimEventListener {
         this.addControl(playerControl);
         
         playerModel = (Node) assetManager.loadModel("Models/ghost/ghost04-014cloth003armature003UV002.j3o");
+        
+        if (EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
+            Material newMaterial = new MultiColoredLightMaterial(assetManager, "Materials/MultiColoredLighting.j3md");
+            newMaterial.setTexture("DiffuseMap", assetManager.loadTexture("Models/ghost/cloth.png"));
+            newMaterial.setBoolean("UseMaterialColors", true);
+            newMaterial.setVector4("Specular", new Vector4f( 0.8f,0.8f,0.8f,1.0f));
+            newMaterial.setVector4("Ambient", new Vector4f( 0, 0, 0, 1));
+            newMaterial.setVector4("Diffuse", new Vector4f( 1.0f, 1.0f, 1.0f, 1.0f));
+            ((Geometry)((Node)playerModel.getChild("Sphere")).getChild("Sphere1")).setMaterial(newMaterial);
+        }
+        
         playerModel.rotate(0, -2.07f, 0);
         playerModel.scale(1f);
         playerModel.setLocalTranslation(0f,2.8f+hoverHeight,0f); 

@@ -8,12 +8,15 @@ import com.jme3.material.RenderState;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.math.Vector4f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
+import material.MultiColoredLightMaterial;
 import variables.EffectSettings;
 import variables.EffectSettings.AmbientOcclusion;
 import variables.P;
@@ -51,13 +54,32 @@ public class Platform extends Node {
      * @param assetManager is used to load the geometry and texture of
      * the <code>Platform</code>.
      */
-    public Platform(AssetManager assetManager, Vector3f position, PType type) {
+    public Platform(AssetManager assetManager, Vector3f position, PType type, WindowFrame.Design windowDesign) {
         super("platform");
         this.type = type;
         
         
         float length = type.length;
         Node platform = (Node)assetManager.loadModel("Models/platform/untitled8-new.j3o");
+        
+        if (EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
+            MultiColoredLightMaterial newMaterial = new MultiColoredLightMaterial(assetManager, "Materials/MultiColoredLighting.j3md");
+            newMaterial.setOnlyOneWindowLight(true);
+            
+            Geometry platformGeom = ((Geometry)((Node)platform.getChild("Cube")).getChild("Cube1"));
+            /*for (MatParam p : platform.getMaterial().getParams()) {
+                System.out.println(p + " " + p.getName() + " " + p.getVarType() + " " + p.getValue());
+                //newMaterial.setParam(p.getName(), p.getVarType(), p.getValue());
+            }*/
+            newMaterial.setTexture("DiffuseMap", assetManager.loadTexture("Models/platform/untitled8-uv-tegel.png"));
+            newMaterial.setBoolean("UseMaterialColors", true);
+            newMaterial.setVector4("Specular", new Vector4f( 1.0f, 1.0f, 1.0f, 1.0f));
+            newMaterial.setVector4("Ambient", new Vector4f( 0, 0, 0, 1));
+            newMaterial.setVector4("Diffuse", new Vector4f( 1.0f, 1.0f, 1.0f, 1.0f));
+            platformGeom.setMaterial(newMaterial);
+            
+        }
+        
         platform.rotate(180*FastMath.DEG_TO_RAD, 0, 0);
         if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE || EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
             ((Geometry)((Node)platform.getChild("Cube")).getChild("Cube1")).getMaterial().setTexture("DiffuseMap", assetManager.loadTexture("Models/platform/AO/plaform-ao-small.png"));
@@ -85,6 +107,12 @@ public class Platform extends Node {
 
         this.addControl(rigidBodyControl);
         
+        if (windowDesign != null && (EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS)) {
+            for (Spatial part : this.getChildren()) {
+                ((Geometry)((Node)((Node)part).getChild("Cube")).getChild("Cube1")).getMaterial().setTexture("LightTexture", assetManager.loadTexture(windowDesign.lightColorsSrc));
+            }
+        }
+        
         if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE || EffectSettings.ambientOcclusion == AmbientOcclusion.INTERVAL_POST_PROCESSING) {
             this.attachChild(addWallOcclusion(assetManager, length));
             //Node platformOccl = this.addPlatformOcclusion(assetManager, length);
@@ -92,7 +120,7 @@ public class Platform extends Node {
             //wallOccl.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
             //platformOccl.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         }
-
+        
         this.setShadowMode(ShadowMode.CastAndReceive);
     }
 
