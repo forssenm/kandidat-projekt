@@ -23,12 +23,16 @@
     <!-- +++++++++++++++++++++++++++++++++++++++ -->    
     <screen id="mainMenuScreen" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center" backgroundColor="#000F">
-            <image id="imageId" filename="Textures/MainMenuScreen.jpg" align="right"/>
-            <panel id="mainMenuPanel" childLayout="vertical" align="left">
-                <control id="playButton" name="button" label="Play" margin="15px" focusable="false"/>
-                <control id="settingsButton" name="button" label="Settings" margin="15px" focusable="false"/>
-                <control id="highscoreButton" name="button" label="Highscore" margin="15px" focusable="false"/>
-                <control id="tutorialButton" name="button" label="Tutorial" margin="15px" focusable="false"/> 
+            <image id="imageId" filename="Textures/MainMenuScreen2.jpg" align="right"/>
+            <panel id="mainMenuPanel" childLayout="vertical" align="left" width = "30%">
+                <panel id="playButtonPanel" childLayout="center" paddingLeft="10%" paddingTop="35%" paddingBottom = "10%" height = "50%" width = "100%">
+                    <control id="playButton" name="button" label="Play"  focusable="false" width="100%" height="100%"/>
+                </panel>
+                <!--<control id="settingsButton" name="button" label="Settings" margin="15px" focusable="false" height = "20%" width = "100%"/>
+                <control id="highscoreButton" name="button" label="Highscore" margin="15px" focusable="false" height = "20%" width = "100%"/>-->
+                <panel id="playButtonPanel" childLayout="center" paddingLeft="10%" paddingTop="10%" paddingBottom = "35%" height = "50%" width = "100%">
+                    <control id="tutorialButton" name="button" label="Instructions" focusable="false" width="100%" height="100%"/>
+                </panel>
             </panel>
         </layer>
     </screen>
@@ -39,9 +43,8 @@
     <screen id="tutorialScreenOne" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center" backgroundColor="#000F">
             <image id="imageId" filename="Textures/Tutorial_Jump.jpg" />
-            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom">
-                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" focusable="false"/> 
-                <control id="tutorialTwoButton" name="button" label="Next" margin="15px" focusable="false"/> 
+            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom" paddingBottom="15px" height="10%">                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" height="100%" focusable="false"/> 
+                <control id="tutorialTwoButton" name="button" label="Next" margin="15px" height="100%" focusable="false"/> 
             </panel>
         </layer>
     </screen>
@@ -49,10 +52,10 @@
     <screen id="tutorialScreenTwo" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center" backgroundColor="#000F">
             <image id="imageId" filename="Textures/Tutorial_Powerups.jpg" />
-            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom">
-                <control id="tutorialButton" name="button" label="Previous" margin="15px" focusable="false"/> 
-                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" focusable="false"/>
-                <control id="tutorialThreeButton" name="button" label="Next" margin="15px" focusable="false"/>  
+            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom" paddingBottom="15px" height="10%">
+                <control id="tutorialButton" name="button" label="Previous" margin="15px" height="100%" focusable="false"/> 
+                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" height="100%" focusable="false"/>
+                <control id="tutorialThreeButton" name="button" label="Next" margin="15px" height="100%" focusable="false"/>  
             </panel>
         </layer>
     </screen>
@@ -60,10 +63,9 @@
     <screen id="tutorialScreenThree" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center" backgroundColor="#000F">
             <image id="imageId" filename="Textures/Tutorial_Hazards.jpg" />
-            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom">
-                <control id="tutorialTwoButton" name="button" label="Previous" margin="15px" focusable="false"/> 
-                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" focusable="false"/>
-                <control id="tutorialFourButton" name="button" label="Next" margin="15px" focusable="false"/>  
+            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom" paddingBottom="15px" height="10%">                <control id="tutorialTwoButton" name="button" label="Previous" margin="15px" height="100%" focusable="false"/> 
+                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" height="100%" focusable="false"/>
+                <control id="tutorialFourButton" name="button" label="Next" margin="15px" height="100%" focusable="false"/>  
             </panel>
         </layer>
     </screen>
@@ -71,9 +73,8 @@
     <screen id="tutorialScreenFour" controller="niftyController.MainMenuScreenController">
         <layer childLayout="center" backgroundColor="#000F">
             <image id="imageId" filename="Textures/Tutorial_Final.jpg" />
-            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom">
-                <control id="tutorialThreeButton" name="button" label="Previous" margin="15px" focusable="false"/>
-                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" focusable="false"/>  
+            <panel id="mainMenuPanel" childLayout="horizontal" valign="bottom" paddingBottom="15px" height="10%">                <control id="tutorialThreeButton" name="button" label="Previous" margin="15px" height="100%" focusable="false"/>
+                <control id="mainMenuButton" name="button" label="Main Menu" margin="15px" height="100%" focusable="false"/>  
             </panel>
         </layer>
     </screen>
