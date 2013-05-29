@@ -35,6 +35,7 @@ public class SplashScreenController implements ScreenController {
 
         @Override
         public void perform() {
+            System.out.println("fadeIn has ended.");
             image.startEffect(EffectEventId.onCustom, new FadeOutEnd(), "fadeOut");
         }
     }
@@ -43,6 +44,7 @@ public class SplashScreenController implements ScreenController {
 
         @Override
         public void perform() {
+            System.out.println("fadeOut has ended.");
             nifty.gotoScreen("mainMenuScreen");
         }
     }
