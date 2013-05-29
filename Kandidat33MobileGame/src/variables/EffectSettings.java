@@ -5,7 +5,7 @@ package variables;
  * @author nina
  */
 public class EffectSettings {
-    public static final AmbientOcclusion ambientOcclusion = AmbientOcclusion.TEXTURE;
+    public static final AmbientOcclusion ambientOcclusion = AmbientOcclusion.NONE;
     public static final Score score = Score.OFF;
     public static final Light light = Light.TEXTURES_SMALL_LIGHTS;
             

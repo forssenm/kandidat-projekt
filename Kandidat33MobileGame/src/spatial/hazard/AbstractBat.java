@@ -7,7 +7,6 @@ import com.jme3.animation.LoopMode;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.Random;
@@ -30,13 +29,17 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
     @Override
     protected Spatial createModel(AssetManager assetManager) {
 
-        Node model = (Node) assetManager.loadModel("Models/bat/bat2-anim3-smooth.j3o");
-        ((Geometry)((Node)model.getChild("Sphere")).getChild("Sphere1")).getMaterial().setColor("Diffuse", ColorRGBA.Orange);
-        
+        Node model;
         if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
-            ((Geometry)((Node)model.getChild("Sphere")).getChild("Sphere1")).getMaterial().setTexture("AOMap", assetManager.loadTexture("Models/bat/AO/ao-small.png"));
+            model = (Node) assetManager.loadModel("Models/bat/AO/bat-with-ao.j3o");
+        } else {
+            model = (Node) assetManager.loadModel("Models/bat/bat2-anim3-smooth.j3o");
         }
+        Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat.setBoolean("UseMaterialColors", true);
+        mat.setColor("Diffuse", ColorRGBA.Orange);
 
+        model.setMaterial(mat);
         model.rotate(+1.6f, +1.4f, 0); //flying towards player, slightly tilted up
         
         control = model.getChild("Sphere").getControl(AnimControl.class);

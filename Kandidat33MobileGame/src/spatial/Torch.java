@@ -143,9 +143,8 @@ public class Torch extends Node {
         Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         wallMaterial.setTexture("ColorMap", assetManager.loadTexture("Models/torch/AO/wall-ao-small.png"));
         wallMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha); // activate transparency
-        wallMaterial.getAdditionalRenderState().setDepthWrite(false);
         wall.setMaterial(wallMaterial);
-        wall.setQueueBucket(RenderQueue.Bucket.Transparent);
+        //wall.setQueueBucket(RenderQueue.Bucket.Transparent);
         return wall;
     }
     
