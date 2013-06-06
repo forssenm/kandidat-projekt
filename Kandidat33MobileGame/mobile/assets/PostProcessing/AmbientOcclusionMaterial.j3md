@@ -1,0 +1,32 @@
+MaterialDef My MaterialDef {
+
+    MaterialParameters {
+        Int NumSamples
+        Int NumSamplesDepth
+        Texture2D Texture
+        Texture2D DepthTexture
+        Vector4Array intervals
+        Int numMoving
+    }
+
+    Technique {
+        VertexShader GLSL150:   PostProcessing/BuiltInSSAO/Post15.vert
+        FragmentShader GLSL150: PostProcessing/AmbientOcclusion.frag
+
+        WorldParameters {
+            WorldViewProjectionMatrix
+            ViewPort
+        }
+    }
+
+    Technique {
+        VertexShader GLSL120:   PostProcessing/BuiltInSSAO/Post.vert
+        FragmentShader GLSL120: PostProcessing/AmbientOcclusion.frag
+
+        WorldParameters {
+            WorldViewProjectionMatrix
+            ViewPort
+        }
+    }
+
+}

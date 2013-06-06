@@ -38,7 +38,7 @@ public class Main extends SimpleApplication {
 
     public Main(){
         /* This call to super makes sure to not load the flyCam. */
-        super( new DebugKeysAppState());
+        //super( );
         //super(new DebugKeysAppState()); // use this to remove the stats in lower-left corner
         Logger.getLogger("").setLevel(Level.SEVERE);
         Logger.getLogger("Kandidat").setLevel(Level.FINE);
@@ -52,7 +52,7 @@ public class Main extends SimpleApplication {
         inMainMenuState = new InMainMenuState();
         stateManager.attach(inMainMenuState);
         //stateManager.attach(inGameState);
-        
+        flyCam.setEnabled(false);
         //FilterPostProcessor processor = (FilterPostProcessor) assetManager.loadAsset("Filters/PostFilter.j3f");
         //viewPort.addProcessor(processor);
         

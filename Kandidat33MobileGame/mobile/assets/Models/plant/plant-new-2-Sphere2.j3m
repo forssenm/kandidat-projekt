@@ -1,0 +1,23 @@
+Material MyMaterial : Materials/AOLighting.j3md {
+    MaterialParameters {
+        Minnaert : false
+        Specular : 0.046961293 0.032866094 0.020390963 1.0
+        Diffuse : 0.018920427 0.0120874895 0.0073770583 1.0
+        UseMaterialColors : true
+        ParallaxHeight : 0.05
+        Ambient : 0.0 0.0 0.0 1.0
+        Shininess : 20.0
+        WardIso : false
+    }
+    AdditionalRenderState {
+      FaceCull Off
+      Wireframe Off
+      DepthWrite On
+      PolyOffset 0.0 0.0
+      AlphaTestFalloff 0.0
+      Blend Off
+      PointSprite Off
+      ColorWrite On
+      DepthTest On
+    }
+}

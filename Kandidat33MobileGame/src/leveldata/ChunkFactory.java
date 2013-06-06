@@ -111,7 +111,7 @@ public class ChunkFactory {
         
         if (level < P.noOfStartingChunks) { //nothing special on the first few chunks
             platformLayoutType = -1;
-            enemyType = -1;
+            enemyType = 6;//-1;
             powerupType = -1;
             decorationType = 4;
         } else {
