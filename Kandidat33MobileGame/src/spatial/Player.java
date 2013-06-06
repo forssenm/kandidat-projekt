@@ -49,6 +49,7 @@ public class Player extends Node implements AnimEventListener {
     private Geometry floorOcclusion;
 
     //animation
+    private boolean enableAnimations;
     private AnimChannel channel;
     private AnimControl control;
     //end animation
@@ -64,6 +65,7 @@ public class Player extends Node implements AnimEventListener {
     public Player(AssetManager assetManager, InGameState game) {
         super("player");
         this.game = game;
+        this.enableAnimations = false;
         this.random = new Random();
         // the player casts shadows
         this.setShadowMode(RenderQueue.ShadowMode.Cast);
@@ -95,8 +97,10 @@ public class Player extends Node implements AnimEventListener {
         playerModel.setLocalTranslation(0f,2.8f+hoverHeight,0f); 
         control = playerModel.getChild("Sphere").getControl(AnimControl.class);
         channel = control.createChannel();
+        
+        if (this.enableAnimations == true) {
         channel.setAnim("ArmatureAction.000");
-
+        }
         /*
         //Sets the model of the player
         if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
@@ -132,7 +136,7 @@ public class Player extends Node implements AnimEventListener {
         
         control.addListener(this);
         
-        channel.setLoopMode(LoopMode.Loop);
+       // channel.setLoopMode(LoopMode.Loop);
 
       //End of animation code
         
@@ -159,6 +163,9 @@ public class Player extends Node implements AnimEventListener {
     }
     
     public void animateCollision () {
+        if (this.enableAnimations == false) {
+        return; //channel.setAnim("ArmatureAction.000");
+        }
         //chooses between 3 different get hit animations
         int a = random.nextInt(60);
         channel.setSpeed(1.5f);
@@ -179,6 +186,9 @@ public class Player extends Node implements AnimEventListener {
     }
     
     private void setFrenzyAnimation(boolean frenzy) {
+        if (this.enableAnimations == false) {
+        return; //channel.setAnim("ArmatureAction.000");
+        }
         //invulnerability also makes you tougher and raging!
         if (frenzy) {
             channel.setAnim("frenzy");
@@ -190,6 +200,9 @@ public class Player extends Node implements AnimEventListener {
     }
     
     private void animateJump() {
+        if (this.enableAnimations == false) {
+        return; //channel.setAnim("ArmatureAction.000");
+        }
         //does not allow switching from frenzy / get hit animation into jump
         String s = channel.getAnimationName();
         if (s.equals("ArmatureAction.000") || s.equals( "jump")) {
@@ -297,6 +310,9 @@ public class Player extends Node implements AnimEventListener {
   }
     //animation function that must be implemented even if unused 
       public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
+          if (this.enableAnimations == false) {
+        return; //channel.setAnim("ArmatureAction.000");
+        }
           channel.setAnim("ArmatureAction.000");
           channel.setSpeed(1.0f);
     /*if (animName.equals("ArmatureAction")) {

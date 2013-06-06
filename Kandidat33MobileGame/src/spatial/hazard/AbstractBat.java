@@ -26,7 +26,8 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
     //animation
     protected AnimChannel channel;
     protected AnimControl control;
-
+    protected boolean enableAnimations;
+    
     @Override
     protected Spatial createModel(AssetManager assetManager) {
 
@@ -44,10 +45,13 @@ public abstract class AbstractBat extends PlayerInteractor implements AnimEventL
         channel = control.createChannel();
 
         control.addListener(this);
-
+        this.enableAnimations = false;
+        if (this.enableAnimations == true) {
         channel.setAnim("ArmatureAction");
         channel.setLoopMode(LoopMode.Loop);
 
+        }
+        
         int mod = (new Random().nextInt(8) - 3); // from -3 to +4
         model.scale(1f - 0.05f * mod); //smaller flap faster
         channel.setSpeed(2f + 0.4f * mod);
