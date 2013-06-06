@@ -453,19 +453,21 @@ public class ChunkFactory {
     /* Creates a spotlight shining through a window at a given position */
     private Light createWindowLight(float positionX, float positionY, Design design) {
         //PointLight light = new PointLight();
-        MultiColoredLight light = new MultiColoredLight(assetManager, design);
-        light.setRadius(75);
-        light.setPosition(new Vector3f(positionX, positionY-5, -P.platformWidth / 2 + 0.2f));
+        PointLight light = null;
+        Vector3f pos = new Vector3f(positionX, positionY-5, -P.platformWidth / 2 + 0.2f);
         if (EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
+            light = new PointLight();
             light.setRadius(75);
             light.setColor(new ColorRGBA(99 / 255f, 184 / 255f, 1f, 0f));
         } else {
+            light = new MultiColoredLight(assetManager, design);
+            light.setColor(ColorRGBA.White);
             //light.setRadius(30);
             light.setRadius(39f/2f+4f);
-            light.setPosition(light.getPosition().add(0,-7,0));
+            pos.add(0,-7,0);
             light.setColor(ColorRGBA.White);
         }
-        
+        light.setPosition(pos);
         return light;
         /*
         if(EffectSettings.light == EffectSettings.Light.STANDARD_LIGHTING) {
