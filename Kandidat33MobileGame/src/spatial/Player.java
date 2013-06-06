@@ -159,9 +159,6 @@ public class Player extends Node implements AnimEventListener {
     }
     
     public void animateCollision () {
-        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
-              return;
-          }
         //chooses between 3 different get hit animations
         int a = random.nextInt(60);
         channel.setSpeed(1.5f);
@@ -182,9 +179,6 @@ public class Player extends Node implements AnimEventListener {
     }
     
     private void setFrenzyAnimation(boolean frenzy) {
-        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
-              return;
-          }
         //invulnerability also makes you tougher and raging!
         if (frenzy) {
             channel.setAnim("frenzy");
@@ -264,9 +258,6 @@ public class Player extends Node implements AnimEventListener {
     }
     
     public void updateModelAfterJump() {
-        if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
-              return;
-          }
         this.animateJump();
         //((AudioNode)this.getChild("jumpsound")).playInstance();
     }
@@ -306,9 +297,6 @@ public class Player extends Node implements AnimEventListener {
   }
     //animation function that must be implemented even if unused 
       public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
-          if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
-              return;
-          }
           channel.setAnim("ArmatureAction.000");
           channel.setSpeed(1.0f);
     /*if (animName.equals("ArmatureAction")) {
