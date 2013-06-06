@@ -38,7 +38,9 @@ public abstract class AbstractWizard extends PlayerInteractor {
     @Override
     protected Spatial createModel(AssetManager assetManager) {
         
-        Node model = (Node) assetManager.loadModel("Models/wizard/wizard3/new/untitled21b-textures.j3o");
+        //Node model = (Node) assetManager.loadModel("Models/wizard/wizard3/new/untitled21b-textures.j3o");
+       Node model = (Node) assetManager.loadModel("Models/wizard/wizardcloth005.j3o");
+       
         //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003-nolightcam.j3o"); // Nina's
         //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair004MergeGreen.j3o");
         //modelForWizard = (Node) assetManager.loadModel("Models/wizard/wizard3/untitled21.j3o");
@@ -47,7 +49,7 @@ public abstract class AbstractWizard extends PlayerInteractor {
         model.rotate(0, FastMath.DEG_TO_RAD * 180, 0);
         
         if (EffectSettings.ambientOcclusion == AmbientOcclusion.TEXTURE) {
-            this.addAOTextures(model, assetManager);
+           // this.addAOTextures(model, assetManager);
         }
 
         //model.rotate(0,3.1f,0);
