@@ -81,7 +81,7 @@ public class Player extends Node implements AnimEventListener {
         this.addControl(playerControl);
         
         playerModel = (Node) assetManager.loadModel("Models/ghost/ghost04-014cloth003armature003UV002.j3o");
-        
+     //playerModel = (Node) assetManager.loadModel("Models/ghost/ghost2-moreanim-nolightcam.j3o");
         if (EffectSettings.light == EffectSettings.Light.TEXTURES_AND_WINDOW || EffectSettings.light == EffectSettings.Light.TEXTURES_SMALL_LIGHTS) {
             Material newMaterial = new MultiColoredLightMaterial(assetManager, "Materials/MultiColoredLighting.j3md");
             newMaterial.setTexture("DiffuseMap", assetManager.loadTexture("Models/ghost/cloth.png"));

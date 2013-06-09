@@ -38,8 +38,8 @@ public abstract class AbstractWizard extends PlayerInteractor {
     @Override
     protected Spatial createModel(AssetManager assetManager) {
         
-        //Node model = (Node) assetManager.loadModel("Models/wizard/wizard3/new/untitled21b-textures.j3o");
-       Node model = (Node) assetManager.loadModel("Models/wizard/wizardcloth005.j3o");
+       // Node model = (Node) assetManager.loadModel("Models/wizard/wizard3/new/untitled21b-textures.j3o");
+       Node model = (Node) assetManager.loadModel("Models/wizard/wizard2.j3o");
        
         //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair003-nolightcam.j3o"); // Nina's
         //modelForWizard = (Node) assetManager.loadModel("Models/wizard/Wizard-NoAnim-YellowbordersHair004MergeGreen.j3o");
@@ -94,7 +94,8 @@ public abstract class AbstractWizard extends PlayerInteractor {
     }
     
     protected void redress(AssetManager a, ColorRGBA cloth, ColorRGBA particle) { //Changes wizard to black clothes and red particle
-        if (cloth != null) {
+        return;
+        /*if (cloth != null) {
             //saknas något här för att materialet ska reflektera ljus på bra sätt. det blir"torrt"
             ((Geometry)this.getChild("Cone.0002")).getMaterial().setColor("Diffuse", cloth);
             ((Geometry)this.getChild("Cone.0012")).getMaterial().setColor("Diffuse", cloth);
@@ -102,7 +103,7 @@ public abstract class AbstractWizard extends PlayerInteractor {
         }
         if (particle != null) {
             ((ParticleEmitter)this.getChild("spark")).setStartColor(particle);
-        }
+        }*/
     }
 
     private void addAOTextures(Node model, AssetManager assetManager) {
